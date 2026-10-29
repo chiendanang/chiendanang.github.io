@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html,body{margin:0}body{font-size:14px}img{max-width:100%}</style>
+<title>Kinh lạc và Huyệt đạo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: thanh tab dính trên cùng, mỗi tab một khung tra cứu; bảng và thẻ dùng chung lưới token. */
+:root {
+  --bg: #f3f6f4; --surface: #ffffff; --fg: #1b2420; --muted: #5b6862; --line: #d6ded9;
+  --accent: #1f6b5c; --accent-soft: #e2efeb;
+  --moc: #3d8a4f; --hoa: #c2452d; --tho: #b8862a; --kim: #7d8790; --thuy: #2f6fb3;
+  --ok: #1e7a46; --mod: #2a5f9e; --weak: #9a6400; --none: #8a3b3b;
+  --warn: #a33a3a; --warn-bg: #f6e3e3;
+  --font: "Be Vietnam Pro", "Segoe UI", Roboto, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121816; --surface: #19211e; --fg: #e3ebe7; --muted: #9aa8a2; --line: #2c3833;
+  --accent: #6cc3ad; --accent-soft: #1d2f2a;
+  --moc: #6fc283; --hoa: #f07c64; --tho: #e3b45c; --kim: #a9b3bb; --thuy: #6ea8eb;
+  --ok: #6fd39a; --mod: #8ab8f0; --weak: #e6b85c; --none: #f08f8f;
+  --warn: #f08f8f; --warn-bg: #3a1c1c; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121816; --surface: #19211e; --fg: #e3ebe7; --muted: #9aa8a2; --line: #2c3833;
+  --accent: #6cc3ad; --accent-soft: #1d2f2a;
+  --moc: #6fc283; --hoa: #f07c64; --tho: #e3b45c; --kim: #a9b3bb; --thuy: #6ea8eb;
+  --ok: #6fd39a; --mod: #8ab8f0; --weak: #e6b85c; --none: #f08f8f;
+  --warn: #f08f8f; --warn-bg: #3a1c1c; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--font); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line);
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.hwrap { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+h1 { font-size: 1.1rem; margin: 0; font-weight: 700; }
+nav { display: flex; gap: 4px; flex-wrap: wrap; }
+nav a { text-decoration: none; font-size: .88rem; padding: 5px 12px; border-radius: 8px; border: 1px solid var(--line); color: var(--fg); }
+nav a[aria-current="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+main { max-width: 1180px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+section.view { display: grid; gap: 18px; min-width: 0; }
+h2 { font-size: 1.25rem; margin: 0; text-wrap: balance; }
+h3 { font-size: 1rem; margin: 0; }
+p { margin: 0; max-width: 70ch; }
+.lead { color: var(--muted); }
+.note { font-size: .85rem; color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 10px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.warnbox { background: var(--warn-bg); color: var(--fg); border-radius: 10px; padding: 10px 14px; font-size: .9rem; }
+.warnbox b { color: var(--warn); }
+ul.tight { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; background: var(--accent-soft); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.code { font-family: var(--mono); font-size: .8rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums; }
+.el { display: inline-block; font-size: .75rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.el.Mộc { color: var(--moc); } .el.Hoả { color: var(--hoa); } .el.Thổ { color: var(--tho); } .el.Kim { color: var(--kim); } .el.Thuỷ { color: var(--thuy); }
+.ev { display: inline-block; font-size: .75rem; font-weight: 600; padding: 1px 8px; border-radius: 6px; white-space: nowrap; color: var(--bg); }
+.ev.m { background: var(--ok); } .ev.k { background: var(--mod); } .ev.h { background: var(--weak); } .ev.n { background: var(--none); } .ev.t { background: var(--kim); }
+.pill { display: inline-block; font-size: .75rem; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.preg { display: inline-block; font-size: .72rem; font-weight: 600; padding: 1px 7px; border-radius: 6px; background: var(--warn-bg); color: var(--warn); white-space: nowrap; }
+/* Đồng hồ khí */
+.clock { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.clock svg { width: 100%; height: auto; max-width: 420px; }
+.clock svg text { fill: var(--fg); font-family: var(--font); }
+.clock svg .sub { fill: var(--muted); }
+.seg { cursor: pointer; }
+.seg path { stroke: var(--surface); stroke-width: 2; }
+.seg:hover path, .seg.on path { opacity: .82; }
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .88rem; }
+.flow span.k { padding: 2px 9px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); }
+.flow span.arr { color: var(--muted); }
+/* Bộ lọc huyệt */
+.filters { display: grid; gap: 10px; }
+.frow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.frow label { font-size: .8rem; color: var(--muted); min-width: 64px; }
+input[type="search"], select { font: inherit; font-size: .9rem; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); min-width: 0; }
+input[type="search"] { flex: 1 1 240px; }
+.chip { font: inherit; font-size: .8rem; padding: 3px 11px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.count { font-size: .85rem; color: var(--muted); }
+.pts { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.pt { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.pt .top { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.pt .top h3 { font-size: 1.05rem; }
+.pt .han { color: var(--muted); font-size: .85rem; }
+.pt dl { margin: 0; display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 4px 10px; font-size: .88rem; }
+.pt dt { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; padding-top: 2px; }
+.pt dd { margin: 0; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.empty { padding: 24px; text-align: center; color: var(--muted); }
+/* Hình người */
+:root { --body: #e6ece9; --body-line: #b9c6bf; --gv: #7a4fa0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --body: #24302b; --body-line: #3d4c45; --gv: #b996dc; } }
+:root[data-theme="dark"] { --body: #24302b; --body-line: #3d4c45; --gv: #b996dc; }
+.atlas { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.figwrap { display: grid; gap: 10px; justify-items: center; min-width: 0; }
+.figwrap svg { width: 100%; max-width: 440px; height: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; touch-action: manipulation; }
+.seg2 { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg2 button { font: inherit; font-size: .85rem; padding: 6px 14px; border: 0; background: var(--surface); color: var(--fg); cursor: pointer; }
+.seg2 button[aria-pressed="true"] { background: var(--accent); color: var(--bg); font-weight: 600; }
+.bodyshape { fill: var(--body); stroke: var(--body-line); stroke-width: 1.2; }
+.feat { fill: none; stroke: var(--body-line); stroke-width: 1; }
+.mline { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; opacity: .85; cursor: pointer; }
+.mhit { fill: none; stroke: transparent; stroke-width: 12; cursor: pointer; }
+.dot { stroke: var(--surface); stroke-width: 1.4; cursor: pointer; }
+.dothit { fill: transparent; cursor: pointer; }
+.plabel { font-size: 7.5px; fill: var(--fg); paint-order: stroke; stroke: var(--surface); stroke-width: 2.5px; pointer-events: none; font-family: var(--mono); }
+svg.dim .mg:not(.hl) { opacity: .12; }
+svg.dim .pg:not(.hl) { opacity: .15; }
+.pg.sel .dot { stroke: var(--fg); stroke-width: 2; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.legend button { font: inherit; font-size: .78rem; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.legend button[aria-pressed="true"] { border-color: var(--fg); font-weight: 600; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.plist { display: flex; flex-wrap: wrap; gap: 6px; }
+.plist button { font: inherit; font-size: .8rem; padding: 3px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+.linkbtn { font: inherit; font-size: .82rem; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; justify-self: start; }
+@media (max-width: 820px) { .atlas { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 720px) { .clock { grid-template-columns: minmax(0, 1fr); } .pts { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: no-preference) { .seg path { transition: opacity .15s; } }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<header><div class="hwrap">
+  <h1>Kinh lạc và Huyệt đạo</h1>
+  <nav id="nav">
+    <a href="#tong-quan">Tổng quan</a>
+    <a href="#hinh-nguoi">Hình người</a>
+    <a href="#dong-ho">Đường đi của khí</a>
+    <a href="#kinh-chinh">12 kinh chính</a>
+    <a href="#ky-kinh">8 mạch kỳ kinh</a>
+    <a href="#huyet">Tra huyệt</a>
+    <a href="#bang-chung">Bằng chứng</a>
+  </nav>
+</div></header>
+
+<main>
+<div class="warnbox"><b>Lưu ý:</b> Trang này để tìm hiểu, không thay cho thầy thuốc. Châm kim chỉ nên do người có chứng chỉ thực hiện. Day ấn nhẹ thường an toàn, nhưng một số huyệt được Đông y kiêng khi đang mang thai (đánh dấu <span class="preg">Kiêng khi có thai</span>).</div>
+
+<!-- TỔNG QUAN -->
+<section class="view" id="v-tong-quan">
+  <h2>Hệ kinh lạc là gì</h2>
+  <p class="lead">Theo Đông y, khí và huyết chạy trong cơ thể theo những đường cố định gọi là kinh lạc. Kinh là đường chính chạy dọc, lạc là nhánh ngang nối các kinh với nhau. Huyệt là những điểm trên đường kinh nơi khí "tụ" lại gần mặt da, có thể tác động bằng kim, cứu (hơ nóng ngải), day ấn hoặc giác hơi.</p>
+  <div class="grid3">
+    <div class="panel"><h3>12 kinh chính</h3><p>Mỗi kinh gắn với một tạng hoặc phủ, có ở cả hai bên cơ thể. Sáu kinh âm (tạng) và sáu kinh dương (phủ) ghép thành sáu cặp biểu lý.</p><p class="note">309 huyệt mỗi bên.</p></div>
+    <div class="panel"><h3>8 mạch kỳ kinh</h3><p>Các mạch "dự trữ", điều hoà lượng khí huyết của 12 kinh. Chỉ Đốc mạch và Nhâm mạch có huyệt riêng, chạy giữa lưng và giữa bụng.</p><p class="note">Đốc 28 huyệt, Nhâm 24 huyệt. Cộng 309 thành 361 huyệt chuẩn (WHO 2008).</p></div>
+    <div class="panel"><h3>Mạng lưới phụ</h3><ul class="tight"><li>15 lạc mạch: nối cặp kinh biểu lý, cộng lạc của Nhâm, Đốc và Đại lạc của Tỳ</li><li>12 kinh biệt: nhánh đi sâu vào trong</li><li>12 kinh cân: đường gân cơ bên ngoài</li><li>12 bì bộ: vùng da do mỗi kinh phụ trách</li></ul></div>
+  </div>
+
+  <h2>Cách gọi tên một kinh</h2>
+  <p>Tên đầy đủ gồm ba phần: <b>Thủ</b> (tay) hay <b>Túc</b> (chân), rồi tầng âm dương (Thái âm, Thiếu âm, Quyết âm, Thái dương, Dương minh, Thiếu dương), rồi tạng phủ. Ví dụ <b>Thủ Thái âm Phế</b> là kinh Phế, đi ở tay, thuộc tầng Thái âm.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Quy luật hướng đi</th><th>Bắt đầu</th><th>Kết thúc</th><th>Các kinh</th></tr></thead>
+    <tbody>
+      <tr><td>3 kinh âm ở tay</td><td>Ngực</td><td>Đầu ngón tay</td><td>Phế, Tâm bào, Tâm</td></tr>
+      <tr><td>3 kinh dương ở tay</td><td>Đầu ngón tay</td><td>Đầu, mặt</td><td>Đại trường, Tam tiêu, Tiểu trường</td></tr>
+      <tr><td>3 kinh dương ở chân</td><td>Đầu, mặt</td><td>Đầu ngón chân</td><td>Vị, Đởm, Bàng quang</td></tr>
+      <tr><td>3 kinh âm ở chân</td><td>Đầu ngón chân</td><td>Bụng, ngực</td><td>Tỳ, Can, Thận</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Mặt trong tay chân là đường của kinh âm, mặt ngoài và mặt sau là đường của kinh dương. Kinh âm nối kinh dương ở đầu ngón tay; dương nối dương ở đầu mặt; dương nối âm ở đầu ngón chân; âm nối âm ở ngực. Nhờ vậy 12 kinh khép thành một vòng tròn.</p>
+
+  <h2>Các nhóm huyệt đặc biệt</h2>
+  <div class="grid2">
+    <div class="panel"><h3>Ngũ du huyệt</h3><p>Năm huyệt từ đầu ngón đến khuỷu hoặc gối trên mỗi kinh, ví khí như dòng nước: <b>Tỉnh</b> (mạch nguồn), <b>Huỳnh</b> (suối nhỏ), <b>Du</b> (dòng chảy), <b>Kinh</b> (sông), <b>Hợp</b> (hợp vào biển). Ví dụ trên kinh Vị, Túc tam lý là huyệt Hợp.</p></div>
+    <div class="panel"><h3>Nguyên huyệt và Lạc huyệt</h3><p>Nguyên huyệt (gần cổ tay, cổ chân) là nơi nguyên khí của tạng phủ đi qua, thường dùng để bổ: Thái uyên (Phế), Thần môn (Tâm), Thái khê (Thận), Thái xung (Can). Lạc huyệt là chỗ tách nhánh sang kinh biểu lý: Liệt khuyết, Nội quan, Ngoại quan, Phong long.</p></div>
+    <div class="panel"><h3>Bối du và Mộ huyệt</h3><p>Bối du nằm ở lưng, hai bên cột sống, cách đường giữa 1,5 thốn, mỗi tạng phủ một huyệt (Phế du ngang T3, Tâm du T5, Can du T9, Tỳ du T11, Thận du L2). Mộ huyệt nằm ở ngực bụng: Trung phủ (Phế), Trung quản (Vị), Thiên khu (Đại trường), Kỳ môn (Can).</p></div>
+    <div class="panel"><h3>Bát hội huyệt</h3><p>Tám huyệt "hội" của tám loại mô: tạng (Chương môn), phủ (Trung quản), khí (Đản trung), huyết (Cách du), cân (Dương lăng tuyền), mạch (Thái uyên), xương (Đại trữ), tuỷ (Huyền chung).</p></div>
+  </div>
+
+  <h2>Đơn vị đo: thốn đồng thân</h2>
+  <p>Vị trí huyệt đo bằng <b>thốn</b> (cun) theo chính ngón tay người được bấm, nên tự điều chỉnh theo vóc người.</p>
+  <ul class="tight">
+    <li>1 thốn: bề ngang khớp ngón tay cái, hoặc khoảng giữa hai nếp gấp đốt giữa ngón giữa.</li>
+    <li>1,5 thốn: bề ngang hai ngón trỏ và giữa khép lại.</li>
+    <li>3 thốn: bề ngang bốn ngón (trỏ đến út) khép lại, đo ngang khớp giữa ngón giữa.</li>
+  </ul>
+  <p class="note">Ngoài ra còn quy ước "cốt độ thốn": ví dụ từ rốn đến bờ trên xương mu là 5 thốn, từ nếp khuỷu đến nếp cổ tay là 12 thốn.</p>
+</section>
+
+<!-- HÌNH NGƯỜI -->
+<section class="view" id="v-hinh-nguoi" hidden>
+  <h2>Tra trên hình người</h2>
+  <p class="lead">Bấm vào một chấm để xem huyệt, bấm vào một đường để xem cả đường kinh. Tay ở tư thế giải phẫu: mặt trước thấy lòng bàn tay (đường kinh âm), mặt sau thấy mu bàn tay (đường kinh dương). Kinh và huyệt có ở cả hai bên cơ thể.</p>
+  <div class="atlas">
+    <div class="figwrap">
+      <div class="frow" style="justify-content:center">
+        <div class="seg2" role="group" aria-label="Chọn mặt"><button id="vf" aria-pressed="true">Mặt trước</button><button id="vb" aria-pressed="false">Mặt sau</button></div>
+        <div class="seg2"><button id="vl" aria-pressed="true">Hiện mã huyệt</button></div>
+      </div>
+      <svg id="fig" viewBox="20 10 260 615" role="img" aria-label="Hình người với đường kinh và huyệt"></svg>
+      <div class="legend" id="legend"></div>
+      <p class="note" style="text-align:center">Màu theo ngũ hành của kinh: <span class="el Mộc">Mộc</span> <span class="el Hoả">Hoả</span> <span class="el Thổ">Thổ</span> <span class="el Kim">Kim</span> <span class="el Thuỷ">Thuỷ</span>, Đốc và Nhâm màu tím. Bấm tên kinh để làm nổi kinh đó, bấm "Bỏ chọn" ở khung bên cạnh để hiện lại tất cả.</p>
+      <p class="note">Vị trí trên hình là gần đúng để định hướng. Khi bấm huyệt thật, tìm theo mô tả "Vị trí" và đo bằng thốn của chính người đó.</p>
+    </div>
+    <div class="panel" id="atlasInfo" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ĐỒNG HỒ KHÍ -->
+<section class="view" id="v-dong-ho" hidden>
+  <h2>Đường đi của khí: vòng 24 giờ</h2>
+  <p class="lead">Đông y cho rằng khí huyết chảy qua 12 kinh lần lượt, mỗi kinh "vượng" trong 2 giờ, bắt đầu ở kinh Phế lúc 3 giờ sáng (thuyết Tý Ngọ lưu chú). Bấm vào một ô để xem kinh đó.</p>
+  <div class="clock">
+    <svg id="clockSvg" viewBox="0 0 420 420" role="img" aria-label="Đồng hồ khí huyết 24 giờ qua 12 kinh"></svg>
+    <div class="panel" id="clockInfo"></div>
+  </div>
+  <h3>Thứ tự vòng chảy</h3>
+  <div class="flow" id="flow"></div>
+  <p class="note">Theo cách này, mỗi kinh có một khung giờ "suy" đối diện 12 tiếng (ví dụ Tâm vượng 11–13 giờ, suy 23–1 giờ). Đây là lý thuyết cổ, chưa được nghiên cứu hiện đại xác nhận. Nó có điểm trùng hợp thú vị với nhịp sinh học (ví dụ gan chuyển hoá mạnh về đêm), nhưng không nên dùng để tự chẩn đoán.</p>
+</section>
+
+<!-- 12 KINH -->
+<section class="view" id="v-kinh-chinh" hidden>
+  <h2>12 kinh chính</h2>
+  <p class="lead">Mỗi hàng là một kinh, xếp theo thứ tự vòng chảy của khí. Huyệt đầu và huyệt cuối cho biết kinh bắt đầu và kết thúc ở đâu.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Kinh</th><th>Mã</th><th>Hành</th><th>Giờ vượng</th><th>Số huyệt</th><th>Đường đi</th><th>Chứng thường gặp</th><th>Cặp biểu lý</th></tr></thead>
+    <tbody id="kinhBody"></tbody>
+  </table></div>
+</section>
+
+<!-- 8 MẠCH -->
+<section class="view" id="v-ky-kinh" hidden>
+  <h2>8 mạch kỳ kinh</h2>
+  <p class="lead">Kỳ kinh không gắn trực tiếp với tạng phủ nào. Sách cổ ví 12 kinh như sông ngòi, còn kỳ kinh như hồ chứa: khi sông đầy thì tràn vào hồ, khi cạn thì hồ bù ra. Mỗi mạch có một "huyệt giao hội" ở tay hoặc chân để mở mạch đó.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Mạch</th><th>Mã</th><th>Đường đi</th><th>Vai trò theo Đông y</th><th>Huyệt giao hội</th></tr></thead>
+    <tbody id="kyBody"></tbody>
+  </table></div>
+  <h3>Bốn cặp phối hợp</h3>
+  <div class="grid2" id="pairs"></div>
+</section>
+
+<!-- TRA HUYỆT -->
+<section class="view" id="v-huyet" hidden>
+  <h2>Tra huyệt quan trọng</h2>
+  <p class="lead">Những huyệt hay dùng nhất trong châm cứu và bấm huyệt, kèm cách tìm, công dụng theo Đông y và mức bằng chứng hiện đại khi có nghiên cứu.</p>
+  <div class="panel filters">
+    <div class="frow"><input type="search" id="q" placeholder="Tìm theo tên, mã (LI4), triệu chứng..." aria-label="Tìm huyệt"><select id="fk" aria-label="Lọc theo kinh"></select><select id="fv" aria-label="Lọc theo vùng"></select></div>
+    <div class="frow" id="tagRow"><label>Công dụng</label></div>
+    <div class="frow"><label>Khác</label><button class="chip" id="fEv" aria-pressed="false">Có bằng chứng Khá trở lên</button><button class="chip" id="fSafe" aria-pressed="false">Ẩn huyệt kiêng khi có thai</button><span class="count" id="count"></span></div>
+  </div>
+  <div class="pts" id="pts"></div>
+</section>
+
+<!-- BẰNG CHỨNG -->
+<section class="view" id="v-bang-chung" hidden>
+  <h2>Khoa học hiện đại nói gì</h2>
+  <p class="lead">Cùng thang bốn mức như trang Bản đồ trường phái chữa bệnh: <span class="ev m">Mạnh</span> <span class="ev k">Khá</span> <span class="ev h">Hạn chế</span> <span class="ev n">Không có</span>. Mức đánh giá dựa trên các tổng quan hệ thống lớn (Cochrane và tương đương), không phải từng nghiên cứu đơn lẻ.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Câu hỏi</th><th>Mức</th><th>Tóm tắt</th></tr></thead>
+    <tbody id="evBody"></tbody>
+  </table></div>
+  <div class="grid2">
+    <div class="panel"><h3>Cách đọc cho đúng</h3><ul class="tight">
+      <li>Châm cứu thật thường tốt hơn không điều trị rõ rệt, nhưng chỉ hơn "châm giả" (kim không xuyên da, hoặc châm sai chỗ) một chút. Nghĩa là phần lớn hiệu quả có thể đến từ kích thích chung, sự chăm sóc và kỳ vọng, chứ không riêng vị trí huyệt.</li>
+      <li>Chưa ai tìm thấy cấu trúc giải phẫu riêng của kinh lạc. Có giả thuyết cho rằng nhiều huyệt nằm trên mặt phẳng mô liên kết giữa các cơ, hoặc gần bó mạch thần kinh, nhưng chưa thống nhất.</li>
+      <li>Có thể xem kinh lạc như một <b>bản đồ kinh nghiệm</b> hữu ích để ghi nhớ các vùng đau quy chiếu và điểm kích thích, hơn là một hệ ống dẫn có thật.</li>
+    </ul></div>
+    <div class="panel"><h3>Gắn với khung Thân, Khí, Tâm</h3><ul class="tight">
+      <li><b>Thân:</b> day ấn Túc tam lý, Hợp cốc, Phong trì là cách tự chăm sóc nhẹ nhàng cho tiêu hoá, đau đầu, mỏi cổ vai.</li>
+      <li><b>Khí:</b> Khí hải và Quan nguyên nằm ở vùng đan điền, nơi khí công và thở bụng hướng sự chú ý tới. Lợi ích của thở chậm bằng cơ hoành có bằng chứng riêng, không phụ thuộc vào thuyết kinh lạc.</li>
+      <li><b>Tâm:</b> Thần môn, Nội quan, Ấn đường được dùng cho lo âu, mất ngủ. Bằng chứng còn hạn chế, nhưng day ấn kết hợp thở chậm là việc ít rủi ro.</li>
+    </ul></div>
+    <div class="panel"><h3>An toàn</h3><ul class="tight">
+      <li>Biến chứng nặng của châm cứu hiếm khi người châm được đào tạo và dùng kim vô trùng dùng một lần.</li>
+      <li>Rủi ro đáng kể nhất: tràn khí màng phổi khi châm sâu vùng ngực, vai, lưng trên; nhiễm trùng khi kim không vô trùng.</li>
+      <li>Người dùng thuốc chống đông, rối loạn đông máu, có máy tạo nhịp (với châm điện), hoặc đang mang thai cần báo trước cho người châm.</li>
+      <li>Không dùng bấm huyệt thay cho cấp cứu khi ngất, đau ngực, khó thở.</li>
+    </ul></div>
+  </div>
+</section>
+</main>
+
+<script>
+const KINH = [
+  {n:"Thủ Thái âm Phế", c:"LU", e:"Kim", t:"3–5", h:11, s:"Trung phủ", f:"Thiếu thương", r:"Từ ngực dưới xương đòn, theo bờ ngoài mặt trong cánh tay, qua chỗ bắt mạch cổ tay, đến góc móng ngón cái.", d:"Ho, hen, khó thở, đau họng, cảm, đau mặt trong cánh tay", p:"Đại trường"},
+  {n:"Thủ Dương minh Đại trường", c:"LI", e:"Kim", t:"5–7", h:20, s:"Thương dương", f:"Nghênh hương", r:"Từ ngón trỏ, theo bờ ngoài mặt sau cánh tay, lên vai, qua cổ, bắt chéo môi trên, kết thúc cạnh cánh mũi bên đối diện.", d:"Đau răng, đau họng, nghẹt mũi, chảy máu cam, táo bón, sốt", p:"Phế"},
+  {n:"Túc Dương minh Vị", c:"ST", e:"Thổ", t:"7–9", h:45, s:"Thừa khấp", f:"Lệ đoài", r:"Từ dưới mắt, vòng quanh mặt, xuống cổ, ngực (qua núm vú), bụng (cách rốn 2 thốn), mặt trước đùi, cạnh ngoài xương chày, đến ngón chân thứ hai.", d:"Đau dạ dày, đầy bụng, nôn, tiêu chảy, đau răng, đau gối", p:"Tỳ"},
+  {n:"Túc Thái âm Tỳ", c:"SP", e:"Thổ", t:"9–11", h:21, s:"Ẩn bạch", f:"Đại bao", r:"Từ ngón chân cái, theo bờ trong bàn chân, qua mắt cá trong, mặt trong cẳng chân và đùi, lên bụng ngực, kết thúc ở thành bên ngực dưới nách.", d:"Ăn kém, đầy bụng, phân lỏng, phù, mệt mỏi, kinh nguyệt không đều", p:"Vị"},
+  {n:"Thủ Thiếu âm Tâm", c:"HT", e:"Hoả", t:"11–13", h:9, s:"Cực tuyền", f:"Thiếu xung", r:"Từ hõm nách, theo bờ trong mặt trong cánh tay, qua nếp cổ tay phía ngón út, đến góc móng ngón út phía ngón nhẫn.", d:"Hồi hộp, đau ngực, mất ngủ, hay quên, lo âu", p:"Tiểu trường"},
+  {n:"Thủ Thái dương Tiểu trường", c:"SI", e:"Hoả", t:"13–15", h:19, s:"Thiếu trạch", f:"Thính cung", r:"Từ ngón út, theo bờ trong mặt sau cánh tay, vòng qua xương bả vai, lên cổ, má, kết thúc trước bình tai.", d:"Đau cổ gáy, vai gáy cứng, ù tai, đau họng", p:"Tâm"},
+  {n:"Túc Thái dương Bàng quang", c:"BL", e:"Thuỷ", t:"15–17", h:67, s:"Tình minh", f:"Chí âm", r:"Từ khoé mắt trong, lên trán, qua đỉnh đầu, xuống gáy, chia hai đường song song hai bên cột sống (1,5 và 3 thốn), xuống mặt sau đùi, khoeo, bắp chân, sau mắt cá ngoài, đến ngón út chân.", d:"Đau lưng, đau gáy, đau thần kinh toạ, bệnh tiết niệu, đau mắt", p:"Thận"},
+  {n:"Túc Thiếu âm Thận", c:"KI", e:"Thuỷ", t:"17–19", h:27, s:"Dũng tuyền", f:"Du phủ", r:"Từ lòng bàn chân, vòng sau mắt cá trong, lên mặt trong cẳng chân và đùi, lên bụng (cách đường giữa 0,5 thốn), ngực, kết thúc dưới xương đòn.", d:"Đau lưng mỏi gối, ù tai, tiểu đêm, sinh lý yếu, mệt mỏi kéo dài", p:"Bàng quang"},
+  {n:"Thủ Quyết âm Tâm bào", c:"PC", e:"Hoả", t:"19–21", h:9, s:"Thiên trì", f:"Trung xung", r:"Từ cạnh ngoài núm vú, theo đường giữa mặt trong cánh tay, giữa hai gân cổ tay, qua lòng bàn tay, đến đầu ngón giữa.", d:"Tức ngực, hồi hộp, buồn nôn, bồn chồn", p:"Tam tiêu"},
+  {n:"Thủ Thiếu dương Tam tiêu", c:"TE", e:"Hoả", t:"21–23", h:23, s:"Quan xung", f:"Ti trúc không", r:"Từ ngón nhẫn, theo đường giữa mặt sau cánh tay (giữa xương quay và trụ), lên vai, vòng quanh sau tai, kết thúc ở đuôi lông mày.", d:"Đau đầu hai bên, ù tai, điếc, đau vai ngoài, sốt", p:"Tâm bào"},
+  {n:"Túc Thiếu dương Đởm", c:"GB", e:"Mộc", t:"23–1", h:44, s:"Đồng tử liêu", f:"Túc khiếu âm", r:"Từ đuôi mắt, chạy ngoằn ngoèo hai bên đầu, xuống gáy, vai, sườn, mông, mặt ngoài đùi và cẳng chân, đến ngón chân thứ tư.", d:"Đau nửa đầu, đắng miệng, đau sườn, đau mặt ngoài chân, đau thần kinh toạ", p:"Can"},
+  {n:"Túc Quyết âm Can", c:"LR", e:"Mộc", t:"1–3", h:14, s:"Đại đôn", f:"Kỳ môn", r:"Từ ngón chân cái, lên mu chân, mặt trong cẳng chân và đùi, vòng quanh bộ phận sinh dục, lên bụng, kết thúc ở khoang liên sườn 6.", d:"Cáu giận, đau đầu đỉnh, chóng mặt, đau sườn, kinh nguyệt không đều", p:"Đởm"}
+];
+
+const KY = [
+  {n:"Đốc mạch", c:"GV", r:"Từ giữa hậu môn và xương cụt, đi lên giữa cột sống, qua gáy, lên đỉnh đầu, xuống trán, mũi, kết thúc ở lợi hàm trên. 28 huyệt.", v:"\"Bể của các kinh dương\": thống lĩnh dương khí toàn thân, liên quan não tuỷ, cột sống.", g:"Hậu khê (SI3)"},
+  {n:"Nhâm mạch", c:"CV", r:"Từ hội âm, đi lên đường giữa bụng ngực, qua cổ, kết thúc ở chỗ lõm dưới môi dưới. 24 huyệt.", v:"\"Bể của các kinh âm\": điều hoà âm huyết, liên quan thai nghén, sinh sản.", g:"Liệt khuyết (LU7)"},
+  {n:"Xung mạch", c:"PV", r:"Từ trong tiểu khung, đi cùng kinh Thận lên bụng ngực, toả ra họng và môi.", v:"\"Bể của 12 kinh\" và \"huyết hải\": gắn với kinh nguyệt và sinh sản.", g:"Công tôn (SP4)"},
+  {n:"Đới mạch", c:"DV", r:"Vòng quanh eo như dây thắt lưng, ngang hông sườn.", v:"Bó các kinh chạy dọc lại với nhau; liên quan khí hư, đau lưng ngang eo.", g:"Túc lâm khấp (GB41)"},
+  {n:"Âm kiểu mạch", c:"Yin Qiao", r:"Từ mắt cá trong, đi lên mặt trong chân, ngực, cổ, đến khoé mắt trong.", v:"Điều hoà vận động hai chân và việc mở nhắm mắt; dùng khi buồn ngủ nhiều.", g:"Chiếu hải (KI6)"},
+  {n:"Dương kiểu mạch", c:"Yang Qiao", r:"Từ mắt cá ngoài, đi lên mặt ngoài chân, sườn, vai, mặt, đến khoé mắt trong rồi lên gáy.", v:"Cùng Âm kiểu điều hoà giấc ngủ và thức; dùng khi mất ngủ.", g:"Thân mạch (BL62)"},
+  {n:"Âm duy mạch", c:"Yin Wei", r:"Từ mặt trong cẳng chân, đi lên bụng, ngực, kết thúc ở cổ.", v:"Liên kết các kinh âm; dùng cho đau ngực, tim, dạ dày.", g:"Nội quan (PC6)"},
+  {n:"Dương duy mạch", c:"Yang Wei", r:"Từ gót chân ngoài, đi lên mặt ngoài chân, sườn, vai, đến đầu.", v:"Liên kết các kinh dương; dùng cho sốt, ớn lạnh, đau hai bên đầu.", g:"Ngoại quan (TE5)"}
+];
+const PAIRS = [
+  ["Công tôn + Nội quan","Xung mạch và Âm duy mạch","Tim, ngực, dạ dày: đau tức ngực, buồn nôn, đau dạ dày."],
+  ["Hậu khê + Thân mạch","Đốc mạch và Dương kiểu mạch","Khoé mắt trong, gáy, tai, vai, lưng: đau gáy, đau cột sống."],
+  ["Túc lâm khấp + Ngoại quan","Đới mạch và Dương duy mạch","Khoé mắt ngoài, sau tai, má, cổ, vai: đau nửa đầu, đau vai."],
+  ["Liệt khuyết + Chiếu hải","Nhâm mạch và Âm kiểu mạch","Họng, phổi, ngực, cơ hoành: ho, đau họng khô."]
+];
+
+// v: Đầu mặt cổ / Ngực bụng / Lưng / Tay / Chân. ev: m k h n hoặc "" (chưa có nghiên cứu riêng)
+const P = [
+  {c:"LU1", n:"Trung phủ", han:"中府", k:"LU", v:"Ngực bụng", loc:"Dưới đầu ngoài xương đòn, khoang liên sườn 1, cách đường giữa ngực 6 thốn.", use:"Ho, hen, tức ngực, đau vai. Mộ huyệt của Phế.", tags:["Hô hấp"], ev:"", evn:"", warn:"Không châm sâu: dễ tràn khí màng phổi."},
+  {c:"LU5", n:"Xích trạch", han:"尺澤", k:"LU", v:"Tay", loc:"Trên nếp gấp khuỷu tay, bờ ngoài gân cơ nhị đầu (phía ngón cái).", use:"Ho có đờm, sốt, đau họng, đau khuỷu tay. Huyệt Hợp của Phế.", tags:["Hô hấp","Sốt, cảm"], ev:"", evn:""},
+  {c:"LU7", n:"Liệt khuyết", han:"列缺", k:"LU", v:"Tay", loc:"Trên nếp cổ tay 1,5 thốn, bờ ngoài xương quay. Đan hai hổ khẩu, đầu ngón trỏ chạm vào chỗ lõm.", use:"Ho, đau họng, đau đầu, cứng gáy (\"đầu gáy tìm Liệt khuyết\"). Lạc huyệt; giao hội Nhâm mạch.", tags:["Hô hấp","Đau đầu","Cổ vai lưng"], ev:"", evn:""},
+  {c:"LU9", n:"Thái uyên", han:"太淵", k:"LU", v:"Tay", loc:"Trên nếp cổ tay, chỗ bắt mạch quay, bờ ngoài động mạch.", use:"Ho lâu, hơi thở ngắn, mạch yếu. Nguyên huyệt Phế; hội huyệt của mạch.", tags:["Hô hấp","Bồi bổ"], ev:"", evn:""},
+  {c:"LI4", n:"Hợp cốc", han:"合谷", k:"LI", v:"Tay", loc:"Mu bàn tay, giữa xương bàn 1 và 2, ngang điểm giữa xương bàn 2. Khép ngón cái sát ngón trỏ, huyệt ở đỉnh chỗ cơ nổi lên.", use:"Đau đầu, đau răng, đau họng, nghẹt mũi, cảm sốt (\"đầu mặt tìm Hợp cốc\"). Phối Thái xung thành \"Tứ quan\" để an thần, giảm đau.", tags:["Đau đầu","Sốt, cảm","Giảm đau chung"], ev:"h", evn:"Một số thử nghiệm cho thấy day ấn giảm đau răng, đau chuyển dạ; chất lượng còn thấp.", preg:true},
+  {c:"LI11", n:"Khúc trì", han:"曲池", k:"LI", v:"Tay", loc:"Gập khuỷu, huyệt ở đầu ngoài nếp gấp khuỷu.", use:"Sốt, ngứa, mề đay, đau khuỷu, đau họng. Đông y dùng hỗ trợ hạ huyết áp.", tags:["Sốt, cảm","Da"], ev:"", evn:""},
+  {c:"LI20", n:"Nghênh hương", han:"迎香", k:"LI", v:"Đầu mặt cổ", loc:"Trong rãnh mũi má, ngang điểm giữa bờ ngoài cánh mũi.", use:"Nghẹt mũi, sổ mũi, viêm xoang, mất khứu giác.", tags:["Hô hấp"], ev:"h", evn:"Vài nghiên cứu nhỏ về viêm mũi dị ứng; châm cứu nói chung cho viêm mũi dị ứng có bằng chứng ở mức hạn chế đến khá."},
+  {c:"ST25", n:"Thiên khu", han:"天樞", k:"ST", v:"Ngực bụng", loc:"Ngang rốn, cách rốn 2 thốn về hai bên.", use:"Táo bón, tiêu chảy, đầy bụng, đau bụng. Mộ huyệt của Đại trường.", tags:["Tiêu hoá"], ev:"k", evn:"Thử nghiệm lớn (Liu 2016, 1.075 người) cho thấy điện châm có Thiên khu giúp tăng số lần đi ngoài ở táo bón chức năng nặng."},
+  {c:"ST36", n:"Túc tam lý", han:"足三里", k:"ST", v:"Chân", loc:"Dưới hõm ngoài xương bánh chè 3 thốn (bốn ngón tay), cách mào xương chày một khoát ngón ra ngoài.", use:"Đau dạ dày, đầy bụng, ăn kém, mệt mỏi, bồi bổ sức khoẻ (\"bụng tìm Tam lý\"). Huyệt Hợp của Vị. Cứu Túc tam lý là cách dưỡng sinh cổ truyền.", tags:["Tiêu hoá","Bồi bổ"], ev:"h", evn:"Có thử nghiệm về khó tiêu chức năng và liệt ruột sau mổ, kết quả tích cực nhưng nhiều nghiên cứu nhỏ. Nghiên cứu trên chuột (Liu 2021, Nature) cho thấy điện châm vùng này tác động đường thần kinh chống viêm."},
+  {c:"ST40", n:"Phong long", han:"豐隆", k:"ST", v:"Chân", loc:"Điểm giữa đường nối hõm gối ngoài với mắt cá ngoài, cách mào xương chày 2 khoát ngón.", use:"Nhiều đờm, ho, chóng mặt, nặng đầu. Lạc huyệt của Vị; huyệt chính trị \"đờm\".", tags:["Hô hấp","Tiêu hoá"], ev:"", evn:""},
+  {c:"SP4", n:"Công tôn", han:"公孫", k:"SP", v:"Chân", loc:"Bờ trong bàn chân, chỗ lõm phía trước dưới đầu gần xương bàn 1.", use:"Đau dạ dày, nôn, đầy bụng, tiêu chảy. Lạc huyệt; giao hội Xung mạch.", tags:["Tiêu hoá"], ev:"", evn:""},
+  {c:"SP6", n:"Tam âm giao", han:"三陰交", k:"SP", v:"Chân", loc:"Trên đỉnh mắt cá trong 3 thốn, sát bờ sau xương chày.", use:"Nơi gặp nhau của ba kinh âm ở chân (Tỳ, Can, Thận). Đau bụng kinh, kinh nguyệt không đều, mất ngủ, tiêu hoá kém, tiểu khó.", tags:["Phụ khoa","Giấc ngủ, tâm thần","Tiêu hoá"], ev:"h", evn:"Day ấn Tam âm giao giảm đau bụng kinh trong một số thử nghiệm; Cochrane 2016 đánh giá chất lượng bằng chứng thấp.", preg:true},
+  {c:"SP9", n:"Âm lăng tuyền", han:"陰陵泉", k:"SP", v:"Chân", loc:"Chỗ lõm dưới lồi cầu trong xương chày, mặt trong cẳng chân dưới gối.", use:"Phù, tiểu khó, tiêu chảy, nặng nề do \"thấp\", đau gối.", tags:["Tiêu hoá","Tiết niệu"], ev:"", evn:""},
+  {c:"SP10", n:"Huyết hải", han:"血海", k:"SP", v:"Chân", loc:"Gập gối, trên bờ trong xương bánh chè 2 thốn, chỗ cơ đùi trong nổi lên.", use:"Kinh nguyệt không đều, ngứa, mề đay, chàm. \"Biển của huyết\".", tags:["Phụ khoa","Da"], ev:"", evn:""},
+  {c:"HT7", n:"Thần môn", han:"神門", k:"HT", v:"Tay", loc:"Trên nếp cổ tay phía ngón út, chỗ lõm bờ ngoài gân cơ gấp cổ tay trụ.", use:"Mất ngủ, hồi hộp, lo âu, hay quên. Nguyên huyệt của Tâm, \"cửa của thần\".", tags:["Giấc ngủ, tâm thần"], ev:"h", evn:"Vài thử nghiệm nhỏ cho thấy day ấn cải thiện giấc ngủ ở người cao tuổi và bệnh nhân lọc máu; cần nghiên cứu lớn hơn."},
+  {c:"SI3", n:"Hậu khê", han:"後谿", k:"SI", v:"Tay", loc:"Nắm tay nhẹ, huyệt ở đầu nếp gấp bờ ngoài bàn tay, sau khớp ngón út.", use:"Đau cứng gáy, đau lưng cấp, ù tai. Giao hội Đốc mạch.", tags:["Cổ vai lưng"], ev:"", evn:""},
+  {c:"BL2", n:"Toản trúc", han:"攢竹", k:"BL", v:"Đầu mặt cổ", loc:"Chỗ lõm ở đầu trong lông mày.", use:"Đau đầu vùng trán, mỏi mắt, nấc, chảy nước mắt.", tags:["Đau đầu","Mắt"], ev:"", evn:""},
+  {c:"BL13", n:"Phế du", han:"肺俞", k:"BL", v:"Lưng", loc:"Dưới mỏm gai đốt sống ngực T3, cách đường giữa 1,5 thốn.", use:"Ho, hen, cảm hay tái phát. Bối du của Phế; hay dùng cứu hoặc dán thuốc mùa hè (\"đông bệnh hạ trị\").", tags:["Hô hấp"], ev:"", evn:"", warn:"Không châm sâu: vùng phổi."},
+  {c:"BL23", n:"Thận du", han:"腎俞", k:"BL", v:"Lưng", loc:"Dưới mỏm gai đốt sống thắt lưng L2 (ngang rốn phía sau), cách đường giữa 1,5 thốn.", use:"Đau lưng, mỏi gối, ù tai, tiểu đêm, mệt mỏi. Bối du của Thận.", tags:["Cổ vai lưng","Bồi bổ","Tiết niệu"], ev:"", evn:""},
+  {c:"BL40", n:"Uỷ trung", han:"委中", k:"BL", v:"Chân", loc:"Điểm giữa nếp gấp khoeo chân.", use:"Đau lưng, đau thần kinh toạ (\"lưng tìm Uỷ trung\"), đau gối. Huyệt Hợp của Bàng quang.", tags:["Cổ vai lưng"], ev:"", evn:""},
+  {c:"BL60", n:"Côn lôn", han:"崑崙", k:"BL", v:"Chân", loc:"Chỗ lõm giữa đỉnh mắt cá ngoài và gân gót.", use:"Đau gáy, đau lưng, đau gót, đau đầu sau.", tags:["Cổ vai lưng","Đau đầu"], ev:"", evn:"", preg:true},
+  {c:"BL62", n:"Thân mạch", han:"申脈", k:"BL", v:"Chân", loc:"Chỗ lõm ngay dưới đỉnh mắt cá ngoài.", use:"Mất ngủ, đau đầu, chóng mặt, đau lưng. Giao hội Dương kiểu mạch.", tags:["Giấc ngủ, tâm thần","Cổ vai lưng"], ev:"", evn:""},
+  {c:"BL67", n:"Chí âm", han:"至陰", k:"BL", v:"Chân", loc:"Góc ngoài gốc móng ngón chân út, cách góc móng 0,1 thốn.", use:"Cứu (hơ ngải) để hỗ trợ xoay thai ngôi ngược; đau đầu, nghẹt mũi.", tags:["Phụ khoa"], ev:"h", evn:"Cochrane 2012: cứu Chí âm có thể giảm nhu cầu dùng oxytocin và tỉ lệ ngôi ngược, nhưng các thử nghiệm không đồng nhất. Chỉ làm khi bác sĩ sản khoa đồng ý.", preg:true},
+  {c:"KI1", n:"Dũng tuyền", han:"湧泉", k:"KI", v:"Chân", loc:"Lòng bàn chân, chỗ lõm hiện ra ở 1/3 trước khi co các ngón chân.", use:"Mất ngủ, nóng bừng, đau đỉnh đầu, chóng mặt; xoa lòng bàn chân buổi tối là thói quen dưỡng sinh. Đông y dùng để \"dẫn hoả đi xuống\".", tags:["Giấc ngủ, tâm thần"], ev:"", evn:""},
+  {c:"KI3", n:"Thái khê", han:"太谿", k:"KI", v:"Chân", loc:"Chỗ lõm giữa đỉnh mắt cá trong và gân gót.", use:"Đau lưng, ù tai, mất ngủ, tiểu đêm, họng khô. Nguyên huyệt Thận.", tags:["Bồi bổ","Tiết niệu"], ev:"", evn:""},
+  {c:"KI6", n:"Chiếu hải", han:"照海", k:"KI", v:"Chân", loc:"Chỗ lõm ngay dưới đỉnh mắt cá trong.", use:"Họng khô đau, mất ngủ, kinh nguyệt không đều. Giao hội Âm kiểu mạch.", tags:["Giấc ngủ, tâm thần","Phụ khoa"], ev:"", evn:""},
+  {c:"PC6", n:"Nội quan", han:"內關", k:"PC", v:"Tay", loc:"Trên nếp cổ tay mặt trong 2 thốn (ba ngón tay), giữa hai gân nổi lên khi nắm tay gập cổ tay.", use:"Buồn nôn, nôn, say tàu xe, hồi hộp, tức ngực, lo âu. Lạc huyệt; giao hội Âm duy mạch.", tags:["Tiêu hoá","Giấc ngủ, tâm thần"], ev:"k", evn:"Huyệt được nghiên cứu nhiều nhất. Cochrane 2015 (59 thử nghiệm, hơn 7.600 người): kích thích Nội quan giảm buồn nôn và nôn sau mổ so với giả. Vòng đeo ấn huyệt chống say xe dựa trên huyệt này."},
+  {c:"PC8", n:"Lao cung", han:"勞宮", k:"PC", v:"Tay", loc:"Lòng bàn tay, giữa xương bàn 2 và 3, chỗ đầu ngón giữa chạm vào khi nắm tay.", use:"Bồn chồn, hôi miệng, loét miệng, ra mồ hôi tay. Trong khí công là điểm \"phát khí\" ở lòng bàn tay.", tags:["Giấc ngủ, tâm thần"], ev:"", evn:""},
+  {c:"TE5", n:"Ngoại quan", han:"外關", k:"TE", v:"Tay", loc:"Trên nếp cổ tay mặt sau 2 thốn, giữa xương quay và xương trụ (đối diện Nội quan).", use:"Sốt, cảm, đau đầu hai bên, ù tai, đau cổ tay. Lạc huyệt; giao hội Dương duy mạch.", tags:["Sốt, cảm","Đau đầu"], ev:"", evn:""},
+  {c:"GB20", n:"Phong trì", han:"風池", k:"GB", v:"Đầu mặt cổ", loc:"Dưới xương chẩm, chỗ lõm giữa cơ ức đòn chũm và cơ thang, ngang dái tai phía sau.", use:"Đau đầu, cảm, chóng mặt, cứng gáy, mỏi mắt. Huyệt chính để \"trừ phong\".", tags:["Đau đầu","Cổ vai lưng","Sốt, cảm"], ev:"k", evn:"Thường nằm trong phác đồ châm cứu đau đầu. Cochrane 2016: châm cứu giảm tần suất đau nửa đầu và đau đầu căng cơ (bằng chứng mức trung bình).", warn:"Không châm sâu hướng vào trong: gần hành tuỷ."},
+  {c:"GB21", n:"Kiên tỉnh", han:"肩井", k:"GB", v:"Lưng", loc:"Đỉnh vai, điểm giữa đường nối mỏm gai C7 và mỏm cùng vai.", use:"Cứng vai gáy, đau vai, tắc tia sữa.", tags:["Cổ vai lưng"], ev:"", evn:"", preg:true, warn:"Không châm sâu: ngay trên đỉnh phổi."},
+  {c:"GB30", n:"Hoàn khiêu", han:"環跳", k:"GB", v:"Chân", loc:"Nằm nghiêng, huyệt ở 1/3 ngoài đường nối mấu chuyển lớn xương đùi với khe xương cùng.", use:"Đau thần kinh toạ, đau hông, tê chân.", tags:["Cổ vai lưng"], ev:"", evn:""},
+  {c:"GB34", n:"Dương lăng tuyền", han:"陽陵泉", k:"GB", v:"Chân", loc:"Chỗ lõm phía trước dưới chỏm xương mác, mặt ngoài cẳng chân dưới gối.", use:"Chuột rút, đau gối, đau sườn, đắng miệng. Hội huyệt của cân (gân cơ).", tags:["Cổ vai lưng","Giảm đau chung"], ev:"", evn:""},
+  {c:"GB41", n:"Túc lâm khấp", han:"足臨泣", k:"GB", v:"Chân", loc:"Mu chân, chỗ lõm phía trước chỗ nối xương bàn 4 và 5.", use:"Đau nửa đầu, đau sườn, căng tức ngực. Giao hội Đới mạch.", tags:["Đau đầu"], ev:"", evn:""},
+  {c:"LR3", n:"Thái xung", han:"太衝", k:"LR", v:"Chân", loc:"Mu chân, chỗ lõm phía trước chỗ nối xương bàn 1 và 2.", use:"Đau đầu đỉnh, chóng mặt, cáu giận, căng thẳng, kinh nguyệt không đều. Nguyên huyệt Can; phối Hợp cốc thành \"Tứ quan\".", tags:["Đau đầu","Giấc ngủ, tâm thần","Phụ khoa"], ev:"h", evn:"Một số thử nghiệm nhỏ về huyết áp và lo âu; chưa đủ để kết luận."},
+  {c:"LR14", n:"Kỳ môn", han:"期門", k:"LR", v:"Ngực bụng", loc:"Khoang liên sườn 6, thẳng dưới núm vú.", use:"Đau tức sườn, ợ chua, đầy bụng. Mộ huyệt của Can.", tags:["Tiêu hoá"], ev:"", evn:"", warn:"Không châm sâu."},
+  {c:"GV4", n:"Mệnh môn", han:"命門", k:"GV", v:"Lưng", loc:"Dưới mỏm gai đốt sống thắt lưng L2, trên đường giữa (ngang Thận du).", use:"Đau lưng, lạnh lưng, tiểu nhiều, mệt mỏi. \"Cửa của mệnh\", nơi chứa dương khí của Thận theo Đông y.", tags:["Cổ vai lưng","Bồi bổ"], ev:"", evn:""},
+  {c:"GV14", n:"Đại chuỳ", han:"大椎", k:"GV", v:"Lưng", loc:"Dưới mỏm gai đốt sống cổ C7 (đốt nhô cao nhất khi cúi đầu).", use:"Sốt, cảm lạnh, cứng gáy, ho. Nơi gặp nhau của các kinh dương.", tags:["Sốt, cảm","Cổ vai lưng"], ev:"", evn:""},
+  {c:"GV20", n:"Bách hội", han:"百會", k:"GV", v:"Đầu mặt cổ", loc:"Đỉnh đầu, giao điểm của đường giữa đầu với đường nối hai đỉnh tai.", use:"Chóng mặt, đau đầu, mất ngủ, hay quên, sa trực tràng, trĩ. \"Trăm mạch hội về\".", tags:["Đau đầu","Giấc ngủ, tâm thần"], ev:"", evn:""},
+  {c:"GV26", n:"Nhân trung", han:"人中 (Thuỷ câu)", k:"GV", v:"Đầu mặt cổ", loc:"Điểm nối 1/3 trên và 2/3 dưới rãnh nhân trung.", use:"Đông y dùng bấm mạnh khi ngất, choáng. Đau lưng cấp.", tags:["Cấp cứu"], ev:"", evn:"", warn:"Khi có người ngất, gọi cấp cứu và kiểm tra hô hấp trước; bấm huyệt không thay sơ cứu."},
+  {c:"GV29", n:"Ấn đường", han:"印堂", k:"GV", v:"Đầu mặt cổ", loc:"Điểm giữa hai đầu trong lông mày. Trước đây xếp là huyệt ngoài kinh (EX-HN3), nay WHO xếp vào Đốc mạch.", use:"Mất ngủ, lo âu, đau đầu trán, nghẹt mũi.", tags:["Giấc ngủ, tâm thần","Đau đầu","Hô hấp"], ev:"h", evn:"Vài thử nghiệm nhỏ về giảm lo âu trước phẫu thuật bằng day ấn; chất lượng thấp."},
+  {c:"EX-HN5", n:"Thái dương", han:"太陽", k:"EX", v:"Đầu mặt cổ", loc:"Chỗ lõm cách điểm giữa đuôi lông mày và đuôi mắt khoảng 1 thốn về phía sau.", use:"Đau đầu hai bên, mỏi mắt, đau mắt đỏ.", tags:["Đau đầu","Mắt"], ev:"", evn:""},
+  {c:"CV4", n:"Quan nguyên", han:"關元", k:"CV", v:"Ngực bụng", loc:"Đường giữa bụng, dưới rốn 3 thốn.", use:"Mệt mỏi, tiểu nhiều, kinh nguyệt không đều, di tinh. Vùng đan điền; huyệt cứu dưỡng sinh quan trọng.", tags:["Bồi bổ","Phụ khoa","Tiết niệu"], ev:"", evn:"", preg:true},
+  {c:"CV6", n:"Khí hải", han:"氣海", k:"CV", v:"Ngực bụng", loc:"Đường giữa bụng, dưới rốn 1,5 thốn.", use:"\"Biển của khí\": mệt mỏi, hơi thở ngắn, đau bụng dưới. Là điểm đặt chú ý khi thở bụng và luyện khí công.", tags:["Bồi bổ","Tiêu hoá"], ev:"", evn:""},
+  {c:"CV12", n:"Trung quản", han:"中脘", k:"CV", v:"Ngực bụng", loc:"Đường giữa bụng, trên rốn 4 thốn (giữa rốn và mỏm ức).", use:"Đau dạ dày, đầy bụng, ợ chua, nôn. Mộ huyệt của Vị; hội huyệt của phủ.", tags:["Tiêu hoá"], ev:"", evn:""},
+  {c:"CV17", n:"Đản trung", han:"膻中 (Chiên trung)", k:"CV", v:"Ngực bụng", loc:"Trên xương ức, ngang khoang liên sườn 4, điểm giữa hai núm vú (ở nam).", use:"Tức ngực, khó thở, hồi hộp, ít sữa. Hội huyệt của khí; mộ huyệt của Tâm bào.", tags:["Hô hấp","Giấc ngủ, tâm thần"], ev:"", evn:""}
+];
+
+const EV = [
+  ["Kinh lạc có cấu trúc giải phẫu riêng (ống, mạch) không?","n","Không tìm thấy qua giải phẫu, mô học hay chụp ảnh. Các báo cáo về điện trở da thấp ở huyệt cho kết quả không nhất quán."],
+  ["Châm cứu giảm đau mạn tính (lưng, cổ, thoái hoá khớp, đau đầu)?","k","Phân tích dữ liệu gốc của khoảng 20.000 bệnh nhân (Vickers 2018): châm cứu hơn không châm rõ rệt và hơn châm giả một mức nhỏ. Hiệu quả kéo dài khoảng một năm."],
+  ["Phòng đau nửa đầu và đau đầu căng cơ?","k","Cochrane 2016: giảm số ngày đau đầu, tương đương thuốc phòng ngừa, ít tác dụng phụ hơn."],
+  ["Nội quan (PC6) chống buồn nôn sau mổ?","k","Cochrane 2015: giảm buồn nôn, nôn so với giả, hiệu quả gần với thuốc chống nôn."],
+  ["Cứu Chí âm (BL67) xoay thai ngôi ngược?","h","Cochrane 2012: có tín hiệu tích cực, nhưng thử nghiệm ít và khác nhau nhiều."],
+  ["Day ấn huyệt cho mất ngủ, lo âu, đau bụng kinh?","h","Nhiều thử nghiệm nhỏ cho kết quả tích cực, nhưng khó làm mù và chất lượng thấp."],
+  ["Đúng huyệt có quan trọng hơn sai huyệt không?","h","Nhiều thử nghiệm thấy châm đúng huyệt và châm ngoài huyệt cho kết quả gần nhau. Bằng chứng về \"đặc hiệu huyệt\" còn yếu."],
+  ["Châm cứu tăng tỉ lệ có thai khi làm IVF?","n","Thử nghiệm lớn (Smith 2018, JAMA, 848 phụ nữ): không tăng tỉ lệ sinh con so với châm giả."],
+  ["Giờ vượng của kinh (đồng hồ khí)?","n","Chưa có nghiên cứu kiểm chứng. Khoa học nhịp sinh học là một lĩnh vực riêng, không dựa trên mô hình này."]
+];
+
+const EVL = {m:"Mạnh", k:"Khá", h:"Hạn chế", n:"Không có"};
+const KN = Object.fromEntries(KINH.map(k => [k.c, k.n]));
+Object.assign(KN, {GV:"Đốc mạch", CV:"Nhâm mạch", EX:"Huyệt ngoài kinh"});
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = id => document.getElementById(id);
+
+// Bảng 12 kinh
+$("kinhBody").innerHTML = KINH.map(k => `<tr><td><b>${esc(k.n)}</b></td><td class="code">${k.c}</td><td><span class="el ${k.e}">${k.e}</span></td><td class="num" style="white-space:nowrap">${k.t} giờ</td><td class="num">${k.h}</td><td style="min-width:260px">${esc(k.r)}<div class="note">Huyệt đầu: ${esc(k.s)} · Huyệt cuối: ${esc(k.f)}</div></td><td style="min-width:180px">${esc(k.d)}</td><td>${esc(k.p)}</td></tr>`).join("");
+$("kyBody").innerHTML = KY.map(k => `<tr><td><b>${esc(k.n)}</b></td><td class="code">${esc(k.c)}</td><td style="min-width:240px">${esc(k.r)}</td><td style="min-width:200px">${esc(k.v)}</td><td>${esc(k.g)}</td></tr>`).join("");
+$("pairs").innerHTML = PAIRS.map(p => `<div class="panel"><h3>${esc(p[0])}</h3><p class="note">${esc(p[1])}</p><p>${esc(p[2])}</p></div>`).join("");
+$("evBody").innerHTML = EV.map(e => `<tr><td style="min-width:220px"><b>${esc(e[0])}</b></td><td><span class="ev ${e[1]}">${EVL[e[1]]}</span></td><td style="min-width:260px">${esc(e[2])}</td></tr>`).join("");
+const SHORT = {LU:"Phế",LI:"Đại trường",ST:"Vị",SP:"Tỳ",HT:"Tâm",SI:"Tiểu trường",BL:"Bàng quang",KI:"Thận",PC:"Tâm bào",TE:"Tam tiêu",GB:"Đởm",LR:"Can"};
+$("flow").innerHTML = KINH.map(k => `<span class="k">${SHORT[k.c]}</span>`).join('<span class="arr">→</span>') + '<span class="arr">→</span><span class="k">Phế</span>';
+
+// Đồng hồ khí: 12 ô, mỗi ô 2 giờ, 0 giờ ở đỉnh
+(function clock(){
+  const svg = $("clockSvg"), cx = 210, cy = 210, R = 190, r = 112, NS = "http://www.w3.org/2000/svg";
+  const colorVar = {Mộc:"--moc", Hoả:"--hoa", Thổ:"--tho", Kim:"--kim", Thuỷ:"--thuy"};
+  const startHour = {LU:3,LI:5,ST:7,SP:9,HT:11,SI:13,BL:15,KI:17,PC:19,TE:21,GB:23,LR:1};
+  const pt = (h, rad) => { const a = (h / 24) * 2 * Math.PI - Math.PI / 2; return [cx + rad * Math.cos(a), cy + rad * Math.sin(a)]; };
+  let html = "";
+  KINH.forEach((k, i) => {
+    const h0 = startHour[k.c], h1 = h0 + 2;
+    const [x0,y0] = pt(h0,R), [x1,y1] = pt(h1,R), [x2,y2] = pt(h1,r), [x3,y3] = pt(h0,r);
+    const d = `M${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} L${x2},${y2} A${r},${r} 0 0 0 ${x3},${y3} Z`;
+    const [tx,ty] = pt(h0 + 1, (R + r) / 2);
+    html += `<g class="seg" data-i="${i}" tabindex="0" role="button" aria-label="${esc(k.n)}, ${k.t} giờ"><path d="${d}" style="fill:var(${colorVar[k.e]})"></path><text x="${tx}" y="${ty - 3}" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--surface)">${SHORT[k.c]}</text><text x="${tx}" y="${ty + 12}" text-anchor="middle" font-size="10" style="fill:var(--surface)">${k.t}h</text></g>`;
+  });
+  for (let h = 0; h < 24; h += 6) { const [x,y] = pt(h, r - 16); html += `<text class="sub" x="${x}" y="${y + 4}" text-anchor="middle" font-size="11">${h}h</text>`; }
+  html += `<text x="${cx}" y="${cy - 6}" text-anchor="middle" font-size="15" font-weight="700" id="cNow"></text><text class="sub" x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="11" id="cNowSub"></text>`;
+  svg.innerHTML = html;
+  const segs = [...svg.querySelectorAll(".seg")];
+  function show(i){
+    const k = KINH[i]; segs.forEach(s => s.classList.toggle("on", +s.dataset.i === i));
+    const opp = KINH[(i + 6) % 12];
+    $("clockInfo").innerHTML = `<div class="top" style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><h3>${esc(k.n)}</h3><span class="code">${k.c}</span><span class="el ${k.e}">${k.e}</span></div><p><b>Giờ vượng:</b> ${k.t} giờ. <b>Giờ suy:</b> ${opp.t} giờ (khi kinh ${SHORT[opp.c]} vượng).</p><p><b>Đường đi:</b> ${esc(k.r)}</p><p><b>Chứng thường gặp:</b> ${esc(k.d)}</p><p class="note">Truyền sang kinh tiếp theo: ${SHORT[KINH[(i+1)%12].c]}. Cặp biểu lý: ${esc(k.p)}. ${k.h} huyệt mỗi bên.</p>`;
+  }
+  segs.forEach(s => { s.addEventListener("click", () => show(+s.dataset.i)); s.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(+s.dataset.i); } }); });
+  const hr = new Date().getHours(); const idx = KINH.findIndex(k => { const h0 = startHour[k.c]; return (hr - h0 + 24) % 24 < 2; });
+  $("cNow").textContent = "Bây giờ " + hr + "h"; $("cNowSub").textContent = "kinh " + SHORT[KINH[idx].c] + " vượng";
+  show(idx);
+})();
+
+// Tra huyệt
+const TAGS = [...new Set(P.flatMap(p => p.tags))];
+const VUNG = ["Đầu mặt cổ","Ngực bụng","Lưng","Tay","Chân"];
+$("fk").innerHTML = `<option value="">Tất cả kinh</option>` + [...new Set(P.map(p => p.k))].map(c => `<option value="${c}">${esc(KN[c])} (${c})</option>`).join("");
+$("fv").innerHTML = `<option value="">Mọi vùng</option>` + VUNG.map(v => `<option>${v}</option>`).join("");
+const st = {tags:new Set(), ev:false, safe:false};
+$("tagRow").insertAdjacentHTML("beforeend", TAGS.map(t => `<button class="chip" data-t="${esc(t)}" aria-pressed="false">${esc(t)}</button>`).join(""));
+$("tagRow").addEventListener("click", e => { const b = e.target.closest(".chip"); if (!b) return; const t = b.dataset.t; st.tags.has(t) ? st.tags.delete(t) : st.tags.add(t); b.setAttribute("aria-pressed", st.tags.has(t)); render(); });
+$("fEv").onclick = () => { st.ev = !st.ev; $("fEv").setAttribute("aria-pressed", st.ev); render(); };
+$("fSafe").onclick = () => { st.safe = !st.safe; $("fSafe").setAttribute("aria-pressed", st.safe); render(); };
+["q","fk","fv"].forEach(id => $(id).addEventListener("input", render));
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
+function cardHTML(p, withLink){
+  return `<article class="pt">
+    <div class="top"><h3>${esc(p.n)}</h3><span class="han">${esc(p.han)}</span><span class="code">${p.c}</span>${p.preg ? '<span class="preg">Kiêng khi có thai</span>' : ""}</div>
+    <div class="tags"><span class="pill">${esc(KN[p.k])}</span><span class="pill">${esc(p.v)}</span>${p.tags.map(t => `<span class="pill">${esc(t)}</span>`).join("")}</div>
+    <dl><dt>Vị trí</dt><dd>${esc(p.loc)}</dd><dt>Công dụng</dt><dd>${esc(p.use)}</dd>
+    <dt>Bằng chứng</dt><dd>${p.ev ? `<span class="ev ${p.ev}">${EVL[p.ev]}</span> ${esc(p.evn)}` : `<span class="ev t">Chưa rõ</span> Chưa có nghiên cứu riêng đáng kể cho huyệt này; dựa trên kinh nghiệm cổ truyền.`}</dd>
+    ${p.warn ? `<dt>Lưu ý</dt><dd style="color:var(--warn)">${esc(p.warn)}</dd>` : ""}</dl>
+    ${withLink ? `<button class="linkbtn" data-show="${p.c}">Xem trên hình người</button>` : ""}</article>`;
+}
+$("pts").addEventListener("click", e => { const b = e.target.closest("[data-show]"); if (b) { location.hash = "hinh-nguoi"; window.atlas.selectPoint(b.dataset.show); } });
+function render(){
+  const q = norm($("q").value.trim()), k = $("fk").value, v = $("fv").value;
+  const list = P.filter(p => (!k || p.k === k) && (!v || p.v === v)
+    && (!st.tags.size || p.tags.some(t => st.tags.has(t)))
+    && (!st.ev || p.ev === "k" || p.ev === "m") && (!st.safe || !p.preg)
+    && (!q || norm([p.c, p.n, p.han, p.use, p.loc, p.tags.join(" "), KN[p.k]].join(" ")).includes(q)));
+  $("count").textContent = list.length + " / " + P.length + " huyệt";
+  $("pts").innerHTML = list.length ? list.map(p => cardHTML(p, true)).join("") : `<div class="empty">Không có huyệt nào khớp bộ lọc. Thử bỏ bớt điều kiện.</div>`;
+}
+render();
+
+// Định tuyến theo hash
+const VIEWS = ["tong-quan","hinh-nguoi","dong-ho","kinh-chinh","ky-kinh","huyet","bang-chung"];
+function route(){
+  const h = location.hash.slice(1); const cur = VIEWS.includes(h) ? h : "tong-quan";
+  VIEWS.forEach(v => { $("v-" + v).hidden = v !== cur; });
+  document.querySelectorAll("#nav a").forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#" + cur));
+}
+window.addEventListener("hashchange", () => { route(); window.scrollTo(0, 0); });
+route();
+
+// Hình người: toạ độ vẽ cho nửa bên trái khung hình (x < 150), nửa phải lấy đối xứng qua x = 150
+window.atlas = (function(){
+  const NS = "http://www.w3.org/2000/svg", M = x => 300 - x;
+  const HALF = [[138,100],[137,120],[112,126],[93,136],[84,160],[77,210],[72,250],[66,300],[60,345],[52,360],[48,392],[54,410],[64,412],[70,396],[73,365],[76,345],[84,300],[92,252],[100,205],[106,172],[110,210],[116,262],[108,300],[102,330],[104,380],[110,440],[112,470],[112,520],[118,568],[121,588],[106,604],[110,616],[140,616],[142,600],[136,586],[134,570],[136,520],[138,470],[141,440],[146,380],[150,352]];
+  const OUTLINE = HALF.concat(HALF.slice(0, -1).reverse().map(([x,y]) => [M(x), y]));
+  const ELC = {Mộc:"--moc", Hoả:"--hoa", Thổ:"--tho", Kim:"--kim", Thuỷ:"--thuy"};
+  const MER = Object.fromEntries(KINH.map(k => [k.c, {name:k.n, col:ELC[k.e], short:SHORT[k.c]}]));
+  MER.GV = {name:"Đốc mạch", col:"--gv", short:"Đốc"}; MER.CV = {name:"Nhâm mạch", col:"--gv", short:"Nhâm"};
+
+  // Đường kinh: f = mặt trước, b = mặt sau; mỗi mặt là danh sách đoạn
+  const LINES = {
+    LU:{f:[[[113,150],[104,158],[88,190],[79,230],[75,262],[68,300],[63,343],[56,365],[49,386]]]},
+    LI:{b:[[[54,406],[56,375],[61,345],[67,300],[73,252],[80,205],[88,160],[96,132]]], f:[[[100,128],[128,118],[138,106],[138,90],[143,72]]]},
+    ST:{f:[[[140,64],[138,80],[134,96],[140,112],[130,138],[125,190],[125,225],[123,262],[124,320],[122,350],[122,400],[123,460],[121,489],[118,524],[124,578],[130,612]]]},
+    SP:{f:[[[139,613],[140,602],[134,575],[134,551],[136,515],[137,478],[140,440],[145,390],[132,340],[120,295],[117,250],[112,215],[107,205]]]},
+    HT:{f:[[[106,170],[98,205],[89,252],[81,300],[74,345],[72,372],[70,402]]]},
+    SI:{b:[[[72,404],[73,372],[75,345],[83,300],[91,252],[99,205],[108,180],[124,168],[114,150],[132,138],[140,112]]], f:[[[140,112],[133,95],[128,80],[121,64]]]},
+    BL:{f:[[[143,58],[144,49],[146,30]],[[110,600],[110,613]]], b:[[[146,26],[144,60],[143,98],[136,112],[134,150],[134,258],[136,330],[132,350],[127,410],[125,462],[124,520],[116,570],[115,578],[112,591],[106,604]],[[124,122],[118,145],[118,300],[121,335],[124,420],[125,462]]]},
+    KI:{b:[[[126,608],[130,594],[134,578],[137,550],[138,510]]], f:[[[136,592],[138,574],[136,555],[137,520],[139,470],[145,410],[148,355],[143,330],[143,262],[143,225],[136,190],[138,140]]]},
+    PC:{f:[[[119,190],[106,172],[94,210],[84,252],[76,300],[69,345],[63,372],[61,410]]]},
+    TE:{b:[[[66,410],[66,372],[68,345],[69,330],[76,300],[84,252],[92,205],[100,150],[104,133],[128,112],[122,90],[118,70],[121,55]]], f:[[[121,58],[128,50]]]},
+    GB:{f:[[[131,58],[123,52],[124,40],[136,36]],[[108,180],[110,230],[105,300],[103,340],[106,390],[111,440],[113,478],[114,530],[117,578],[116,600],[114,613]]], b:[[[124,38],[120,55],[126,72],[136,96],[116,127],[108,175],[112,250],[118,338],[106,370]]]},
+    LR:{f:[[[140,613],[133,600],[132,576],[133,540],[135,500],[138,465],[144,400],[148,350],[136,300],[114,252],[126,215]]]},
+    GV:{b:[[[150,335],[150,120],[150,100],[150,26]]], f:[[[150,24],[150,51],[150,76],[150,83]]]},
+    CV:{f:[[[150,345],[150,100],[150,90]]]}
+  };
+  // Huyệt: [mặt, x, y]; huyệt trên đường giữa (Đốc, Nhâm, Ấn đường) chỉ có một chấm
+  const POS = {
+    LU1:["f",113,150], LU5:["f",77,252], LU7:["f",63,331], LU9:["f",63,345],
+    LI4:["b",57,372], LI11:["b",75,250], LI20:["f",143,72],
+    ST25:["f",123,262], ST36:["f",121,489], ST40:["f",118,524],
+    SP4:["f",140,602], SP6:["f",134,551], SP9:["f",137,478], SP10:["f",140,440],
+    HT7:["f",74,345], SI3:["b",73,372],
+    BL2:["f",144,49], BL13:["b",134,150], BL23:["b",134,258], BL40:["b",125,462], BL60:["b",115,578], BL62:["b",112,591], BL67:["f",110,612],
+    KI1:["b",126,608], KI3:["f",138,574], KI6:["f",136,590],
+    PC6:["f",71,330], PC8:["f",63,372], TE5:["b",69,330],
+    GB20:["b",136,96], GB21:["b",116,127], GB30:["b",118,338], GB34:["f",113,478], GB41:["f",116,600],
+    LR3:["f",133,600], LR14:["f",126,215],
+    GV4:["b",150,258], GV14:["b",150,120], GV20:["b",150,27], GV26:["f",150,81], GV29:["f",150,51],
+    "EX-HN5":["f",124,55],
+    CV4:["f",150,303], CV6:["f",150,282], CV12:["f",150,225], CV17:["f",150,190]
+  };
+  // Chỗ đặt nhãn cho các huyệt nằm sát nhau: [r = bên phải, độ lệch dọc]
+  const LAB = {PC6:["r",0], HT7:["r",0], SI3:["r",0], SP9:["r",0], SP4:["r",6], GB41:["l",-5], LR3:["l",4], BL67:["l",5], KI6:["r",0]};
+  const PBY = Object.fromEntries(P.map(p => [p.c, p]));
+  const svg = $("fig"), info = $("atlasInfo");
+  let view = "f", labels = true, selM = null, selP = null;
+
+  function smooth(pts, closed){
+    const n = pts.length, g = i => closed ? pts[(i + n) % n] : pts[Math.max(0, Math.min(n - 1, i))];
+    let d = `M${pts[0][0]},${pts[0][1]}`;
+    for (let i = 0; i < (closed ? n : n - 1); i++) {
+      const p0 = g(i - 1), p1 = g(i), p2 = g(i + 1), p3 = g(i + 2);
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += ` C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2[0]},${p2[1]}`;
+    }
+    return d + (closed ? "Z" : "");
+  }
+  const mirror = pts => pts.map(([x,y]) => [M(x), y]);
+  const onMid = pts => pts.every(([x]) => x === 150);
+  function features(v){
+    const ears = `<ellipse class="bodyshape" cx="119" cy="64" rx="5" ry="9"/><ellipse class="bodyshape" cx="181" cy="64" rx="5" ry="9"/>`;
+    const head = `<ellipse class="bodyshape" cx="150" cy="62" rx="31" ry="39"/>`;
+    if (v === "f") return ears + head + `<path class="feat" d="M132,58 q6,-4 12,0 M156,58 q6,-4 12,0 M150,62 v12 q-4,2 -6,0 M143,87 q7,4 14,0 M120,138 q30,8 60,0"/><circle class="feat" cx="125" cy="190" r="2.5"/><circle class="feat" cx="175" cy="190" r="2.5"/><circle class="feat" cx="150" cy="262" r="2.5"/><path class="feat" d="M150,352 v-6"/>`;
+    return ears + head + `<path class="feat" d="M150,110 V335" stroke-dasharray="2 4"/><path class="feat" d="M120,140 q-6,25 8,45 M180,140 q6,25 -8,45 M150,335 q-22,18 -40,12 M150,335 q22,18 40,12 M114,462 h22 M164,462 h22"/>`;
+  }
+
+  function draw(){
+    let h = `<path class="bodyshape" d="${smooth(OUTLINE, true)}"/>` + features(view);
+    for (const [c, L] of Object.entries(LINES)) {
+      const segs = L[view]; if (!segs) continue;
+      let paths = "";
+      segs.forEach(sg => { const both = onMid(sg) ? [sg] : [sg, mirror(sg)]; both.forEach(pp => { const d = smooth(pp, false); paths += `<path class="mline" d="${d}" style="stroke:var(${MER[c].col})"/><path class="mhit" d="${d}"/>`; }); });
+      h += `<g class="mg${selM === c ? " hl" : ""}" data-m="${c}" role="button" tabindex="0" aria-label="Kinh ${esc(MER[c].name)}">${paths}</g>`;
+    }
+    for (const [c, [v, x, y]] of Object.entries(POS)) {
+      if (v !== view || !PBY[c]) continue;
+      const k = PBY[c].k, col = MER[k] ? MER[k].col : "--accent";
+      const xs = x === 150 ? [x] : [x, M(x)];
+      const right = x === 150 || (LAB[c] && LAB[c][0] === "r"), dy = LAB[c] ? LAB[c][1] : 0;
+      const lab = labels ? `<text class="plabel" x="${right ? x + 6 : x - 6}" y="${y + 2.5 + dy}" text-anchor="${right ? "start" : "end"}">${c}</text>` : "";
+      h += `<g class="pg${(selM && (k === selM)) ? " hl" : ""}${selP === c ? " sel hl" : ""}" data-p="${c}" role="button" tabindex="0" aria-label="Huyệt ${esc(PBY[c].n)} (${c})">${xs.map(xx => `<circle class="dothit" cx="${xx}" cy="${y}" r="7"/><circle class="dot" cx="${xx}" cy="${y}" r="3.6" style="fill:var(${col})"/>`).join("")}${lab}</g>`;
+    }
+    svg.innerHTML = h;
+    svg.classList.toggle("dim", !!(selM || selP));
+    $("legend").innerHTML = Object.keys(LINES).filter(c => LINES[c][view]).map(c => `<button data-m="${c}" aria-pressed="${selM === c}"><i style="background:var(${MER[c].col})"></i>${esc(MER[c].short)}</button>`).join("");
+  }
+
+  function showMer(c){
+    selM = c; selP = null;
+    if (!LINES[c][view]) setView(LINES[c].f ? "f" : "b", true);
+    const k = KINH.find(x => x.c === c), ky = KY.find(x => x.c === c);
+    const pts = P.filter(p => p.k === c);
+    const other = (LINES[c].f && LINES[c].b ? `<p class="note">Kinh này đi qua cả mặt trước và mặt sau, chuyển mặt để xem phần còn lại.</p>` : "");
+    info.innerHTML = `<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><h3>${esc(MER[c].name)}</h3><span class="code">${c}</span>${k ? `<span class="el ${k.e}">${k.e}</span>` : ""}</div>
+      ${k ? `<p><b>Giờ vượng:</b> ${k.t} giờ · ${k.h} huyệt mỗi bên</p><p><b>Đường đi:</b> ${esc(k.r)}</p><p><b>Chứng thường gặp:</b> ${esc(k.d)}</p><p class="note">Huyệt đầu ${esc(k.s)}, huyệt cuối ${esc(k.f)}. Cặp biểu lý: ${esc(k.p)}.</p>` : `<p><b>Đường đi:</b> ${esc(ky.r)}</p><p>${esc(ky.v)}</p>`}
+      ${other}
+      <h3>Huyệt quan trọng trên kinh này</h3>
+      <div class="plist">${pts.map(p => `<button data-p="${p.c}">${esc(p.n)} <span class="code">${p.c}</span></button>`).join("") || '<span class="note">Chưa có trong danh sách.</span>'}</div>
+      <button class="linkbtn" data-clear="1">Bỏ chọn</button>`;
+    draw();
+  }
+  function selectPoint(c){
+    const p = PBY[c]; if (!p) return;
+    selP = c; selM = p.k;
+    if (POS[c] && POS[c][0] !== view) setView(POS[c][0], true);
+    info.innerHTML = `${cardHTML(p, false).replace('<article class="pt">', '<article class="pt" style="border:0;padding:0">')}
+      <p class="note">${POS[c] ? `Hiện ở ${POS[c][0] === "f" ? "mặt trước" : "mặt sau"}.` : ""} Thuộc ${esc(KN[p.k])}.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${MER[p.k] ? `<button class="linkbtn" data-m="${p.k}">Xem cả kinh ${esc(MER[p.k].short)}</button>` : ""}<button class="linkbtn" data-clear="1">Bỏ chọn</button></div>`;
+    draw();
+  }
+  function intro(){
+    selM = selP = null;
+    info.innerHTML = `<h3>Chọn một huyệt hoặc đường kinh</h3><p>Hình có ${Object.keys(LINES).length} đường (12 kinh chính, Đốc mạch, Nhâm mạch) và ${Object.keys(POS).length} huyệt quan trọng. Màu đường kinh theo ngũ hành: <span class="el Mộc">Mộc</span> <span class="el Hoả">Hoả</span> <span class="el Thổ">Thổ</span> <span class="el Kim">Kim</span> <span class="el Thuỷ">Thuỷ</span>; Đốc và Nhâm màu tím.</p>
+      <h3>Gợi ý bắt đầu</h3><div class="plist">${["LI4","PC6","ST36","SP6","GB20","GV20","CV6","KI1"].map(c => `<button data-p="${c}">${esc(PBY[c].n)} <span class="code">${c}</span></button>`).join("")}</div>`;
+    draw();
+  }
+  function setView(v, keep){
+    view = v; $("vf").setAttribute("aria-pressed", v === "f"); $("vb").setAttribute("aria-pressed", v === "b");
+    if (!keep && selP && POS[selP][0] !== v) selP = null;
+    draw();
+  }
+  function handle(e){
+    const t = e.target.closest("[data-p],[data-m],[data-clear]"); if (!t) return;
+    if (t.dataset.clear) return intro();
+    t.dataset.p ? selectPoint(t.dataset.p) : showMer(t.dataset.m);
+    if (e.currentTarget !== info && window.innerWidth < 820) info.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+  }
+  [svg, info, $("legend")].forEach(el => {
+    el.addEventListener("click", handle);
+    el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handle(e); } });
+  });
+  $("vf").onclick = () => setView("f"); $("vb").onclick = () => setView("b");
+  $("vl").onclick = () => { labels = !labels; $("vl").setAttribute("aria-pressed", labels); draw(); };
+  intro();
+  return {selectPoint};
+})();
+
+</script>
+<script>
+if (window.self !== window.top) {
+  document.documentElement.classList.add("embedded");
+  const send = () => parent.postMessage({ skH: document.documentElement.scrollHeight, page: location.pathname }, "*");
+  new ResizeObserver(send).observe(document.body); addEventListener("load", send); send();
+}
+</script>
+<style>.embedded header { position: static; } .embedded body::before { display: none; }</style>
+</body>
+</html>
