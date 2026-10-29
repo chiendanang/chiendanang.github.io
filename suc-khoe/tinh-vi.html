@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tính vị thực phẩm và cây thuốc</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+<style>
+/* Layout: bảng tra cứu một trang; thang tính hàn → nhiệt là trục màu chính, bộ lọc ở trên, bảng cuộn ngang trên điện thoại */
+:root {
+  --bg: #f5f7f5; --surface: #ffffff; --fg: #1b2420; --muted: #5b6862; --line: #d9e0dc;
+  --accent: #1f6b5c; --accent-soft: #e2efeb;
+  --t0: #2f6fb3; --t1: #5aa3c9; --t2: #8a948f; --t3: #d08a2e; --t4: #c2452d;
+  --ev-strong: #1e7a46; --ev-strong-bg: #e1f2e7;
+  --ev-mod: #2a5f9e; --ev-mod-bg: #e3ecf7;
+  --ev-weak: #9a6400; --ev-weak-bg: #f8eed9;
+  --ev-none: #a33a3a; --ev-none-bg: #f6e3e3;
+  --font-display: "Literata", Georgia, serif;
+  --font-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121816; --surface: #19211e; --fg: #e3ebe7; --muted: #9aa8a2; --line: #2c3833;
+    --accent: #6cc3ad; --accent-soft: #1d2f2a;
+    --t0: #6ea8eb; --t1: #8ccbe8; --t2: #a3ada8; --t3: #e8ae5c; --t4: #f07c64;
+    --ev-strong: #6fd39a; --ev-strong-bg: #173023; --ev-mod: #8ab8f0; --ev-mod-bg: #18263a;
+    --ev-weak: #e6b85c; --ev-weak-bg: #33290f; --ev-none: #f08f8f; --ev-none-bg: #3a1c1c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121816; --surface: #19211e; --fg: #e3ebe7; --muted: #9aa8a2; --line: #2c3833;
+  --accent: #6cc3ad; --accent-soft: #1d2f2a;
+  --t0: #6ea8eb; --t1: #8ccbe8; --t2: #a3ada8; --t3: #e8ae5c; --t4: #f07c64;
+  --ev-strong: #6fd39a; --ev-strong-bg: #173023; --ev-mod: #8ab8f0; --ev-mod-bg: #18263a;
+  --ev-weak: #e6b85c; --ev-weak-bg: #33290f; --ev-none: #f08f8f; --ev-none-bg: #3a1c1c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 36px 64px;
+  display: grid; gap: 32px;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 650; line-height: 1.25; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); }
+h2 { font-size: 1.4rem; }
+p { margin: 0; }
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.lede { font-size: 1.05rem; color: var(--muted); max-width: 70ch; }
+.meta { font-size: .85rem; color: var(--muted); }
+.meta a, .note a { color: var(--accent); }
+header, section { display: grid; gap: 14px; }
+
+.factors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.factor { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+.factor h3 { font-size: 1.1rem; }
+.factor p { font-size: .9rem; color: var(--muted); }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); border-radius: 6px; overflow: hidden; font-size: .78rem; font-weight: 600; text-align: center; }
+.scale span { padding: 5px 2px; color: #fff; }
+.vi-map { display: flex; flex-wrap: wrap; gap: 6px; }
+.vi-map span { font-size: .8rem; border: 1px solid var(--line); border-radius: 4px; padding: 1px 7px; }
+
+.controls { display: grid; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.row > .lbl { font-size: .8rem; color: var(--muted); width: 64px; flex-shrink: 0; }
+.chip { font: inherit; font-size: .85rem; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
+.chip:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+input[type="search"] { font: inherit; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); width: min(100%, 360px); }
+.count { font-size: .85rem; color: var(--muted); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 980px; font-size: .88rem; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { position: sticky; top: 0; background: var(--surface); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.name strong { display: block; }
+td.name small { color: var(--muted); }
+.grp { font-size: .72rem; color: var(--muted); white-space: nowrap; }
+.tinh { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 600; }
+.tinh i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.khi { color: var(--accent); font-weight: 500; }
+.ev { display: inline-block; font-size: .72rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; margin-right: 4px; white-space: nowrap; }
+.ev-s { color: var(--ev-strong); background: var(--ev-strong-bg); }
+.ev-m { color: var(--ev-mod); background: var(--ev-mod-bg); }
+.ev-w { color: var(--ev-weak); background: var(--ev-weak-bg); }
+.ev-n { color: var(--ev-none); background: var(--ev-none-bg); }
+.warn { color: var(--ev-none); font-weight: 600; }
+.empty { padding: 24px; text-align: center; color: var(--muted); }
+
+.note { border-left: 3px solid var(--ev-none); padding: 4px 0 4px 14px; max-width: 75ch; display: grid; gap: 6px; font-size: .92rem; }
+.sources { margin: 0; padding-left: 20px; font-size: .85rem; color: var(--muted); display: grid; gap: 4px; }
+
+@media (max-width: 760px) {
+  .factors { grid-template-columns: 1fr; }
+  .row > .lbl { width: 100%; }
+}
+body{margin:0}
+</style>
+</head>
+<body>
+<nav style="max-width:1180px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));font-size:.9rem;display:flex;gap:16px;flex-wrap:wrap"><a href="../#suc-khoe" style="color:var(--accent)">← Sổ tay Dự án · Sức khoẻ</a><a href="truong-phai.html" style="color:var(--accent)">Bản đồ trường phái chữa bệnh</a></nav>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Dự án Healthy · Đông y</div>
+    <h1>Tính, khí, vị của thực phẩm và cây thuốc</h1>
+    <p class="lede">Bảng tra 90 loại thức ăn thực vật, động vật và vị thuốc thông dụng ở Việt Nam, xếp theo ba yếu tố Đông y dùng để xét một thứ ăn hay một vị thuốc. Cột cuối ghi những gì y học hiện đại đã kiểm chứng và các lưu ý an toàn.</p>
+    <p class="meta">Cập nhật 29/10/2026 · Đi kèm trang <a href="truong-phai.html#dong-y">Bản đồ trường phái chữa bệnh</a>. Trang để tham khảo; không tự dùng vị thuốc khi chưa hỏi thầy thuốc hoặc bác sĩ.</p>
+  </header>
+
+  <section aria-label="Ba yếu tố">
+    <div class="factors">
+      <div class="factor">
+        <h3>Tính</h3>
+        <div class="scale" aria-label="Thang tính từ hàn đến nhiệt">
+          <span style="background:var(--t0)">Hàn</span><span style="background:var(--t1)">Lương</span><span style="background:var(--t2)">Bình</span><span style="background:var(--t3)">Ôn</span><span style="background:var(--t4)">Nhiệt</span>
+        </div>
+        <p>Thứ có tính hàn, lương dùng khi cơ thể "nóng"; tính ôn, nhiệt dùng khi cơ thể "lạnh". Tính bình dùng được hằng ngày. "Hơi hàn" xếp vào nhóm lương, "đại nhiệt" xếp vào nhóm nhiệt.</p>
+      </div>
+      <div class="factor">
+        <h3>Khí</h3>
+        <p><strong>Thăng</strong> đưa lên, <strong>giáng</strong> đưa xuống, <strong>xuất</strong> (phù, phát tán) đưa ra ngoài và làm ra mồ hôi, <strong>liễm</strong> (trầm, thu liễm) giữ lại. Cột Khí chỉ ghi khi sách nêu rõ xu hướng. Với thức ăn, xu hướng thường suy ra từ vị: cay thì tán, chua thì liễm, đắng thì giáng.</p>
+      </div>
+      <div class="factor">
+        <h3>Vị</h3>
+        <p>Mỗi vị đi vào một tạng theo bảng ngũ hành:</p>
+        <div class="vi-map"><span>Chua → Can</span><span>Đắng → Tâm</span><span>Ngọt → Tỳ</span><span>Cay → Phế</span><span>Mặn → Thận</span><span>Nhạt → lợi tiểu</span><span>Chát → thu liễm</span></div>
+        <p>Cột Quy kinh ghi tạng phủ mà vị đó tác động, theo sách.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="table-h">
+    <h2 id="table-h">Bảng tra</h2>
+    <div class="controls">
+      <div class="row"><span class="lbl">Nhóm</span><span id="f-group"></span></div>
+      <div class="row"><span class="lbl">Tính</span><span id="f-tinh"></span></div>
+      <div class="row"><span class="lbl">Vị</span><span id="f-vi"></span></div>
+      <div class="row"><span class="lbl">Tìm</span><input type="search" id="q" placeholder="Tên, công dụng, tạng…" aria-label="Tìm trong bảng"><span class="count" id="count"></span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tên</th><th>Tính</th><th>Vị</th><th>Khí</th><th>Quy kinh</th><th>Công dụng theo Đông y</th><th>Y học hiện đại và lưu ý</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="note">
+      <h3>Đọc bảng này thế nào</h3>
+      <p>Cách xếp tính, vị khác nhau giữa các sách, và giữa sách với kinh nghiệm dân gian. Ví dụ xoài được sách Trung Hoa xếp tính lương, nhưng dân gian Việt Nam cho là nóng; thịt lợn được ghi bình hoặc hơi hàn tuỳ nguồn. Bảng này theo cách ghi phổ biến nhất.</p>
+      <p>Hệ thống tính, khí, vị chưa được kiểm chứng như quan hệ nhân quả (xem mục Đông y trên trang chính). Cột cuối chỉ gắn mức bằng chứng cho những tác dụng đã có nghiên cứu hiện đại. Các vị thuốc ghi chữ đỏ có độc tính đã được ghi nhận: chỉ dùng khi có thầy thuốc kê và theo dõi.</p>
+    </div>
+    <h2>Nguồn</h2>
+    <ul class="sources">
+      <li>Đỗ Tất Lợi, Những cây thuốc và vị thuốc Việt Nam.</li>
+      <li>Dược điển Việt Nam V (2017), phần dược liệu.</li>
+      <li>Bensky và cộng sự, Chinese Herbal Medicine: Materia Medica, bản 3.</li>
+      <li>NCCIH, các trang tổng hợp về nhân sâm, nghệ, bạc hà, quế, ma hoàng, cam thảo, berberin. <a href="https://www.nccih.nih.gov/health/herbsataglance">nccih.nih.gov</a></li>
+      <li>Các mục tính, vị được viết từ kiến thức sẵn có và chưa đối chiếu lại từng trang sách.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+const TINH = [["Hàn", "--t0"], ["Lương", "--t1"], ["Bình", "--t2"], ["Ôn", "--t3"], ["Nhiệt", "--t4"]];
+const GROUPS = { tv: "Thực vật", dv: "Động vật", ct: "Cây thuốc" };
+const EV = { s: ["ev-s", "Mạnh"], m: ["ev-m", "Khá"], w: ["ev-w", "Hạn chế"], n: ["ev-n", "Không có"] };
+// [tên, tên khác, nhóm, loại, mức tính 0-4, nhãn tính, vị, khí, quy kinh, công dụng, ghi chú hiện đại, mức bằng chứng, cảnh báo độc]
+const D = [
+  ["Gạo tẻ", "Ngạnh mễ", "tv", "Ngũ cốc", 2, "bình", "ngọt", "", "Tỳ, Vị", "Bổ trung ích khí, kiện tỳ", "Nguồn tinh bột chính; gạo lứt nhiều chất xơ hơn gạo trắng.", "", 0],
+  ["Gạo nếp", "Nhu mễ", "tv", "Ngũ cốc", 3, "ôn", "ngọt", "liễm", "Tỳ, Vị, Phế", "Bổ trung, cầm mồ hôi", "Chỉ số đường huyết cao; người tiểu đường nên ăn ít.", "", 0],
+  ["Lúa mì", "Tiểu mạch", "tv", "Ngũ cốc", 1, "lương", "ngọt", "", "Tâm, Tỳ, Thận", "Dưỡng tâm, an thần", "", "", 0],
+  ["Ngô", "Ngọc mễ", "tv", "Ngũ cốc", 2, "bình", "ngọt", "", "Tỳ, Vị", "Điều trung, khai vị; râu ngô lợi tiểu", "", "", 0],
+  ["Khoai lang", "Cam thự", "tv", "Củ", 2, "bình", "ngọt", "", "Tỳ, Vị", "Bổ tỳ, nhuận tràng", "Nhiều chất xơ, beta-caroten.", "", 0],
+  ["Đậu xanh", "Lục đậu", "tv", "Đậu, hạt", 0, "hàn", "ngọt", "", "Tâm, Vị", "Thanh nhiệt giải độc, giải thử", "", "", 0],
+  ["Đậu đen", "Hắc đậu", "tv", "Đậu, hạt", 2, "bình", "ngọt", "", "Tỳ, Thận", "Bổ thận, lợi thuỷ, giải độc", "", "", 0],
+  ["Đậu phụ", "Đậu hủ", "tv", "Đậu, hạt", 1, "lương", "ngọt", "", "Tỳ, Vị, Đại tràng", "Ích khí, thanh nhiệt, nhuận táo", "Đạm thực vật tốt; thay một phần thịt đỏ có lợi cho tim mạch.", "m", 0],
+  ["Vừng đen", "Hắc chi ma", "tv", "Đậu, hạt", 2, "bình", "ngọt", "giáng", "Can, Thận", "Bổ can thận, nhuận tràng, đen tóc", "Tác dụng làm đen tóc chưa được chứng minh.", "n", 0],
+  ["Ý dĩ", "Bo bo", "tv", "Đậu, hạt", 1, "lương", "ngọt, nhạt", "", "Tỳ, Vị, Phế", "Kiện tỳ, lợi thấp, thanh nhiệt", "", "", 0],
+  ["Rau má", "Tích tuyết thảo", "tv", "Rau", 0, "hàn", "đắng, ngọt", "", "Can, Tỳ, Vị", "Thanh nhiệt, giải độc, lợi tiểu", "Chiết xuất rau má hỗ trợ suy tĩnh mạch trong nghiên cứu nhỏ.", "w", 0],
+  ["Mướp đắng", "Khổ qua", "tv", "Rau", 0, "hàn", "đắng", "giáng", "Tâm, Can, Tỳ", "Thanh nhiệt, minh mục", "Hạ đường huyết nhẹ trong nghiên cứu nhỏ; không thay thuốc tiểu đường.", "w", 0],
+  ["Rau muống", "Ung thái", "tv", "Rau", 0, "hàn", "ngọt", "", "Tâm, Tỳ, Vị", "Thanh nhiệt, giải độc, lợi tiểu", "", "", 0],
+  ["Rau ngót", "", "tv", "Rau", 1, "lương", "ngọt", "", "Phế, Tỳ", "Thanh nhiệt, lợi tiểu", "Ăn sống lượng lớn (dạng nước ép) từng gây tổn thương phổi ở Đài Loan; nấu chín bình thường thì an toàn.", "", 0],
+  ["Bí đao", "Đông qua", "tv", "Rau", 1, "lương", "ngọt, nhạt", "giáng", "Phế, Đại tràng, Bàng quang", "Lợi tiểu, thanh nhiệt, tiêu phù", "", "", 0],
+  ["Bí đỏ", "Nam qua", "tv", "Rau", 3, "ôn", "ngọt", "", "Tỳ, Vị", "Bổ trung ích khí", "", "", 0],
+  ["Cà chua", "Phiên gia", "tv", "Rau", 1, "hơi hàn", "ngọt, chua", "", "Can, Vị", "Sinh tân chỉ khát, kiện vị", "Giàu lycopen.", "", 0],
+  ["Dưa chuột", "Hoàng qua", "tv", "Rau", 1, "lương", "ngọt", "", "Tỳ, Vị, Đại tràng", "Thanh nhiệt, lợi tiểu", "", "", 0],
+  ["Rau cần", "Cần thái", "tv", "Rau", 1, "lương", "ngọt, cay", "", "Can, Vị", "Bình can, thanh nhiệt", "Hạ huyết áp chưa được chứng minh ở người.", "w", 0],
+  ["Củ cải trắng", "La bặc", "tv", "Rau", 1, "lương", "cay, ngọt", "giáng", "Phế, Vị", "Tiêu thực, hạ khí, hoá đờm", "", "", 0],
+  ["Cải bẹ xanh", "Giới thái", "tv", "Rau", 3, "ôn", "cay", "xuất", "Phế, Vị", "Tuyên phế, hoá đờm", "", "", 0],
+  ["Rong biển", "Côn bố", "tv", "Rau", 0, "hàn", "mặn", "giáng", "Can, Vị, Thận", "Nhuyễn kiên, tán kết, lợi thuỷ", "Nhiều i-ốt; ăn quá nhiều có thể ảnh hưởng tuyến giáp.", "", 0],
+  ["Nấm hương", "Hương cô", "tv", "Rau", 2, "bình", "ngọt", "", "Can, Vị", "Bổ khí, kiện tỳ", "", "", 0],
+  ["Mộc nhĩ đen", "Hắc mộc nhĩ", "tv", "Rau", 2, "bình", "ngọt", "", "Vị, Đại tràng", "Lương huyết, chỉ huyết, nhuận táo", "Có thể tăng tác dụng thuốc chống đông.", "", 0],
+  ["Hành lá", "Thông bạch", "tv", "Gia vị", 3, "ôn", "cay", "xuất, thăng", "Phế, Vị", "Phát hãn giải biểu, thông dương", "", "", 0],
+  ["Tỏi", "Đại toán", "tv", "Gia vị", 3, "ôn", "cay", "", "Tỳ, Vị, Phế", "Ôn trung, sát trùng, tiêu thực", "Hạ nhẹ huyết áp và cholesterol trong các phân tích gộp; tăng nguy cơ chảy máu khi dùng cùng thuốc chống đông.", "m", 0],
+  ["Gừng tươi", "Sinh khương", "tv", "Gia vị", 3, "hơi ôn", "cay", "xuất", "Phế, Tỳ, Vị", "Phát tán phong hàn, ôn trung chỉ ẩu, giải độc cua cá", "Giảm buồn nôn, kể cả khi mang thai.", "m", 0],
+  ["Gừng khô", "Can khương", "tv", "Gia vị", 4, "nhiệt", "cay", "", "Tâm, Phế, Tỳ, Vị", "Ôn trung tán hàn, hồi dương", "", "", 0],
+  ["Tía tô", "Tử tô", "tv", "Gia vị", 3, "ôn", "cay", "xuất", "Phế, Tỳ", "Giải cảm, hành khí, giải độc cua cá", "", "", 0],
+  ["Ớt", "Lạt tiêu", "tv", "Gia vị", 4, "nhiệt", "cay", "xuất", "Tâm, Tỳ", "Ôn trung tán hàn, kiện vị", "Capsaicin tăng nhẹ sinh nhiệt; dạng dán giảm đau thần kinh.", "m", 0],
+  ["Hồ tiêu", "", "tv", "Gia vị", 4, "nhiệt", "cay", "", "Vị, Đại tràng", "Ôn trung, hạ khí, tiêu đờm", "", "", 0],
+  ["Dưa hấu", "Tây qua", "tv", "Quả", 0, "hàn", "ngọt", "giáng", "Tâm, Vị, Bàng quang", "Thanh nhiệt giải thử, lợi tiểu", "", "", 0],
+  ["Chuối", "Hương tiêu", "tv", "Quả", 0, "hàn", "ngọt", "giáng", "Phế, Đại tràng", "Thanh nhiệt, nhuận tràng", "Nhiều kali; người suy thận cần hạn chế.", "", 0],
+  ["Lê", "", "tv", "Quả", 1, "lương", "ngọt, hơi chua", "", "Phế, Vị", "Nhuận phế, thanh nhiệt, hoá đờm", "", "", 0],
+  ["Cam", "", "tv", "Quả", 1, "lương", "ngọt, chua", "", "Phế, Vị", "Sinh tân chỉ khát, khai vị", "Giàu vitamin C.", "", 0],
+  ["Chanh", "", "tv", "Quả", 1, "lương", "chua", "liễm", "Phế, Vị", "Sinh tân, giải thử", "", "", 0],
+  ["Dừa (nước)", "Da tử", "tv", "Quả", 1, "lương", "ngọt", "", "Tâm, Phế, Vị", "Thanh thử, sinh tân, lợi tiểu", "Bù nước và điện giải nhẹ; người suy thận lưu ý kali.", "", 0],
+  ["Đu đủ chín", "Phiên mộc qua", "tv", "Quả", 2, "bình", "ngọt", "", "Can, Tỳ", "Tiêu thực, kiện vị", "", "", 0],
+  ["Vải", "Lệ chi", "tv", "Quả", 3, "ôn", "ngọt, chua", "", "Tâm, Tỳ, Can", "Dưỡng huyết, ích khí", "Ăn nhiều lúc đói có thể gây hạ đường huyết, nhất là trẻ suy dinh dưỡng.", "", 0],
+  ["Nhãn", "Long nhãn", "tv", "Quả", 3, "ôn", "ngọt", "", "Tâm, Tỳ", "Dưỡng huyết, an thần, bổ tâm tỳ", "", "", 0],
+  ["Táo tàu", "Đại táo", "tv", "Quả", 3, "ôn", "ngọt", "", "Tỳ, Vị", "Bổ trung ích khí, dưỡng huyết an thần", "", "", 0],
+  ["Trà xanh", "Trà diệp", "tv", "Đồ uống", 1, "lương", "đắng, ngọt", "giáng", "Tâm, Phế, Vị", "Thanh nhiệt, lợi tiểu, tỉnh táo", "Tỉnh táo nhờ caffein; uống thường xuyên đi kèm ít bệnh tim mạch trong nghiên cứu quan sát.", "w", 0],
+  ["Thịt lợn", "Trư nhục", "dv", "Thịt", 2, "bình (hơi hàn)", "ngọt, mặn", "", "Tỳ, Vị, Thận", "Tư âm, nhuận táo, bổ huyết", "", "", 0],
+  ["Thịt bò", "Ngưu nhục", "dv", "Thịt", 3, "hơi ôn", "ngọt", "", "Tỳ, Vị", "Bổ tỳ vị, ích khí huyết, mạnh gân cốt", "Thịt đỏ ăn nhiều đi kèm tăng nguy cơ ung thư đại tràng.", "m", 0],
+  ["Thịt gà", "Kê nhục", "dv", "Thịt", 3, "ôn", "ngọt", "", "Tỳ, Vị", "Ôn trung ích khí, bổ tinh", "", "", 0],
+  ["Thịt vịt", "Áp nhục", "dv", "Thịt", 1, "lương", "ngọt, mặn", "", "Tỳ, Vị, Phế, Thận", "Tư âm, lợi thuỷ", "", "", 0],
+  ["Thịt dê", "Dương nhục", "dv", "Thịt", 4, "nhiệt", "ngọt", "", "Tỳ, Thận", "Ôn trung, bổ thận, ích khí huyết", "", "", 0],
+  ["Trứng gà", "Kê tử", "dv", "Trứng, sữa", 2, "bình", "ngọt", "", "Tâm, Thận", "Dưỡng huyết, an thần, tư âm", "", "", 0],
+  ["Sữa bò", "Ngưu nhũ", "dv", "Trứng, sữa", 2, "bình", "ngọt", "", "Tâm, Phế, Vị", "Bổ hư, nhuận táo", "", "", 0],
+  ["Mật ong", "Phong mật", "dv", "Trứng, sữa", 2, "bình", "ngọt", "", "Phế, Tỳ, Đại tràng", "Bổ trung, nhuận phế, nhuận tràng", "Giảm ho ở trẻ trên 1 tuổi. Không cho trẻ dưới 1 tuổi ăn mật ong vì nguy cơ ngộ độc botulinum.", "m", 0],
+  ["Cá chép", "Lý ngư", "dv", "Cá", 2, "bình", "ngọt", "", "Tỳ, Thận", "Lợi thuỷ, tiêu phù, thông sữa", "", "", 0],
+  ["Cá diếc", "Tức ngư", "dv", "Cá", 2, "bình", "ngọt", "", "Tỳ, Vị, Đại tràng", "Kiện tỳ, lợi thấp", "", "", 0],
+  ["Lươn", "Hoàng thiện", "dv", "Cá", 3, "ôn", "ngọt", "", "Can, Tỳ, Thận", "Bổ khí huyết, mạnh gân cốt", "", "", 0],
+  ["Cua đồng", "Giải", "dv", "Hải sản", 0, "hàn", "mặn", "", "Can, Vị", "Thanh nhiệt, tán ứ, nối gân xương", "Nấu chín kỹ để tránh sán lá phổi.", "", 0],
+  ["Ốc", "Điền loa", "dv", "Hải sản", 0, "hàn", "ngọt", "", "Vị, Bàng quang", "Thanh nhiệt, lợi tiểu", "Nấu chín kỹ để tránh giun tròn gây viêm màng não.", "", 0],
+  ["Tôm", "Hà", "dv", "Hải sản", 3, "ôn", "ngọt", "", "Can, Thận", "Bổ thận tráng dương", "", "", 0],
+  ["Hàu", "Mẫu lệ (vỏ)", "dv", "Hải sản", 1, "lương", "ngọt, mặn", "liễm", "Can, Thận", "Thịt dưỡng huyết; vỏ (mẫu lệ) an thần, thu liễm", "Rất giàu kẽm.", "", 0],
+  ["Cam thảo", "", "ct", "Bổ khí", 2, "bình", "ngọt", "", "Tâm, Phế, Tỳ, Vị", "Bổ tỳ ích khí, điều hoà các vị thuốc", "Dùng nhiều, kéo dài gây tăng huyết áp, giữ nước, hạ kali.", "s", 0],
+  ["Nhân sâm", "", "ct", "Bổ khí", 3, "hơi ôn", "ngọt, hơi đắng", "thăng", "Tỳ, Phế, Tâm", "Đại bổ nguyên khí, an thần", "Giảm mệt mỏi: kết quả trái chiều. Tương tác với warfarin và thuốc tiểu đường.", "w", 0],
+  ["Đảng sâm", "", "ct", "Bổ khí", 2, "bình", "ngọt", "", "Tỳ, Phế", "Bổ trung ích khí", "", "", 0],
+  ["Hoàng kỳ", "", "ct", "Bổ khí", 3, "hơi ôn", "ngọt", "thăng", "Tỳ, Phế", "Bổ khí thăng dương, cố biểu chỉ hãn", "Nghiên cứu về miễn dịch còn nhỏ.", "w", 0],
+  ["Đương quy", "", "ct", "Bổ huyết", 3, "ôn", "ngọt, cay", "", "Can, Tâm, Tỳ", "Bổ huyết, hoạt huyết, điều kinh", "Tăng tác dụng thuốc chống đông.", "", 0],
+  ["Thục địa", "", "ct", "Bổ huyết", 3, "hơi ôn", "ngọt", "", "Can, Thận", "Bổ huyết, tư âm", "", "", 0],
+  ["Hà thủ ô đỏ", "", "ct", "Bổ huyết", 3, "hơi ôn", "đắng, ngọt, chát", "liễm", "Can, Thận", "Bổ can thận, đen tóc", "Nhiều báo cáo tổn thương gan, kể cả khi đã chế.", "", 1],
+  ["Kỷ tử", "Câu kỷ", "ct", "Bổ âm", 2, "bình", "ngọt", "", "Can, Thận, Phế", "Tư bổ can thận, minh mục", "Có thể tương tác với warfarin.", "", 0],
+  ["Ngũ vị tử", "", "ct", "Thu liễm", 3, "ôn", "chua", "liễm", "Phế, Tâm, Thận", "Thu liễm cố sáp, sinh tân, an thần", "", "", 0],
+  ["Ô mai", "Ô mai (mơ hun)", "ct", "Thu liễm", 2, "bình", "chua, chát", "liễm", "Can, Tỳ, Phế, Đại tràng", "Liễm phế chỉ khái, sáp trường chỉ tả, sinh tân", "", "", 0],
+  ["Liên nhục", "Hạt sen", "ct", "Thu liễm", 2, "bình", "ngọt, chát", "liễm", "Tâm, Tỳ, Thận", "Kiện tỳ chỉ tả, dưỡng tâm an thần", "", "", 0],
+  ["Liên tâm", "Tâm sen", "ct", "An thần", 0, "hàn", "đắng", "giáng", "Tâm", "Thanh tâm hoả, an thần", "Hỗ trợ giấc ngủ: chưa có thử nghiệm tốt ở người.", "w", 0],
+  ["Toan táo nhân", "", "ct", "An thần", 2, "bình", "ngọt, chua", "liễm", "Tâm, Can", "Dưỡng tâm an thần, liễm hãn", "Cải thiện giấc ngủ trong vài thử nghiệm nhỏ.", "w", 0],
+  ["Bạc hà", "", "ct", "Giải biểu", 1, "lương", "cay", "xuất, thăng", "Phế, Can", "Sơ tán phong nhiệt, thanh lợi đầu mắt", "Viên dầu bạc hà giảm triệu chứng hội chứng ruột kích thích.", "m", 0],
+  ["Quế chi", "", "ct", "Giải biểu", 3, "ôn", "cay, ngọt", "xuất", "Tâm, Phế, Bàng quang", "Phát hãn giải cơ, ôn kinh thông mạch", "Quế cassia chứa coumarin, dùng liều cao kéo dài có thể hại gan.", "", 0],
+  ["Ma hoàng", "", "ct", "Giải biểu", 3, "ôn", "cay, hơi đắng", "xuất", "Phế, Bàng quang", "Phát hãn mạnh, bình suyễn, lợi thuỷ", "Chứa ephedrin: gây tăng huyết áp, loạn nhịp, đột quỵ. Bị cấm trong thực phẩm bổ sung ở Mỹ từ 2004.", "", 1],
+  ["Cát căn", "Sắn dây", "ct", "Giải biểu", 1, "lương", "ngọt, cay", "thăng", "Tỳ, Vị", "Giải cơ thoái nhiệt, sinh tân, thăng dương chỉ tả", "", "", 0],
+  ["Sài hồ", "", "ct", "Giải biểu", 1, "hơi hàn", "đắng, cay", "thăng", "Can, Đởm", "Sơ can giải uất, thăng dương", "", "", 0],
+  ["Kim ngân hoa", "", "ct", "Thanh nhiệt", 0, "hàn", "ngọt", "", "Phế, Vị, Tâm", "Thanh nhiệt giải độc", "", "", 0],
+  ["Hoàng liên", "", "ct", "Thanh nhiệt", 0, "hàn", "đắng", "giáng", "Tâm, Can, Vị, Đại tràng", "Thanh nhiệt táo thấp, tả hoả", "Berberin hạ đường huyết và mỡ máu trong nhiều thử nghiệm, chất lượng không đều; tương tác nhiều thuốc.", "m", 0],
+  ["Hoàng cầm", "", "ct", "Thanh nhiệt", 0, "hàn", "đắng", "giáng", "Phế, Đởm, Vị, Đại tràng", "Thanh nhiệt táo thấp, an thai", "", "", 0],
+  ["Cúc hoa", "", "ct", "Thanh nhiệt", 1, "hơi hàn", "ngọt, đắng", "", "Phế, Can", "Tán phong nhiệt, thanh can minh mục", "", "", 0],
+  ["Diếp cá", "Ngư tinh thảo", "ct", "Thanh nhiệt", 1, "hơi hàn", "cay", "", "Phế", "Thanh nhiệt giải độc, tiêu ung", "Dạng tiêm từng gây phản vệ ở Trung Quốc; ăn như rau thì an toàn.", "", 0],
+  ["Diệp hạ châu", "Chó đẻ răng cưa", "ct", "Thanh nhiệt", 1, "lương", "đắng", "", "Can", "Thanh can, giải độc, lợi tiểu", "Tác dụng với viêm gan B: thử nghiệm nhỏ, chưa đủ để thay thuốc kháng virus.", "w", 0],
+  ["Atiso", "", "ct", "Thanh nhiệt", 1, "lương", "đắng", "", "Can, Đởm", "Lợi mật, thanh nhiệt", "Giảm chứng khó tiêu trong vài thử nghiệm nhỏ.", "w", 0],
+  ["Đại hoàng", "", "ct", "Tả hạ", 0, "hàn", "đắng", "giáng", "Tỳ, Vị, Đại tràng, Can", "Tả hạ công tích, thanh nhiệt", "Nhuận tràng mạnh nhờ anthraquinon; không dùng kéo dài.", "m", 0],
+  ["Hạnh nhân đắng", "Khổ hạnh nhân", "ct", "Chỉ khái", 3, "hơi ôn", "đắng", "giáng", "Phế, Đại tràng", "Chỉ khái bình suyễn, nhuận tràng", "Chứa amygdalin sinh xyanua; quá liều gây ngộ độc.", "", 1],
+  ["Ích mẫu", "", "ct", "Hoạt huyết", 1, "hơi hàn", "đắng, cay", "giáng", "Can, Tâm bào", "Hoạt huyết điều kinh, lợi thuỷ", "Không dùng khi mang thai.", "", 0],
+  ["Nghệ", "Khương hoàng", "ct", "Hoạt huyết", 3, "ôn", "cay, đắng", "", "Can, Tỳ", "Hoạt huyết, hành khí, chỉ thống", "Curcumin giảm nhẹ đau khớp gối; có báo cáo tổn thương gan với chế phẩm liều cao.", "w", 0],
+  ["Ngải cứu", "Ngải diệp", "ct", "Ôn lý", 3, "ôn", "đắng, cay", "", "Can, Tỳ, Thận", "Ôn kinh chỉ huyết, an thai, tán hàn", "", "", 0],
+  ["Đinh hương", "", "ct", "Ôn lý", 3, "ôn", "cay", "giáng", "Tỳ, Vị, Thận", "Ôn trung giáng nghịch, chỉ nôn", "Dầu đinh hương gây tê nhẹ khi đau răng.", "w", 0],
+  ["Nhục quế", "", "ct", "Ôn lý", 4, "đại nhiệt", "cay, ngọt", "", "Thận, Tỳ, Tâm, Can", "Bổ hoả trợ dương, tán hàn chỉ thống", "Tác dụng hạ đường huyết: kết quả trái chiều.", "w", 0],
+  ["Phụ tử (chế)", "", "ct", "Ôn lý", 4, "đại nhiệt", "cay", "", "Tâm, Thận, Tỳ", "Hồi dương cứu nghịch, bổ hoả", "Chứa aconitin, độc với tim; ngộ độc có thể tử vong ngay cả khi đã chế.", "", 1]
+];
+
+const state = { g: "all", t: "all", v: "all", q: "" };
+const VI = ["chua", "đắng", "ngọt", "cay", "mặn", "nhạt", "chát"];
+const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
+
+function chips(el, key, opts) {
+  el.innerHTML = opts.map(([val, label, color]) =>
+    `<button class="chip" data-k="${key}" data-v="${val}" aria-pressed="${state[key] === val}">${color ? `<span class="dot" style="background:var(${color})"></span>` : ""}${label}</button>`).join(" ");
+}
+chips(document.getElementById("f-group"), "g", [["all", "Tất cả"], ["tv", "Thực vật"], ["dv", "Động vật"], ["ct", "Cây thuốc"]]);
+chips(document.getElementById("f-tinh"), "t", [["all", "Tất cả"], ...TINH.map((x, i) => [String(i), x[0], x[1]])]);
+chips(document.getElementById("f-vi"), "v", [["all", "Tất cả"], ...VI.map(v => [v, v[0].toUpperCase() + v.slice(1)])]);
+
+function render() {
+  const q = norm(state.q.trim());
+  const rows = D.filter(r =>
+    (state.g === "all" || r[2] === state.g) &&
+    (state.t === "all" || String(r[4]) === state.t) &&
+    (state.v === "all" || r[6].includes(state.v)) &&
+    (!q || norm(r.slice(0, 11).join(" ")).includes(q)));
+  document.getElementById("count").textContent = `${rows.length} / ${D.length} mục`;
+  document.getElementById("rows").innerHTML = rows.length ? rows.map(r => {
+    const ev = r[11] ? `<span class="ev ${EV[r[11]][0]}">${EV[r[11]][1]}</span>` : "";
+    const warn = r[12] ? `<span class="warn">Có độc. </span>` : "";
+    return `<tr>
+      <td class="name"><strong>${r[0]}</strong>${r[1] ? `<small>${r[1]}</small><br>` : ""}<span class="grp">${GROUPS[r[2]]} · ${r[3]}</span></td>
+      <td><span class="tinh"><i style="background:var(${TINH[r[4]][1]})"></i>${r[5][0].toUpperCase() + r[5].slice(1)}</span></td>
+      <td>${r[6][0].toUpperCase() + r[6].slice(1)}</td>
+      <td class="khi">${r[7] ? r[7][0].toUpperCase() + r[7].slice(1) : "—"}</td>
+      <td>${r[8]}</td>
+      <td>${r[9]}</td>
+      <td>${warn}${ev}${r[10] || (ev ? "" : "—")}</td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="7" class="empty">Không có mục nào khớp. Thử bỏ bớt bộ lọc.</td></tr>`;
+}
+document.querySelector(".controls").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  state[b.dataset.k] = b.dataset.v;
+  document.querySelectorAll(`.chip[data-k="${b.dataset.k}"]`).forEach(c => c.setAttribute("aria-pressed", String(c === b)));
+  render();
+});
+document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; render(); });
+render();
+</script>
+</body>
+</html>
