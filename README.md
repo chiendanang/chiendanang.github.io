@@ -2,4 +2,4 @@
 
 Website tổng hợp các dự án: Kinh Dịch (giai đoạn 1), Sức khoẻ và Tài chính (giai đoạn sau).
 
-Xem tại: https://themarket841-bot.github.io/chiendanang/
+Xem tại: https://chiendanang.github.io/chiendanang/
