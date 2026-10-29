@@ -11,17 +11,17 @@
 /* Layout: sticky mục lục trên cùng, mỗi dự án là một khối có ký hiệu quẻ làm dấu mục, lưới thẻ cho các nhánh con */
 :root{
   --bg:#f5f6f3; --surface:#ffffff; --fg:#1b2422; --muted:#5d6a66; --line:#dbe1dd;
-  --ink:#1f3d4a; --jade:#2f7d63; --gold:#a8741a; --chip:#e8efeb;
+  --ink:#1f3d4a; --jade:#2f7d63; --gold:#a8741a; --chip:#e8efeb; --bad:#b4442f;
   --display:"Literata",Georgia,"Times New Roman",serif;
   --body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121816; --surface:#1a2220; --fg:#e4ebe8; --muted:#9aaaa4; --line:#2c3833;
-  --ink:#9cc7d6; --jade:#6cc5a2; --gold:#e0b25c; --chip:#22302b; color-scheme:dark}}
+  --ink:#9cc7d6; --jade:#6cc5a2; --gold:#e0b25c; --chip:#22302b; --bad:#ec8a72; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121816; --surface:#1a2220; --fg:#e4ebe8; --muted:#9aaaa4; --line:#2c3833;
-  --ink:#9cc7d6; --jade:#6cc5a2; --gold:#e0b25c; --chip:#22302b; color-scheme:dark}
+  --ink:#9cc7d6; --jade:#6cc5a2; --gold:#e0b25c; --chip:#22302b; --bad:#ec8a72; color-scheme:dark}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6}
@@ -100,6 +100,20 @@ p.sublead{margin:0;color:var(--muted);max-width:65ch;font-size:.95rem}
 button.btn{border:0;cursor:pointer;font-family:inherit}
 .later{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .later .card{opacity:.92}
+.bmi-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.bmi-fields label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted)}
+.bmi-fields input,.bmi-fields select{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.bmi-fields input:focus-visible,.bmi-fields select:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.bmi-out{display:flex;align-items:center;gap:12px}
+.bmi-num{font-family:var(--display);font-size:2.4rem;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.pill.ok{color:var(--jade)}.pill.warn{color:var(--gold)}.pill.bad{color:var(--bad)}
+.bmi-bar{position:relative;display:flex;height:10px;border-radius:999px;overflow:hidden;margin-top:6px}
+.bmi-bar span:nth-child(1){background:var(--chip)}.bmi-bar span:nth-child(2){background:var(--jade)}.bmi-bar span:nth-child(3){background:var(--gold)}.bmi-bar span:nth-child(4){background:var(--bad)}
+.bmi-bar i{position:absolute;top:-3px;width:4px;height:16px;background:var(--fg);border-radius:2px;transform:translateX(-2px);left:0}
+.bmi-bar{overflow:visible}
+.bmi-scale{position:relative;height:1.2em;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.bmi-scale span{position:absolute;transform:translateX(-50%)}
+.bmi-scale span:nth-child(1){left:0;transform:none}.bmi-scale span:nth-child(2){left:17.5%}.bmi-scale span:nth-child(3){left:40%}.bmi-scale span:nth-child(4){left:50%}.bmi-scale span:nth-child(5){left:auto;right:0;transform:none}
 </style>
 </head>
 <body>
@@ -115,10 +129,10 @@ button.btn{border:0;cursor:pointer;font-family:inherit}
   <div class="intro">
     <span class="eyebrow">Trang tổng hợp · cập nhật 28/10/2026</span>
     <h1>Mọi dự án nghiên cứu ở một nơi</h1>
-    <p>Giai đoạn 1 triển khai Kinh Dịch. Sức khoẻ và Tài chính đang trong quá trình nghiên cứu và sẽ được đưa lên ở giai đoạn sau.</p>
+    <p>Kinh Dịch và Sức khoẻ đã có nội dung và công cụ dùng được ngay. Tài chính đang trong quá trình nghiên cứu và sẽ được đưa lên ở giai đoạn sau.</p>
     <div class="overview">
       <a href="#kinh-dich"><span class="gua" aria-hidden="true">☰</span><span><b>Kinh Dịch</b><small>Giai đoạn 1 · đang triển khai</small></span></a>
-      <a href="#suc-khoe"><span class="gua" aria-hidden="true">☵</span><span><b>Sức khoẻ</b><small>Giai đoạn sau · đang nghiên cứu</small></span></a>
+      <a href="#suc-khoe"><span class="gua" aria-hidden="true">☵</span><span><b>Sức khoẻ</b><small>Giai đoạn 1 · có công cụ tính BMI</small></span></a>
       <a href="#tai-chinh"><span class="gua" aria-hidden="true">☷</span><span><b>Tài chính</b><small>Giai đoạn sau · đang nghiên cứu</small></span></a>
     </div>
   </div>
@@ -174,17 +188,52 @@ button.btn{border:0;cursor:pointer;font-family:inherit}
 
   <section class="proj" id="suc-khoe">
     <div class="head"><span class="gua" aria-hidden="true">☵</span><div>
-      <span class="eyebrow">Giai đoạn sau · Healthy</span>
+      <span class="eyebrow">Giai đoạn 1 · Healthy</span>
       <h2>Sức khoẻ</h2>
-      <p class="lead">Theo dõi và xây thói quen sống khoẻ dựa trên bằng chứng: ăn uống, vận động, giấc ngủ và các chỉ số cơ thể.</p>
+      <p class="lead">Bốn trụ cột của sức khoẻ hằng ngày: vận động, dinh dưỡng, giấc ngủ và các chỉ số cần theo dõi. Mỗi con số dưới đây đều ghi rõ nguồn khuyến nghị.</p>
     </div></div>
-    <div class="later">
-      <article class="card"><h3>Dinh dưỡng</h3><ul><li>Cân đối đạm, tinh bột, chất béo</li><li>Thực đơn tuần, món Việt lành mạnh</li><li>Nước, rau xanh, hạn chế đường</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
-      <article class="card"><h3>Vận động</h3><ul><li>150 phút cường độ vừa mỗi tuần (khuyến nghị WHO)</li><li>Tập sức mạnh 2 buổi/tuần</li><li>Đi bộ, yoga, khí công</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
-      <article class="card"><h3>Giấc ngủ và tinh thần</h3><ul><li>Ngủ 7–9 giờ, giờ giấc đều đặn</li><li>Thiền, thở, giảm căng thẳng</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
-      <article class="card"><h3>Chỉ số theo dõi</h3><ul><li>Cân nặng, BMI, vòng eo</li><li>Huyết áp, đường huyết, mỡ máu</li><li>Lịch khám sức khoẻ định kỳ</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+    <div class="grid">
+      <article class="card"><h3>Vận động</h3><ul><li>150–300 phút/tuần cường độ vừa (đi bộ nhanh, đạp xe), hoặc 75–150 phút cường độ cao</li><li>Tập sức mạnh các nhóm cơ lớn từ 2 buổi/tuần</li><li>Hạn chế ngồi lâu, cứ 30–60 phút đứng dậy đi lại</li></ul><div class="foot"><span class="pill done">Nguồn: WHO 2020</span></div></article>
+      <article class="card"><h3>Dinh dưỡng</h3><ul><li>Ít nhất 400 g rau và trái cây mỗi ngày</li><li>Muối dưới 5 g/ngày (khoảng 1 thìa cà phê)</li><li>Đường tự do dưới 10% năng lượng, tốt hơn là dưới 5% (khoảng 25 g)</li><li>Chất béo bão hoà dưới 10%, chất béo chuyển hoá dưới 1% năng lượng</li></ul><div class="foot"><span class="pill done">Nguồn: WHO</span></div></article>
+      <article class="card"><h3>Giấc ngủ</h3><ul><li>Người 18–64 tuổi: 7–9 giờ mỗi đêm</li><li>Từ 65 tuổi: 7–8 giờ</li><li>Đi ngủ và thức dậy cùng giờ, kể cả cuối tuần</li><li>Tránh màn hình và cà phê trước giờ ngủ</li></ul><div class="foot"><span class="pill done">Nguồn: National Sleep Foundation</span></div></article>
+      <article class="card"><h3>Khám định kỳ</h3><ul><li>Khám tổng quát mỗi năm một lần</li><li>Đo huyết áp ít nhất mỗi năm, thường xuyên hơn nếu cao</li><li>Xét nghiệm đường huyết, mỡ máu theo chỉ định của bác sĩ</li></ul><div class="foot"><span class="pill plan">Theo bác sĩ</span></div></article>
     </div>
-    <p class="note">Nội dung mang tính tham khảo, không thay thế lời khuyên của bác sĩ.</p>
+
+    <h3 class="sub">Ngưỡng chỉ số cho người trưởng thành</h3>
+    <p class="sublead">BMI và vòng eo dùng ngưỡng dành cho người châu Á, thấp hơn ngưỡng quốc tế.</p>
+    <div class="trigrams">
+      <table>
+        <thead><tr><th>Chỉ số</th><th>Bình thường</th><th>Cần chú ý</th><th>Nguy cơ cao</th><th>Nguồn</th></tr></thead>
+        <tbody>
+          <tr><td>BMI (kg/m²)</td><td>18,5–22,9</td><td>23–24,9 (thừa cân)</td><td>≥ 25 (béo phì)</td><td>WHO Tây Thái Bình Dương</td></tr>
+          <tr><td>Vòng eo</td><td>Nam &lt; 90 cm, nữ &lt; 80 cm</td><td>Từ ngưỡng này trở lên</td><td>Kèm huyết áp, đường huyết cao</td><td>IDF</td></tr>
+          <tr><td>Huyết áp (mmHg)</td><td>&lt; 120/80</td><td>120–139 / 80–89</td><td>≥ 140/90</td><td>Bộ Y tế, ESH</td></tr>
+          <tr><td>Đường huyết lúc đói (mmol/L)</td><td>&lt; 5,6</td><td>5,6–6,9 (tiền đái tháo đường)</td><td>≥ 7,0</td><td>ADA</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub" id="tinh-bmi">Tính BMI và vòng eo</h3>
+    <p class="sublead">Nhập chiều cao, cân nặng và vòng eo để xem bạn đang ở ngưỡng nào.</p>
+    <form class="cast" id="bmiForm" novalidate>
+      <div class="card">
+        <div class="bmi-fields">
+          <label for="bmiH">Chiều cao (cm)<input id="bmiH" type="number" inputmode="decimal" min="100" max="230" value="165"></label>
+          <label for="bmiW">Cân nặng (kg)<input id="bmiW" type="number" inputmode="decimal" min="25" max="250" value="62"></label>
+          <label for="bmiWaist">Vòng eo (cm)<input id="bmiWaist" type="number" inputmode="decimal" min="40" max="200" value="82"></label>
+          <label for="bmiSex">Giới tính<select id="bmiSex"><option value="m">Nam</option><option value="f">Nữ</option></select></label>
+        </div>
+        <p class="sublead">Số mẫu để minh hoạ, bạn thay bằng số của mình.</p>
+      </div>
+      <div class="card" aria-live="polite">
+        <h3>Kết quả</h3>
+        <div class="bmi-out"><span class="bmi-num" id="bmiNum">–</span><span class="pill" id="bmiTag">–</span></div>
+        <div class="bmi-bar" aria-hidden="true"><span style="flex:3.5"></span><span style="flex:4.5"></span><span style="flex:2"></span><span style="flex:10"></span><i id="bmiMark"></i></div>
+        <div class="bmi-scale" aria-hidden="true"><span>15</span><span>18,5</span><span>23</span><span>25</span><span>35</span></div>
+        <p class="sublead" id="waistMsg"></p>
+      </div>
+    </form>
+    <p class="note">Nội dung mang tính tham khảo, không thay thế lời khuyên của bác sĩ. Nếu chỉ số ở mức nguy cơ cao, hãy đi khám để được tư vấn.</p>
   </section>
 
   <section class="proj" id="tai-chinh">
@@ -263,6 +312,24 @@ button.btn{border:0;cursor:pointer;font-family:inherit}
   document.getElementById('castAll').onclick=function(){while(cast.length<6)cast.push(coin());render()};
   document.getElementById('castReset').onclick=function(){cast=[];render()};
   render();
+  (function(){
+    var f=document.getElementById('bmiForm');if(!f)return;
+    function v(id){return parseFloat(String(document.getElementById(id).value).replace(',','.'))}
+    function run(){
+      var h=v('bmiH')/100,w=v('bmiW'),wa=v('bmiWaist'),sex=document.getElementById('bmiSex').value;
+      var num=document.getElementById('bmiNum'),tag=document.getElementById('bmiTag'),mk=document.getElementById('bmiMark'),wm=document.getElementById('waistMsg');
+      if(!(h>0.5&&w>0)){num.textContent='–';tag.textContent='Nhập chiều cao và cân nặng';tag.className='pill';mk.style.left='0';}
+      else{
+        var b=w/(h*h),t,c;
+        if(b<18.5){t='Thiếu cân';c='warn'}else if(b<23){t='Bình thường';c='ok'}else if(b<25){t='Thừa cân';c='warn'}else{t='Béo phì';c='bad'}
+        num.textContent=b.toFixed(1).replace('.',',');tag.textContent=t;tag.className='pill '+c;
+        mk.style.left=Math.max(0,Math.min(100,(b-15)/20*100))+'%';
+      }
+      var lim=sex==='f'?80:90;
+      wm.textContent=wa>0?(wa>=lim?'Vòng eo '+wa+' cm, từ ngưỡng '+lim+' cm trở lên: nguy cơ béo bụng, nên kiểm tra thêm huyết áp và đường huyết.':'Vòng eo '+wa+' cm, dưới ngưỡng '+lim+' cm: trong mức khuyến nghị.'):'';
+    }
+    f.addEventListener('input',run);f.addEventListener('submit',function(e){e.preventDefault()});run();
+  })();
 })();
 </script>
 </body>
