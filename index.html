@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sổ tay Dự án</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: sticky mục lục trên cùng, mỗi dự án là một khối có ký hiệu quẻ làm dấu mục, lưới thẻ cho các nhánh con */
+:root{
+  --bg:#f5f6f3; --surface:#ffffff; --fg:#1b2422; --muted:#5d6a66; --line:#dbe1dd;
+  --ink:#1f3d4a; --jade:#2f7d63; --gold:#a8741a; --chip:#e8efeb;
+  --display:"Literata",Georgia,"Times New Roman",serif;
+  --body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121816; --surface:#1a2220; --fg:#e4ebe8; --muted:#9aaaa4; --line:#2c3833;
+  --ink:#9cc7d6; --jade:#6cc5a2; --gold:#e0b25c; --chip:#22302b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121816; --surface:#1a2220; --fg:#e4ebe8; --muted:#9aaaa4; --line:#2c3833;
+  --ink:#9cc7d6; --jade:#6cc5a2; --gold:#e0b25c; --chip:#22302b; color-scheme:dark}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--jade)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding-block:12px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none;margin-right:auto}
+nav{display:flex;flex-wrap:wrap;gap:4px}
+nav a{font-size:.9rem;font-weight:500;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:999px}
+nav a:hover,nav a.on{background:var(--chip);color:var(--fg)}
+
+.intro{padding-block:48px 32px;display:grid;gap:16px}
+.intro h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3rem);line-height:1.15;margin:0;color:var(--ink);text-wrap:balance}
+.intro p{margin:0;max-width:62ch;color:var(--muted);font-size:1.05rem}
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px}
+.overview a{display:flex;gap:12px;align-items:center;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg)}
+.overview a:hover{border-color:var(--jade)}
+.overview b{display:block;font-weight:600}
+.overview small{color:var(--muted);font-size:.82rem}
+.gua{font-size:1.9rem;line-height:1;color:var(--ink);width:1.4em;text-align:center;flex:none}
+
+section.proj{padding-block:40px;border-top:1px solid var(--line);scroll-margin-top:72px}
+.head{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}
+.head .gua{font-size:2.6rem}
+.head h2{font-family:var(--display);font-size:1.75rem;margin:0;line-height:1.2;color:var(--ink);text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.lead{margin:6px 0 0;max-width:65ch;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{margin:0;font-size:1.05rem;font-weight:600}
+.card ul{margin:0;padding-left:1.1em;color:var(--muted);font-size:.93rem}
+.card li+li{margin-top:2px}
+.card .foot{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.88rem}
+.pill{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;padding:3px 8px;border-radius:999px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.pill.done{color:var(--jade)}
+.pill.plan{color:var(--gold)}
+
+.trigrams{overflow-x:auto;margin-top:16px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line)}
+th{font-weight:600;font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+td.sym{font-size:1.5rem;color:var(--ink);width:3em}
+tr:last-child td{border-bottom:0}
+
+.note{margin-top:16px;padding:12px 16px;border-left:3px solid var(--gold);background:var(--surface);color:var(--muted);font-size:.9rem;border-radius:0 8px 8px 0;max-width:75ch}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:500;font-size:.92rem}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+footer{padding-block:32px 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+
+.hexgrid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin-top:16px}
+@media (max-width:640px){.hexgrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.hx{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;color:var(--fg);font:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.hx:hover,.hx.sel{border-color:var(--jade)}
+.hx .g{font-size:1.7rem;line-height:1.1;color:var(--ink)}
+.hx .n{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.hx .t{font-size:.74rem;line-height:1.25;overflow-wrap:anywhere}
+.detail{margin-top:14px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);border-radius:10px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.detail .big{font-size:3.4rem;line-height:1;color:var(--ink)}
+.detail h3{margin:0;font-family:var(--display);font-size:1.3rem}
+.detail p{margin:4px 0 0;color:var(--muted);font-size:.93rem}
+h3.sub{font-family:var(--display);font-size:1.25rem;margin:36px 0 4px;color:var(--ink)}
+p.sublead{margin:0;color:var(--muted);max-width:65ch;font-size:.95rem}
+.cast{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:16px}
+.lines{display:flex;flex-direction:column-reverse;gap:7px;width:120px}
+.ln{display:flex;gap:10px;height:10px}
+.ln span{flex:1;background:var(--ink);border-radius:2px}
+.ln.moving span{background:var(--gold)}
+.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.log{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin:0;padding-left:1.2em}
+button.btn{border:0;cursor:pointer;font-family:inherit}
+.later{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.later .card{opacity:.92}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#">Sổ tay Dự án</a>
+  <nav aria-label="Mục lục">
+    <a href="#kinh-dich">Kinh Dịch</a><a href="#suc-khoe">Sức khoẻ</a><a href="#tai-chinh">Tài chính</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">Trang tổng hợp · cập nhật 28/10/2026</span>
+    <h1>Mọi dự án nghiên cứu ở một nơi</h1>
+    <p>Giai đoạn 1 triển khai Kinh Dịch. Sức khoẻ và Tài chính đang trong quá trình nghiên cứu và sẽ được đưa lên ở giai đoạn sau.</p>
+    <div class="overview">
+      <a href="#kinh-dich"><span class="gua" aria-hidden="true">☰</span><span><b>Kinh Dịch</b><small>Giai đoạn 1 · đang triển khai</small></span></a>
+      <a href="#suc-khoe"><span class="gua" aria-hidden="true">☵</span><span><b>Sức khoẻ</b><small>Giai đoạn sau · đang nghiên cứu</small></span></a>
+      <a href="#tai-chinh"><span class="gua" aria-hidden="true">☷</span><span><b>Tài chính</b><small>Giai đoạn sau · đang nghiên cứu</small></span></a>
+    </div>
+  </div>
+
+  <section class="proj" id="kinh-dich">
+    <div class="head"><span class="gua" aria-hidden="true">☰</span><div>
+      <span class="eyebrow">Giai đoạn 1 · Triết học phương Đông</span>
+      <h2>Kinh Dịch</h2>
+      <p class="lead">Hệ thống 8 quẻ đơn chồng thành 64 quẻ kép, mỗi quẻ 6 hào. Dự án đi từ nền tảng lý thuyết đến cách đọc quẻ và ứng dụng vào ra quyết định.</p>
+    </div></div>
+    <div class="grid">
+      <article class="card"><h3>Nền tảng</h3><ul><li>Âm dương, Thái cực, Lưỡng nghi, Tứ tượng</li><li>Tiên thiên và Hậu thiên bát quái</li><li>Kinh văn: Thoán từ, Hào từ, Thập dực</li></ul><div class="foot"><span class="pill done">Đang triển khai</span></div></article>
+      <article class="card"><h3>64 quẻ</h3><ul><li>Tên, tượng và ý nghĩa từng quẻ</li><li>Hào động, quẻ biến, quẻ hỗ</li><li>Thứ tự Văn Vương</li></ul><div class="foot"><span class="pill done">Đã có bảng tra</span><a href="#bang-64-que">Xem bảng</a></div></article>
+      <article class="card"><h3>Ứng dụng</h3><ul><li>Gieo quẻ bằng đồng xu và cỏ thi</li><li>Mai Hoa Dịch Số</li><li>Liên hệ với ngũ hành và phong thuỷ</li></ul><div class="foot"><span class="pill done">Có công cụ gieo quẻ</span><a href="#gieo-que">Thử gieo</a></div></article>
+    </div>
+
+    <h3 class="sub">Bát quái</h3>
+    <p class="sublead">Tám quẻ đơn, mỗi quẻ 3 hào, là đơn vị dựng nên 64 quẻ kép. Quẻ kép gồm quẻ thượng (3 hào trên) và quẻ hạ (3 hào dưới).</p>
+    <div class="trigrams">
+      <table>
+        <thead><tr><th>Quẻ</th><th>Tên</th><th>Tượng</th><th>Tính chất</th><th>Phương (Hậu thiên)</th></tr></thead>
+        <tbody>
+          <tr><td class="sym">☰</td><td>Càn</td><td>Trời</td><td>Cương kiện</td><td>Tây Bắc</td></tr>
+          <tr><td class="sym">☱</td><td>Đoài</td><td>Đầm</td><td>Vui vẻ</td><td>Tây</td></tr>
+          <tr><td class="sym">☲</td><td>Ly</td><td>Lửa</td><td>Sáng, bám</td><td>Nam</td></tr>
+          <tr><td class="sym">☳</td><td>Chấn</td><td>Sấm</td><td>Động</td><td>Đông</td></tr>
+          <tr><td class="sym">☴</td><td>Tốn</td><td>Gió</td><td>Thâm nhập</td><td>Đông Nam</td></tr>
+          <tr><td class="sym">☵</td><td>Khảm</td><td>Nước</td><td>Hiểm</td><td>Bắc</td></tr>
+          <tr><td class="sym">☶</td><td>Cấn</td><td>Núi</td><td>Dừng</td><td>Đông Bắc</td></tr>
+          <tr><td class="sym">☷</td><td>Khôn</td><td>Đất</td><td>Nhu thuận</td><td>Tây Nam</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub" id="bang-64-que">Bảng 64 quẻ theo thứ tự Văn Vương</h3>
+    <p class="sublead">Chọn một quẻ để xem quẻ thượng, quẻ hạ và cấu trúc hào.</p>
+    <div class="hexgrid" id="hexgrid"></div>
+    <div class="detail" id="detail" aria-live="polite"></div>
+
+    <h3 class="sub" id="gieo-que">Gieo quẻ bằng ba đồng xu</h3>
+    <p class="sublead">Mỗi lần gieo 3 đồng xu cho một hào, tính từ dưới lên. Mặt ngửa tính 3, mặt sấp tính 2. Tổng 6 là âm động, 7 là dương tĩnh, 8 là âm tĩnh, 9 là dương động. Hào động biến thành hào ngược lại để ra quẻ biến.</p>
+    <div class="row" style="margin-top:14px">
+      <button class="btn" id="castOne" type="button">Gieo một hào</button>
+      <button class="btn" id="castAll" type="button">Gieo đủ 6 hào</button>
+      <button class="btn ghost" id="castReset" type="button">Làm lại</button>
+    </div>
+    <div class="cast">
+      <div class="card"><h3>Quẻ chủ</h3><div class="row"><div class="lines" id="linesMain"></div><div id="nameMain" class="sublead">Chưa gieo hào nào.</div></div><ol class="log" id="castLog"></ol></div>
+      <div class="card"><h3>Quẻ biến</h3><div class="row"><div class="lines" id="linesChg"></div><div id="nameChg" class="sublead">Hiện khi đủ 6 hào.</div></div></div>
+    </div>
+    <p class="note">Công cụ dùng để học cách lập quẻ. Kết quả là ngẫu nhiên và mang tính tham khảo.</p>
+  </section>
+
+  <section class="proj" id="suc-khoe">
+    <div class="head"><span class="gua" aria-hidden="true">☵</span><div>
+      <span class="eyebrow">Giai đoạn sau · Healthy</span>
+      <h2>Sức khoẻ</h2>
+      <p class="lead">Theo dõi và xây thói quen sống khoẻ dựa trên bằng chứng: ăn uống, vận động, giấc ngủ và các chỉ số cơ thể.</p>
+    </div></div>
+    <div class="later">
+      <article class="card"><h3>Dinh dưỡng</h3><ul><li>Cân đối đạm, tinh bột, chất béo</li><li>Thực đơn tuần, món Việt lành mạnh</li><li>Nước, rau xanh, hạn chế đường</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+      <article class="card"><h3>Vận động</h3><ul><li>150 phút cường độ vừa mỗi tuần (khuyến nghị WHO)</li><li>Tập sức mạnh 2 buổi/tuần</li><li>Đi bộ, yoga, khí công</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+      <article class="card"><h3>Giấc ngủ và tinh thần</h3><ul><li>Ngủ 7–9 giờ, giờ giấc đều đặn</li><li>Thiền, thở, giảm căng thẳng</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+      <article class="card"><h3>Chỉ số theo dõi</h3><ul><li>Cân nặng, BMI, vòng eo</li><li>Huyết áp, đường huyết, mỡ máu</li><li>Lịch khám sức khoẻ định kỳ</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+    </div>
+    <p class="note">Nội dung mang tính tham khảo, không thay thế lời khuyên của bác sĩ.</p>
+  </section>
+
+  <section class="proj" id="tai-chinh">
+    <div class="head"><span class="gua" aria-hidden="true">☷</span><div>
+      <span class="eyebrow">Giai đoạn sau · Đầu tư</span>
+      <h2>Tài chính</h2>
+      <p class="lead">Bốn kênh đầu tư được nghiên cứu riêng, mỗi kênh có rủi ro, thanh khoản và khung thời gian khác nhau.</p>
+    </div></div>
+    <div class="later">
+      <article class="card" id="bat-dong-san"><h3>Bất động sản</h3><ul><li>Thị trường Đà Nẵng: khu vực, giá, quy hoạch</li><li>Pháp lý: sổ hồng, quy hoạch, thuế phí</li><li>Dòng tiền cho thuê và lợi suất</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+      <article class="card" id="quy-futures"><h3>Quỹ và Futures</h3><ul><li>Quỹ mở, ETF, quỹ trái phiếu</li><li>Hợp đồng tương lai VN30, hàng hoá</li><li>Forex: quản lý vốn, đòn bẩy, ký quỹ</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+      <article class="card" id="chung-khoan"><h3>Chứng khoán</h3><ul><li>Sàn HOSE, HNX, UPCoM</li><li>Phân tích cơ bản: P/E, P/B, ROE</li><li>Phân tích kỹ thuật và quản trị danh mục</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+      <article class="card" id="crypto"><h3>Cryptocurrency</h3><ul><li>Bitcoin, Ethereum, stablecoin</li><li>Ví, sàn giao dịch, bảo mật khoá</li><li>Chu kỳ thị trường và rủi ro</li></ul><div class="foot"><span class="pill plan">Đang nghiên cứu</span></div></article>
+    </div>
+    <p class="note">Thông tin chỉ để học tập và nghiên cứu, không phải khuyến nghị đầu tư. Futures, Forex và tiền mã hoá có đòn bẩy và biến động cao, có thể mất toàn bộ vốn.</p>
+  </section>
+</main>
+
+<footer><div class="wrap">Sổ tay Dự án của Themarket841.</div></footer>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function mark(){
+    var y=window.scrollY+120,cur=-1;
+    secs.forEach(function(s,i){if(s&&s.offsetTop<=y)cur=i});
+    links.forEach(function(a,i){a.classList.toggle('on',i===cur)});
+  }
+  window.addEventListener('scroll',mark,{passive:true});mark();
+
+  var NAMES="Thuần Càn|Thuần Khôn|Thủy Lôi Truân|Sơn Thủy Mông|Thủy Thiên Nhu|Thiên Thủy Tụng|Địa Thủy Sư|Thủy Địa Tỷ|Phong Thiên Tiểu Súc|Thiên Trạch Lý|Địa Thiên Thái|Thiên Địa Bĩ|Thiên Hỏa Đồng Nhân|Hỏa Thiên Đại Hữu|Địa Sơn Khiêm|Lôi Địa Dự|Trạch Lôi Tùy|Sơn Phong Cổ|Địa Trạch Lâm|Phong Địa Quan|Hỏa Lôi Phệ Hạp|Sơn Hỏa Bí|Sơn Địa Bác|Địa Lôi Phục|Thiên Lôi Vô Vọng|Sơn Thiên Đại Súc|Sơn Lôi Di|Trạch Phong Đại Quá|Thuần Khảm|Thuần Ly|Trạch Sơn Hàm|Lôi Phong Hằng|Thiên Sơn Độn|Lôi Thiên Đại Tráng|Hỏa Địa Tấn|Địa Hỏa Minh Di|Phong Hỏa Gia Nhân|Hỏa Trạch Khuê|Thủy Sơn Kiển|Lôi Thủy Giải|Sơn Trạch Tổn|Phong Lôi Ích|Trạch Thiên Quải|Thiên Phong Cấu|Trạch Địa Tụy|Địa Phong Thăng|Trạch Thủy Khốn|Thủy Phong Tỉnh|Trạch Hỏa Cách|Hỏa Phong Đỉnh|Thuần Chấn|Thuần Cấn|Phong Sơn Tiệm|Lôi Trạch Quy Muội|Lôi Hỏa Phong|Hỏa Sơn Lữ|Thuần Tốn|Thuần Đoài|Phong Thủy Hoán|Thủy Trạch Tiết|Phong Trạch Trung Phu|Lôi Sơn Tiểu Quá|Thủy Hỏa Ký Tế|Hỏa Thủy Vị Tế".split('|');
+  // Quẻ đơn: hào từ dưới lên (1 = dương, 0 = âm)
+  var TRI={'Càn':[1,1,1],'Đoài':[1,1,0],'Ly':[1,0,1],'Chấn':[1,0,0],'Tốn':[0,1,1],'Khảm':[0,1,0],'Cấn':[0,0,1],'Khôn':[0,0,0]};
+  var IMG={'Thiên':'Càn','Trạch':'Đoài','Hỏa':'Ly','Lôi':'Chấn','Phong':'Tốn','Thủy':'Khảm','Sơn':'Cấn','Địa':'Khôn'};
+  var TSYM={'Càn':'☰','Đoài':'☱','Ly':'☲','Chấn':'☳','Tốn':'☴','Khảm':'☵','Cấn':'☶','Khôn':'☷'};
+  var HEX=NAMES.map(function(n,i){
+    var w=n.split(' '),up,lo,short;
+    if(w[0]==='Thuần'){up=lo=w[1];short=w[1]}else{up=IMG[w[0]];lo=IMG[w[1]];short=w.slice(2).join(' ')}
+    return {no:i+1,name:n,short:short,up:up,lo:lo,lines:TRI[lo].concat(TRI[up]),sym:String.fromCodePoint(0x4DC0+i)};
+  });
+  function find(lines){var k=lines.join('');for(var i=0;i<64;i++)if(HEX[i].lines.join('')===k)return HEX[i]}
+
+  var grid=document.getElementById('hexgrid'),det=document.getElementById('detail');
+  function show(h){
+    [].forEach.call(grid.children,function(b){b.classList.toggle('sel',+b.dataset.no===h.no)});
+    det.innerHTML='<span class="big" aria-hidden="true">'+h.sym+'</span><div><span class="eyebrow">Quẻ số '+h.no+'</span><h3>'+h.name+'</h3><p>Quẻ thượng: '+TSYM[h.up]+' '+h.up+' · Quẻ hạ: '+TSYM[h.lo]+' '+h.lo+'</p><p>Số hào dương: '+h.lines.reduce(function(a,b){return a+b},0)+' / 6</p></div>';
+  }
+  HEX.forEach(function(h){
+    var b=document.createElement('button');b.type='button';b.className='hx';b.dataset.no=h.no;
+    b.innerHTML='<span class="g" aria-hidden="true">'+h.sym+'</span><span class="n">'+h.no+'</span><span class="t">'+h.short+'</span>';
+    b.setAttribute('aria-label','Quẻ '+h.no+' '+h.name);
+    b.onclick=function(){show(h)};grid.appendChild(b);
+  });
+  show(HEX[0]);
+
+  var cast=[],lm=document.getElementById('linesMain'),lc=document.getElementById('linesChg');
+  function draw(el,vals,moving){
+    el.innerHTML='';vals.forEach(function(v,i){
+      var d=document.createElement('div');d.className='ln'+(moving&&moving[i]?' moving':'');
+      d.innerHTML=v?'<span></span>':'<span></span><span></span>';el.appendChild(d);
+    });
+  }
+  function render(){
+    var yang=cast.map(function(v){return v%2}),mov=cast.map(function(v){return v===6||v===9});
+    draw(lm,yang,mov);
+    document.getElementById('castLog').innerHTML=cast.map(function(v,i){return '<li>Hào '+(i+1)+': '+v+' · '+({6:'âm động',7:'dương tĩnh',8:'âm tĩnh',9:'dương động'})[v]+'</li>'}).join('');
+    var nm=document.getElementById('nameMain'),nc=document.getElementById('nameChg');
+    if(cast.length<6){nm.textContent=cast.length?'Đã gieo '+cast.length+' / 6 hào.':'Chưa gieo hào nào.';lc.innerHTML='';nc.textContent='Hiện khi đủ 6 hào.';return}
+    var h=find(yang);nm.innerHTML='<b>Quẻ '+h.no+': '+h.name+'</b>';
+    if(mov.some(Boolean)){var c=yang.map(function(v,i){return mov[i]?1-v:v}),hc=find(c);draw(lc,c);nc.innerHTML='<b>Quẻ '+hc.no+': '+hc.name+'</b>'}
+    else{lc.innerHTML='';nc.textContent='Không có hào động, quẻ không biến.'}
+  }
+  function coin(){var t=0;for(var i=0;i<3;i++)t+=Math.random()<.5?3:2;return t}
+  document.getElementById('castOne').onclick=function(){if(cast.length<6){cast.push(coin());render()}};
+  document.getElementById('castAll').onclick=function(){while(cast.length<6)cast.push(coin());render()};
+  document.getElementById('castReset').onclick=function(){cast=[];render()};
+  render();
+})();
+</script>
+</body>
+</html>
