@@ -97,6 +97,20 @@ input[type="search"] { flex: 1 1 240px; }
 .pt dd { margin: 0; }
 .tags { display: flex; flex-wrap: wrap; gap: 4px; }
 .empty { padding: 24px; text-align: center; color: var(--muted); }
+/* Hình chi tiết huyệt */
+.detail { margin: 0; display: grid; gap: 4px; }
+.detail svg { width: 100%; height: auto; background: var(--bg); border-radius: 10px; border: 1px solid var(--line); }
+.detail figcaption { font-size: .75rem; color: var(--muted); }
+.detail .sk { fill: var(--body); stroke: var(--body-line); stroke-width: 1.2; }
+.detail .lm { fill: none; stroke: var(--body-line); stroke-width: 1.2; }
+.detail .gd { stroke: var(--fg); stroke-width: 1; stroke-dasharray: 4 3; opacity: .7; }
+.detail .dm { fill: none; stroke: var(--accent); stroke-width: 1.3; }
+.detail .dt { fill: var(--accent); font-size: 10px; font-weight: 600; font-family: var(--font); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; }
+.detail .lb { fill: var(--fg); font-size: 10px; font-family: var(--font); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; }
+.detail .lbm { fill: var(--muted); font-size: 9px; font-family: var(--font); }
+.detail .lbo { fill: var(--muted); font-size: 8px; font-family: var(--mono); opacity: .7; }
+.detail .od { fill: var(--muted); opacity: .45; }
+.detail .hp { fill: var(--hoa); stroke: var(--surface); stroke-width: 2; }
 /* Hình người */
 :root { --body: #e6ece9; --body-line: #b9c6bf; --gv: #7a4fa0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --body: #24302b; --body-line: #3d4c45; --gv: #b996dc; } }
@@ -432,10 +446,125 @@ $("fEv").onclick = () => { st.ev = !st.ev; $("fEv").setAttribute("aria-pressed",
 $("fSafe").onclick = () => { st.safe = !st.safe; $("fSafe").setAttribute("aria-pressed", st.safe); render(); };
 ["q","fk","fv"].forEach(id => $(id).addEventListener("input", render));
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
+
+// Hình chi tiết từng vùng: khung 320 x 200, vẽ phác hoạ + mốc giải phẫu; huyệt có đường đo thốn
+const HAND = "M0,72 L170,74 Q182,70 192,64 L232,24 Q244,16 250,26 Q252,36 240,48 L214,82 Q240,70 262,68 L304,66 Q314,68 312,76 Q310,82 300,84 L266,88 L304,92 Q316,94 314,102 Q312,110 300,110 L266,112 L300,118 Q312,120 310,128 Q308,136 296,135 L262,134 L290,142 Q300,146 296,153 Q292,158 282,156 L250,150 Q230,160 205,156 Q186,152 170,148 L0,152 Z";
+const FOOTSIDE = "M95,0 L145,0 Q142,60 140,100 Q150,130 190,140 Q250,150 290,158 Q312,162 312,174 Q310,186 290,186 L90,188 Q66,188 64,170 Q62,150 80,128 Q90,110 92,60 Z";
+const REGION = {
+  palm: {t:"Cẳng tay và lòng bàn tay (ngửa tay, ngón cái ở trên)", mid:false, d:`<path class="sk" d="${HAND}"/>
+    <path class="lm" d="M170,74 V148" stroke-dasharray="3 3"/><path class="lm" d="M70,104 H168 M70,118 H168 M60,142 H168"/>
+    <text class="lbm" x="6" y="64">phía ngón cái</text><text class="lbm" x="6" y="166">phía ngón út</text><text class="lbm" x="150" y="194">nếp lằn cổ tay</text>`},
+  dorsum: {t:"Mu bàn tay và cẳng tay mặt sau", mid:false, d:`<path class="sk" d="${HAND}"/>
+    <path class="lm" d="M176,84 L262,76 M180,72 L226,40 M40,92 H168 M40,128 H168" stroke-dasharray="3 3"/><path class="lm" d="M170,74 V148"/>
+    <text class="lbm" x="6" y="64">phía ngón cái</text><text class="lbm" x="6" y="166">phía ngón út</text><text class="lbm" x="60" y="88">xương quay</text><text class="lbm" x="60" y="140">xương trụ</text>`},
+  elbow: {t:"Khuỷu tay (ngửa tay)", mid:false, d:`<path class="sk" d="M0,55 Q80,52 150,62 Q165,66 180,64 Q250,62 320,70 L320,138 Q250,140 180,146 Q165,150 150,148 Q80,150 0,152 Z"/>
+    <path class="lm" d="M162,64 Q158,105 162,147"/><path class="lm" d="M80,96 Q130,94 160,98 M80,108 Q130,108 160,104"/>
+    <text class="lbm" x="40" y="45">phía ngón cái</text><text class="lbm" x="30" y="175">cánh tay</text><text class="lbm" x="250" y="175">cẳng tay</text><text class="lbm" x="70" y="126">gân cơ nhị đầu</text>`},
+  face: {t:"Mặt và đầu", mid:true, d:`<ellipse class="sk" cx="90" cy="100" rx="9" ry="18"/><ellipse class="sk" cx="230" cy="100" rx="9" ry="18"/><ellipse class="sk" cx="160" cy="105" rx="70" ry="92"/>
+    <path class="lm" d="M115,78 Q130,70 147,76 M173,76 Q190,70 205,78 M120,92 Q132,85 144,92 Q132,97 120,92Z M176,92 Q188,85 200,92 Q188,97 176,92Z M156,82 L152,122 Q148,128 152,131 Q160,134 168,131 Q172,128 168,122 L164,82 M146,124 Q138,140 140,155 M174,124 Q182,140 180,155 M142,158 Q160,165 178,158 M156,132 V155 M164,132 V155"/>`},
+  neck: {t:"Gáy và vai (nhìn từ sau)", mid:true, d:`<path class="sk" d="M135,104 L132,135 Q90,140 50,150 Q28,158 26,200 L294,200 Q292,158 270,150 Q230,140 188,135 L185,104 Z"/><ellipse class="sk" cx="106" cy="62" rx="7" ry="14"/><ellipse class="sk" cx="214" cy="62" rx="7" ry="14"/><ellipse class="sk" cx="160" cy="58" rx="52" ry="56"/>
+    <path class="lm" d="M120,98 Q160,88 200,98"/><path class="lm" d="M160,112 V198" stroke-dasharray="3 4"/><circle class="lm" cx="160" cy="142" r="3"/>
+    <text class="lbm" x="168" y="138">C7</text><text class="lbm" x="22" y="146">mỏm vai</text><text class="lbm" x="206" y="92">xương chẩm</text>`},
+  back: {t:"Lưng (nhìn từ sau)", mid:true, d:`<path class="sk" d="M40,20 Q160,5 280,20 L272,120 Q262,150 266,198 L54,198 Q58,150 48,120 Z"/>
+    <path class="lm" d="M85,35 L130,40 L124,95 Z M235,35 L190,40 L196,95 Z M60,180 Q160,166 260,180"/><path class="lm" d="M160,10 V196" stroke-dasharray="3 4"/>
+    <path class="lm" d="M86,50 L130,48 M234,50 L190,48"/>
+    <text class="lbm" x="184" y="62">T3</text><text class="lbm" x="184" y="104">T7</text><text class="lbm" x="184" y="166">L2</text><text class="lbm" x="50" y="46">gai vai</text><text class="lbm" x="200" y="192">mào chậu</text>`},
+  abd: {t:"Ngực và bụng", mid:true, d:`<path class="sk" d="M60,10 Q160,0 260,10 Q262,90 245,130 Q258,170 255,200 L65,200 Q62,170 75,130 Q58,90 60,10 Z"/>
+    <path class="lm" d="M158,12 Q120,4 82,14 M162,12 Q200,4 238,14 M160,12 V62 M160,62 Q120,90 80,108 M160,62 Q200,90 240,108 M120,196 Q160,190 200,196"/>
+    <circle class="lm" cx="115" cy="42" r="3"/><circle class="lm" cx="205" cy="42" r="3"/><circle class="lm" cx="160" cy="140" r="3"/>
+    <text class="lbm" x="86" y="32">xương đòn</text><text class="lbm" x="166" y="66">mỏm ức</text><text class="lbm" x="168" y="144">rốn</text><text class="lbm" x="204" y="192">xương mu</text>`},
+  knee: {t:"Gối và cẳng chân mặt trước", mid:false, d:`<path class="sk" d="M110,0 L210,0 Q216,40 214,80 Q212,120 200,160 Q194,185 192,200 L132,200 Q128,185 122,160 Q108,120 106,80 Q104,40 110,0 Z"/>
+    <ellipse class="lm" cx="160" cy="55" rx="18" ry="22"/><path class="lm" d="M162,82 Q166,140 168,200"/><circle class="lm" cx="206" cy="94" r="5"/><circle class="lm" cx="176" cy="80" r="3"/>
+    <text class="lbm" x="246" y="196">phía ngoài</text><text class="lbm" x="58" y="196">phía trong</text><text class="lbm" x="214" y="90">chỏm xương mác</text><text class="lbm" x="172" y="186">mào chày</text><text class="lbm" x="182" y="70">mắt gối ngoài</text>`},
+  inner: {t:"Mắt cá trong và bờ trong bàn chân", mid:false, d:`<path class="sk" d="${FOOTSIDE}"/>
+    <circle class="lm" cx="118" cy="118" r="9"/><path class="lm" d="M95,30 Q92,90 84,140"/><path class="lm" d="M130,0 L128,108" stroke-dasharray="3 3"/><path class="lm" d="M175,150 L280,166" stroke-dasharray="3 3"/>
+    <text class="lbm" x="30" y="40">gân gót</text><text class="lbm" x="150" y="40">bờ sau xương chày</text><text class="lbm" x="132" y="122">mắt cá trong</text><text class="lbm" x="240" y="152">xương bàn 1</text><text class="lbm" x="250" y="198">ngón cái</text>`},
+  outer: {t:"Mắt cá ngoài (nhìn từ bên ngoài)", mid:false, d:`<path class="sk" d="${FOOTSIDE}"/>
+    <circle class="lm" cx="118" cy="118" r="9"/><path class="lm" d="M95,30 Q92,90 84,140"/>
+    <text class="lbm" x="30" y="40">gân gót</text><text class="lbm" x="132" y="122">mắt cá ngoài</text><text class="lbm" x="250" y="198">ngón út</text>`},
+  top: {t:"Mu bàn chân (chân phải, nhìn từ trên)", mid:false, d:`<path class="sk" d="M100,46 Q96,120 112,170 Q130,200 165,200 Q200,200 210,170 Q222,110 220,56 Q200,50 170,48 Q130,44 100,46 Z"/>
+    <ellipse class="sk" cx="118" cy="30" rx="16" ry="22"/><ellipse class="sk" cx="148" cy="24" rx="9" ry="16"/><ellipse class="sk" cx="170" cy="28" rx="8" ry="15"/><ellipse class="sk" cx="190" cy="34" rx="8" ry="14"/><ellipse class="sk" cx="208" cy="44" rx="7" ry="12"/>
+    <path class="lm" d="M120,52 L134,132 M148,46 L150,132 M170,48 L166,132 M190,52 L178,130 M208,58 L194,128" stroke-dasharray="3 3"/>
+    <text class="lbm" x="40" y="30">ngón cái</text><text class="lbm" x="226" y="46">ngón út</text><text class="lbm" x="226" y="140">bờ ngoài</text>`},
+  sole: {t:"Lòng bàn chân", mid:false, d:`<path class="sk" d="M120,34 Q160,20 200,34 Q215,80 205,130 Q200,175 165,196 Q130,198 122,170 Q110,120 125,90 Q112,60 120,34 Z"/>
+    <circle class="sk" cx="130" cy="20" r="11"/><circle class="sk" cx="152" cy="13" r="7"/><circle class="sk" cx="170" cy="14" r="6.5"/><circle class="sk" cx="186" cy="18" r="6"/><circle class="sk" cx="200" cy="25" r="5.5"/>
+    <text class="lbm" x="70" y="22">ngón cái</text><text class="lbm" x="200" y="190">gót</text>`},
+  hip: {t:"Mông và khoeo chân (nhìn từ sau)", mid:false, d:`<path class="sk" d="M150,0 L300,0 Q312,60 298,100 L282,200 L190,200 L178,100 Q150,70 150,0 Z"/>
+    <path class="lm" d="M175,92 Q230,104 292,92 M196,180 H278"/><path class="lm" d="M150,0 V60" stroke-dasharray="3 4"/><circle class="lm" cx="292" cy="50" r="5"/><circle class="lm" cx="157" cy="45" r="3"/>
+    <text class="lbm" x="60" y="48">khe xương cùng</text><text class="lbm" x="240" y="30">mấu chuyển lớn</text><text class="lbm" x="200" y="196">nếp khoeo</text>`}
+};
+// [vùng, x, y, nét hướng dẫn]; nét: ["l",x1,y1,x2,y2] đường gióng, ["d",x1,y1,x2,y2,nhãn] đường đo, ["t",x,y,nhãn]
+const DET = {
+  LU7:["palm",145,79,[["l",145,79,145,52],["d",145,52,170,52,"1,5 thốn"],["l",170,52,170,74]]],
+  LU9:["palm",170,82,[["t",176,52,"chỗ mạch quay đập,\ntrên nếp cổ tay"]]],
+  PC6:["palm",136,111,[["l",136,111,136,168],["l",170,148,170,168],["d",136,168,170,168,"2 thốn (3 ngón tay)"],["t",28,100,"giữa hai gân"]]],
+  HT7:["palm",170,140,[["l",120,140,286,140],["t",190,170,"thẳng khe ngón 4 và 5,\nsát bờ gân"]]],
+  PC8:["palm",216,112,[["t",316,168,"chỗ đầu ngón giữa chạm\nkhi nắm tay","end"]]],
+  LI4:["dorsum",214,72,[["l",176,84,262,76],["t",316,172,"khép ngón cái, đỉnh chỗ cơ nổi lên;\ngiữa xương bàn 1 và 2","end"]]],
+  SI3:["dorsum",250,150,[["t",316,174,"nắm tay, đầu nếp gấp\nsau khớp ngón út","end"]]],
+  TE5:["dorsum",136,110,[["l",136,110,136,168],["l",170,148,170,168],["d",136,168,170,168,"2 thốn"],["t",20,112,"giữa 2 xương"]]],
+  LU5:["elbow",158,86,[["t",186,100,"trên nếp khuỷu,\nbờ ngoài gân nhị đầu"]]],
+  LI11:["elbow",160,63,[["t",180,22,"gập khuỷu,\nđầu ngoài nếp gấp"]]],
+  BL2:["face",147,74,[["t",20,60,"đầu trong lông mày"],["l",58,64,140,74]]],
+  GV29:["face",160,77,[["l",147,76,173,76],["t",132,48,"giữa hai đầu lông mày"]]],
+  "EX-HN5":["face",222,86,[["l",205,78,200,91],["l",203,84,222,86],["t",236,70,"sau 1 thốn"]]],
+  LI20:["face",146,124,[["l",146,124,174,124],["t",20,130,"rãnh mũi má, ngang cánh mũi"]]],
+  GV26:["face",160,139,[["d",270,131,270,155,"1/3 trên"],["l",164,139,270,139],["t",230,168,"rãnh nhân trung"]]],
+  GV20:["face",160,21,[["l",90,82,160,21],["l",230,82,160,21],["l",160,21,160,77],["t",172,16,"nối 2 đỉnh tai với đường giữa"]]],
+  GB20:["neck",137,104,[["t",8,96,"hõm dưới xương chẩm, giữa 2 cơ"],["l",112,100,132,103]]],
+  GV14:["neck",160,148,[["t",172,166,"dưới gai C7\n(đốt nhô nhất khi cúi)"]]],
+  GB21:["neck",104,147,[["l",160,142,48,152],["t",70,182,"điểm giữa C7 và mỏm vai"]]],
+  BL13:["back",145,50,[["l",145,50,160,50],["d",145,30,160,30,"1,5 thốn"],["t",186,26,"dưới gai T3, ngang gai vai"]]],
+  BL23:["back",145,150,[["l",145,150,175,150],["d",145,130,160,130,"1,5 thốn"],["t",196,154,"ngang L2, ngang rốn"]]],
+  GV4:["back",160,150,[["t",176,128,"dưới gai L2, đường giữa"]]],
+  CV17:["abd",160,42,[["l",115,42,205,42],["t",176,30,"giữa hai núm vú"]]],
+  CV12:["abd",160,101,[["d",186,101,186,140,"4 thốn"],["l",160,101,186,101],["t",196,96,"giữa rốn và mỏm ức"]]],
+  CV6:["abd",160,156,[["d",186,140,186,156,"1,5 thốn"],["l",160,156,186,156]]],
+  CV4:["abd",160,172,[["d",214,140,214,172,"3 thốn"],["l",160,172,214,172]]],
+  ST25:["abd",139,140,[["d",139,126,160,126,"2 thốn"],["l",139,140,139,126]]],
+  LR14:["abd",115,66,[["l",115,42,115,66],["t",30,80,"thẳng dưới núm vú, khe sườn 6"]]],
+  LU1:["abd",92,24,[["t",22,56,"dưới xương đòn, cách giữa 6 thốn"],["l",60,50,90,26]]],
+  ST36:["knee",174,110,[["l",176,80,234,80],["l",174,110,234,110],["d",234,80,234,110,"3 thốn"],["t",36,124,"cách mào chày 1 khoát ngón"],["l",126,121,170,110]]],
+  ST40:["knee",184,160,[["l",176,80,250,80],["l",184,160,250,160],["d",250,80,250,160,"8 thốn"],["t",22,170,"giữa gối và mắt cá ngoài"]]],
+  GB34:["knee",200,104,[["t",222,122,"trước dưới\nchỏm xương mác"]]],
+  SP9:["knee",117,100,[["t",12,92,"hõm dưới lồi cầu"],["t",12,104,"trong xương chày"]]],
+  SP10:["knee",132,14,[["l",142,36,132,14],["d",120,33,120,14,"2 thốn"],["t",8,44,"gập gối, bờ trong\ntrên xương bánh chè"]]],
+  SP6:["inner",129,70,[["l",129,70,170,70],["l",127,109,170,109],["d",170,70,170,109,"3 thốn"],["t",8,66,"sát bờ sau\nxương chày"]]],
+  KI3:["inner",101,120,[["t",8,112,"giữa mắt cá"],["t",8,124,"và gân gót"]]],
+  KI6:["inner",118,136,[["t",132,140,"ngay dưới mắt cá trong"]]],
+  SP4:["inner",210,165,[["t",168,186,"dưới đầu gần xương bàn 1"]]],
+  BL60:["outer",101,120,[["t",8,112,"giữa mắt cá"],["t",8,124,"và gân gót"]]],
+  BL62:["outer",118,136,[["t",132,140,"ngay dưới mắt cá ngoài"]]],
+  LR3:["top",141,100,[["t",20,110,"lõm trước chỗ gặp"],["t",20,122,"xương bàn 1 và 2"],["l",92,114,138,102]]],
+  GB41:["top",191,108,[["t",226,104,"trước chỗ gặp"],["t",226,116,"xương bàn 4 và 5"]]],
+  BL67:["top",214,38,[["t",232,16,"góc ngoài\nmóng ngón út"]]],
+  KI1:["sole",161,76,[["l",161,30,166,190],["t",224,72,"1/3 trước, chỗ lõm"],["t",224,84,"khi co các ngón"]]],
+  GB30:["hip",247,48,[["l",157,45,292,50],["t",182,128,"1/3 ngoài đường nối mấu\nchuyển lớn với khe cùng"]]],
+  BL40:["hip",237,180,[["t",200,166,"giữa nếp khoeo"]]]
+};
+function detailSVG(code){
+  const d = DET[code]; if (!d) return "";
+  const [r, x, y, g] = d, R = REGION[r];
+  const others = Object.entries(DET).filter(([c, v]) => v[0] === r && c !== code).map(([c, v]) => {
+    const xs = R.mid && v[1] !== 160 ? [v[1], 320 - v[1]] : [v[1]];
+    return xs.map(xx => `<circle class="od" cx="${xx}" cy="${v[2]}" r="3"/>`).join("") + `<text class="lbo" x="${v[1] + 5}" y="${v[2] - 4}">${c}</text>`;
+  }).join("");
+  const guides = g.map(s => {
+    if (s[0] === "l") return `<line class="gd" x1="${s[1]}" y1="${s[2]}" x2="${s[3]}" y2="${s[4]}"/>`;
+    if (s[0] === "t") return `<text class="lb" x="${s[1]}" y="${s[2]}" text-anchor="${s[4] || "start"}">${s[3].split("\n").map((ln, k) => `<tspan x="${s[1]}" dy="${k ? 12 : 0}">${esc(ln)}</tspan>`).join("")}</text>`;
+    const [, x1, y1, x2, y2, lab] = s, v = x1 === x2, mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    const tick = v ? `M${x1 - 4},${y1}H${x1 + 4}M${x2 - 4},${y2}H${x2 + 4}` : `M${x1},${y1 - 4}V${y1 + 4}M${x2},${y2 - 4}V${y2 + 4}`;
+    return `<path class="dm" d="M${x1},${y1}L${x2},${y2}${tick}"/><text class="dt" x="${v ? mx + 6 : mx}" y="${v ? my + 3 : my - 6}" text-anchor="${v ? "start" : "middle"}">${esc(lab)}</text>`;
+  }).join("");
+  const twin = R.mid && x !== 160 ? `<circle class="hp" cx="${320 - x}" cy="${y}" r="5"/>` : "";
+  return `<figure class="detail"><svg viewBox="0 0 320 200" role="img" aria-label="Hình chi tiết vị trí huyệt ${esc(code)}">${R.d}${others}${guides}${twin}<circle class="hp" cx="${x}" cy="${y}" r="5.5"/></svg><figcaption>${esc(R.t)}</figcaption></figure>`;
+}
+
 function cardHTML(p, withLink){
   return `<article class="pt">
     <div class="top"><h3>${esc(p.n)}</h3><span class="han">${esc(p.han)}</span><span class="code">${p.c}</span>${p.preg ? '<span class="preg">Kiêng khi có thai</span>' : ""}</div>
     <div class="tags"><span class="pill">${esc(KN[p.k])}</span><span class="pill">${esc(p.v)}</span>${p.tags.map(t => `<span class="pill">${esc(t)}</span>`).join("")}</div>
+    ${detailSVG(p.c)}
     <dl><dt>Vị trí</dt><dd>${esc(p.loc)}</dd><dt>Công dụng</dt><dd>${esc(p.use)}</dd>
     <dt>Bằng chứng</dt><dd>${p.ev ? `<span class="ev ${p.ev}">${EVL[p.ev]}</span> ${esc(p.evn)}` : `<span class="ev t">Chưa rõ</span> Chưa có nghiên cứu riêng đáng kể cho huyệt này; dựa trên kinh nghiệm cổ truyền.`}</dd>
     ${p.warn ? `<dt>Lưu ý</dt><dd style="color:var(--warn)">${esc(p.warn)}</dd>` : ""}</dl>
@@ -602,6 +731,7 @@ window.atlas = (function(){
 })();
 
 </script>
+
 <script>
 if (window.self !== window.top) {
   document.documentElement.classList.add("embedded");
