@@ -99,6 +99,19 @@ td.name small { color: var(--muted); }
 .note { border-left: 3px solid var(--ev-none); padding: 4px 0 4px 14px; max-width: 75ch; display: grid; gap: 6px; font-size: .92rem; }
 .sources { margin: 0; padding-left: 20px; font-size: .85rem; color: var(--muted); display: grid; gap: 4px; }
 
+.bai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.bai { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 8px; align-content: start; }
+.bai h3 { font-size: 1.08rem; }
+.bai .src { font-size: .78rem; color: var(--muted); }
+.bai dl { margin: 0; display: grid; gap: 6px; font-size: .88rem; }
+.bai dt { font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.bai dd { margin: 0; }
+.vithuoc { display: flex; flex-wrap: wrap; gap: 4px; }
+.vithuoc span, .vithuoc button { font: inherit; font-size: .8rem; border: 1px solid var(--line); border-radius: 4px; padding: 1px 7px; background: var(--bg); color: var(--fg); }
+.vithuoc button { cursor: pointer; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.vithuoc button:hover { border-color: var(--accent); }
+.bai .lu { font-size: .85rem; }
+
 @media (max-width: 760px) {
   .factors { grid-template-columns: 1fr; }
   .row > .lbl { width: 100%; }
@@ -111,9 +124,9 @@ body{margin:0}
 <div class="wrap">
   <header>
     <div class="eyebrow">Dự án Healthy · Đông y</div>
-    <h1>Tính, khí, vị của thực phẩm và cây thuốc</h1>
-    <p class="lede">Bảng tra 90 loại thức ăn thực vật, động vật và vị thuốc thông dụng ở Việt Nam, xếp theo ba yếu tố Đông y dùng để xét một thứ ăn hay một vị thuốc. Cột cuối ghi những gì y học hiện đại đã kiểm chứng và các lưu ý an toàn.</p>
-    <p class="meta">Cập nhật 29/10/2026 · Đi kèm trang <a href="truong-phai.html#dong-y">Bản đồ trường phái chữa bệnh</a>. Trang để tham khảo; không tự dùng vị thuốc khi chưa hỏi thầy thuốc hoặc bác sĩ.</p>
+    <h1>Tính, khí, vị của thực phẩm, cây thuốc và bài thuốc</h1>
+    <p class="lede">Bảng tra 166 loại thức ăn thực vật, động vật và vị thuốc thông dụng ở Việt Nam, xếp theo ba yếu tố Đông y dùng để xét một thứ ăn hay một vị thuốc. Cột cuối ghi những gì y học hiện đại đã kiểm chứng và các lưu ý an toàn.</p>
+    <p class="meta">Cập nhật 12/11/2026 · Đi kèm trang <a href="truong-phai.html#dong-y">Bản đồ trường phái chữa bệnh</a>. Có thêm phần <a href="#bai-thuoc">bài thuốc theo nhóm bệnh</a>. Trang để tham khảo; không tự dùng vị thuốc khi chưa hỏi thầy thuốc hoặc bác sĩ.</p>
   </header>
 
   <section aria-label="Ba yếu tố">
@@ -152,6 +165,20 @@ body{margin:0}
         <tbody id="rows"></tbody>
       </table>
     </div>
+  </section>
+
+  <section aria-labelledby="bai-h" id="bai-thuoc">
+    <h2 id="bai-h">Bài thuốc theo nhóm bệnh</h2>
+    <p class="lede">43 bài: bài cổ phương kinh điển và bài Nam dược, dân gian quen dùng ở Việt Nam. Bấm vào tên một vị có gạch chân để xem tính, vị của nó trong bảng tra ở trên.</p>
+    <div class="note">
+      <p>Một bài thuốc cổ phương gồm vị chủ (quân), vị hỗ trợ (thần), vị điều chỉnh tác dụng phụ (tá) và vị dẫn thuốc, điều hoà (sứ). Thầy thuốc chọn bài theo <strong>chứng</strong> (thể bệnh) sau khi xem mạch, lưỡi, chứ không chỉ theo tên bệnh, rồi thêm bớt vị và chỉnh liều cho từng người. Vì vậy trang này không ghi liều. Đừng tự bốc thuốc theo trang này: hỏi thầy thuốc y học cổ truyền có chứng chỉ, và báo bác sĩ nếu đang dùng thuốc tây.</p>
+    </div>
+    <div class="controls" id="b-controls">
+      <div class="row"><span class="lbl">Nhóm</span><span id="b-group"></span></div>
+      <div class="row"><span class="lbl">Loại</span><span id="b-kind"></span></div>
+      <div class="row"><span class="lbl">Tìm</span><input type="search" id="bq" placeholder="Tên bài, vị thuốc, triệu chứng…" aria-label="Tìm bài thuốc"><span class="count" id="bcount"></span></div>
+    </div>
+    <div class="bai-grid" id="bai-list"></div>
   </section>
 
   <section>
@@ -234,39 +261,115 @@ const D = [
   ["Ốc", "Điền loa", "dv", "Hải sản", 0, "hàn", "ngọt", "", "Vị, Bàng quang", "Thanh nhiệt, lợi tiểu", "Nấu chín kỹ để tránh giun tròn gây viêm màng não.", "", 0],
   ["Tôm", "Hà", "dv", "Hải sản", 3, "ôn", "ngọt", "", "Can, Thận", "Bổ thận tráng dương", "", "", 0],
   ["Hàu", "Mẫu lệ (vỏ)", "dv", "Hải sản", 1, "lương", "ngọt, mặn", "liễm", "Can, Thận", "Thịt dưỡng huyết; vỏ (mẫu lệ) an thần, thu liễm", "Rất giàu kẽm.", "", 0],
-  ["Cam thảo", "", "ct", "Bổ khí", 2, "bình", "ngọt", "", "Tâm, Phế, Tỳ, Vị", "Bổ tỳ ích khí, điều hoà các vị thuốc", "Dùng nhiều, kéo dài gây tăng huyết áp, giữ nước, hạ kali.", "s", 0],
-  ["Nhân sâm", "", "ct", "Bổ khí", 3, "hơi ôn", "ngọt, hơi đắng", "thăng", "Tỳ, Phế, Tâm", "Đại bổ nguyên khí, an thần", "Giảm mệt mỏi: kết quả trái chiều. Tương tác với warfarin và thuốc tiểu đường.", "w", 0],
-  ["Đảng sâm", "", "ct", "Bổ khí", 2, "bình", "ngọt", "", "Tỳ, Phế", "Bổ trung ích khí", "", "", 0],
-  ["Hoàng kỳ", "", "ct", "Bổ khí", 3, "hơi ôn", "ngọt", "thăng", "Tỳ, Phế", "Bổ khí thăng dương, cố biểu chỉ hãn", "Nghiên cứu về miễn dịch còn nhỏ.", "w", 0],
-  ["Đương quy", "", "ct", "Bổ huyết", 3, "ôn", "ngọt, cay", "", "Can, Tâm, Tỳ", "Bổ huyết, hoạt huyết, điều kinh", "Tăng tác dụng thuốc chống đông.", "", 0],
-  ["Thục địa", "", "ct", "Bổ huyết", 3, "hơi ôn", "ngọt", "", "Can, Thận", "Bổ huyết, tư âm", "", "", 0],
-  ["Hà thủ ô đỏ", "", "ct", "Bổ huyết", 3, "hơi ôn", "đắng, ngọt, chát", "liễm", "Can, Thận", "Bổ can thận, đen tóc", "Nhiều báo cáo tổn thương gan, kể cả khi đã chế.", "", 1],
-  ["Kỷ tử", "Câu kỷ", "ct", "Bổ âm", 2, "bình", "ngọt", "", "Can, Thận, Phế", "Tư bổ can thận, minh mục", "Có thể tương tác với warfarin.", "", 0],
-  ["Ngũ vị tử", "", "ct", "Thu liễm", 3, "ôn", "chua", "liễm", "Phế, Tâm, Thận", "Thu liễm cố sáp, sinh tân, an thần", "", "", 0],
-  ["Ô mai", "Ô mai (mơ hun)", "ct", "Thu liễm", 2, "bình", "chua, chát", "liễm", "Can, Tỳ, Phế, Đại tràng", "Liễm phế chỉ khái, sáp trường chỉ tả, sinh tân", "", "", 0],
-  ["Liên nhục", "Hạt sen", "ct", "Thu liễm", 2, "bình", "ngọt, chát", "liễm", "Tâm, Tỳ, Thận", "Kiện tỳ chỉ tả, dưỡng tâm an thần", "", "", 0],
-  ["Liên tâm", "Tâm sen", "ct", "An thần", 0, "hàn", "đắng", "giáng", "Tâm", "Thanh tâm hoả, an thần", "Hỗ trợ giấc ngủ: chưa có thử nghiệm tốt ở người.", "w", 0],
-  ["Toan táo nhân", "", "ct", "An thần", 2, "bình", "ngọt, chua", "liễm", "Tâm, Can", "Dưỡng tâm an thần, liễm hãn", "Cải thiện giấc ngủ trong vài thử nghiệm nhỏ.", "w", 0],
-  ["Bạc hà", "", "ct", "Giải biểu", 1, "lương", "cay", "xuất, thăng", "Phế, Can", "Sơ tán phong nhiệt, thanh lợi đầu mắt", "Viên dầu bạc hà giảm triệu chứng hội chứng ruột kích thích.", "m", 0],
-  ["Quế chi", "", "ct", "Giải biểu", 3, "ôn", "cay, ngọt", "xuất", "Tâm, Phế, Bàng quang", "Phát hãn giải cơ, ôn kinh thông mạch", "Quế cassia chứa coumarin, dùng liều cao kéo dài có thể hại gan.", "", 0],
-  ["Ma hoàng", "", "ct", "Giải biểu", 3, "ôn", "cay, hơi đắng", "xuất", "Phế, Bàng quang", "Phát hãn mạnh, bình suyễn, lợi thuỷ", "Chứa ephedrin: gây tăng huyết áp, loạn nhịp, đột quỵ. Bị cấm trong thực phẩm bổ sung ở Mỹ từ 2004.", "", 1],
-  ["Cát căn", "Sắn dây", "ct", "Giải biểu", 1, "lương", "ngọt, cay", "thăng", "Tỳ, Vị", "Giải cơ thoái nhiệt, sinh tân, thăng dương chỉ tả", "", "", 0],
-  ["Sài hồ", "", "ct", "Giải biểu", 1, "hơi hàn", "đắng, cay", "thăng", "Can, Đởm", "Sơ can giải uất, thăng dương", "", "", 0],
-  ["Kim ngân hoa", "", "ct", "Thanh nhiệt", 0, "hàn", "ngọt", "", "Phế, Vị, Tâm", "Thanh nhiệt giải độc", "", "", 0],
-  ["Hoàng liên", "", "ct", "Thanh nhiệt", 0, "hàn", "đắng", "giáng", "Tâm, Can, Vị, Đại tràng", "Thanh nhiệt táo thấp, tả hoả", "Berberin hạ đường huyết và mỡ máu trong nhiều thử nghiệm, chất lượng không đều; tương tác nhiều thuốc.", "m", 0],
-  ["Hoàng cầm", "", "ct", "Thanh nhiệt", 0, "hàn", "đắng", "giáng", "Phế, Đởm, Vị, Đại tràng", "Thanh nhiệt táo thấp, an thai", "", "", 0],
-  ["Cúc hoa", "", "ct", "Thanh nhiệt", 1, "hơi hàn", "ngọt, đắng", "", "Phế, Can", "Tán phong nhiệt, thanh can minh mục", "", "", 0],
-  ["Diếp cá", "Ngư tinh thảo", "ct", "Thanh nhiệt", 1, "hơi hàn", "cay", "", "Phế", "Thanh nhiệt giải độc, tiêu ung", "Dạng tiêm từng gây phản vệ ở Trung Quốc; ăn như rau thì an toàn.", "", 0],
-  ["Diệp hạ châu", "Chó đẻ răng cưa", "ct", "Thanh nhiệt", 1, "lương", "đắng", "", "Can", "Thanh can, giải độc, lợi tiểu", "Tác dụng với viêm gan B: thử nghiệm nhỏ, chưa đủ để thay thuốc kháng virus.", "w", 0],
-  ["Atiso", "", "ct", "Thanh nhiệt", 1, "lương", "đắng", "", "Can, Đởm", "Lợi mật, thanh nhiệt", "Giảm chứng khó tiêu trong vài thử nghiệm nhỏ.", "w", 0],
-  ["Đại hoàng", "", "ct", "Tả hạ", 0, "hàn", "đắng", "giáng", "Tỳ, Vị, Đại tràng, Can", "Tả hạ công tích, thanh nhiệt", "Nhuận tràng mạnh nhờ anthraquinon; không dùng kéo dài.", "m", 0],
-  ["Hạnh nhân đắng", "Khổ hạnh nhân", "ct", "Chỉ khái", 3, "hơi ôn", "đắng", "giáng", "Phế, Đại tràng", "Chỉ khái bình suyễn, nhuận tràng", "Chứa amygdalin sinh xyanua; quá liều gây ngộ độc.", "", 1],
-  ["Ích mẫu", "", "ct", "Hoạt huyết", 1, "hơi hàn", "đắng, cay", "giáng", "Can, Tâm bào", "Hoạt huyết điều kinh, lợi thuỷ", "Không dùng khi mang thai.", "", 0],
-  ["Nghệ", "Khương hoàng", "ct", "Hoạt huyết", 3, "ôn", "cay, đắng", "", "Can, Tỳ", "Hoạt huyết, hành khí, chỉ thống", "Curcumin giảm nhẹ đau khớp gối; có báo cáo tổn thương gan với chế phẩm liều cao.", "w", 0],
-  ["Ngải cứu", "Ngải diệp", "ct", "Ôn lý", 3, "ôn", "đắng, cay", "", "Can, Tỳ, Thận", "Ôn kinh chỉ huyết, an thai, tán hàn", "", "", 0],
-  ["Đinh hương", "", "ct", "Ôn lý", 3, "ôn", "cay", "giáng", "Tỳ, Vị, Thận", "Ôn trung giáng nghịch, chỉ nôn", "Dầu đinh hương gây tê nhẹ khi đau răng.", "w", 0],
-  ["Nhục quế", "", "ct", "Ôn lý", 4, "đại nhiệt", "cay, ngọt", "", "Thận, Tỳ, Tâm, Can", "Bổ hoả trợ dương, tán hàn chỉ thống", "Tác dụng hạ đường huyết: kết quả trái chiều.", "w", 0],
-  ["Phụ tử (chế)", "", "ct", "Ôn lý", 4, "đại nhiệt", "cay", "", "Tâm, Thận, Tỳ", "Hồi dương cứu nghịch, bổ hoả", "Chứa aconitin, độc với tim; ngộ độc có thể tử vong ngay cả khi đã chế.", "", 1]
+  ["Cam thảo", "", "ct", "Bổ khí · rễ", 2, "bình", "ngọt", "", "Tâm, Phế, Tỳ, Vị", "Bổ tỳ ích khí, điều hoà các vị thuốc", "Dùng nhiều, kéo dài gây tăng huyết áp, giữ nước, hạ kali.", "s", 0],
+  ["Nhân sâm", "", "ct", "Bổ khí · rễ", 3, "hơi ôn", "ngọt, hơi đắng", "thăng", "Tỳ, Phế, Tâm", "Đại bổ nguyên khí, an thần", "Giảm mệt mỏi: kết quả trái chiều. Tương tác với warfarin và thuốc tiểu đường.", "w", 0],
+  ["Đảng sâm", "", "ct", "Bổ khí · rễ", 2, "bình", "ngọt", "", "Tỳ, Phế", "Bổ trung ích khí", "", "", 0],
+  ["Hoàng kỳ", "", "ct", "Bổ khí · rễ", 3, "hơi ôn", "ngọt", "thăng", "Tỳ, Phế", "Bổ khí thăng dương, cố biểu chỉ hãn", "Nghiên cứu về miễn dịch còn nhỏ.", "w", 0],
+  ["Đương quy", "", "ct", "Bổ huyết · rễ", 3, "ôn", "ngọt, cay", "", "Can, Tâm, Tỳ", "Bổ huyết, hoạt huyết, điều kinh", "Tăng tác dụng thuốc chống đông.", "", 0],
+  ["Thục địa", "", "ct", "Bổ huyết · củ", 3, "hơi ôn", "ngọt", "", "Can, Thận", "Bổ huyết, tư âm", "", "", 0],
+  ["Hà thủ ô đỏ", "", "ct", "Bổ huyết · củ", 3, "hơi ôn", "đắng, ngọt, chát", "liễm", "Can, Thận", "Bổ can thận, đen tóc", "Nhiều báo cáo tổn thương gan, kể cả khi đã chế.", "", 1],
+  ["Kỷ tử", "Câu kỷ", "ct", "Bổ âm · quả", 2, "bình", "ngọt", "", "Can, Thận, Phế", "Tư bổ can thận, minh mục", "Có thể tương tác với warfarin.", "", 0],
+  ["Ngũ vị tử", "", "ct", "Thu liễm · quả", 3, "ôn", "chua", "liễm", "Phế, Tâm, Thận", "Thu liễm cố sáp, sinh tân, an thần", "", "", 0],
+  ["Ô mai", "Ô mai (mơ hun)", "ct", "Thu liễm · quả", 2, "bình", "chua, chát", "liễm", "Can, Tỳ, Phế, Đại tràng", "Liễm phế chỉ khái, sáp trường chỉ tả, sinh tân", "", "", 0],
+  ["Liên nhục", "Hạt sen", "ct", "Thu liễm · hạt", 2, "bình", "ngọt, chát", "liễm", "Tâm, Tỳ, Thận", "Kiện tỳ chỉ tả, dưỡng tâm an thần", "", "", 0],
+  ["Liên tâm", "Tâm sen", "ct", "An thần · mầm hạt", 0, "hàn", "đắng", "giáng", "Tâm", "Thanh tâm hoả, an thần", "Hỗ trợ giấc ngủ: chưa có thử nghiệm tốt ở người.", "w", 0],
+  ["Toan táo nhân", "", "ct", "An thần · hạt", 2, "bình", "ngọt, chua", "liễm", "Tâm, Can", "Dưỡng tâm an thần, liễm hãn", "Cải thiện giấc ngủ trong vài thử nghiệm nhỏ.", "w", 0],
+  ["Bạc hà", "", "ct", "Giải biểu · cả cây", 1, "lương", "cay", "xuất, thăng", "Phế, Can", "Sơ tán phong nhiệt, thanh lợi đầu mắt", "Viên dầu bạc hà giảm triệu chứng hội chứng ruột kích thích.", "m", 0],
+  ["Quế chi", "", "ct", "Giải biểu · cành", 3, "ôn", "cay, ngọt", "xuất", "Tâm, Phế, Bàng quang", "Phát hãn giải cơ, ôn kinh thông mạch", "Quế cassia chứa coumarin, dùng liều cao kéo dài có thể hại gan.", "", 0],
+  ["Ma hoàng", "", "ct", "Giải biểu · thân", 3, "ôn", "cay, hơi đắng", "xuất", "Phế, Bàng quang", "Phát hãn mạnh, bình suyễn, lợi thuỷ", "Chứa ephedrin: gây tăng huyết áp, loạn nhịp, đột quỵ. Bị cấm trong thực phẩm bổ sung ở Mỹ từ 2004.", "", 1],
+  ["Cát căn", "Sắn dây", "ct", "Giải biểu · củ", 1, "lương", "ngọt, cay", "thăng", "Tỳ, Vị", "Giải cơ thoái nhiệt, sinh tân, thăng dương chỉ tả", "", "", 0],
+  ["Sài hồ", "", "ct", "Giải biểu · rễ", 1, "hơi hàn", "đắng, cay", "thăng", "Can, Đởm", "Sơ can giải uất, thăng dương", "", "", 0],
+  ["Kim ngân hoa", "", "ct", "Thanh nhiệt · hoa", 0, "hàn", "ngọt", "", "Phế, Vị, Tâm", "Thanh nhiệt giải độc", "", "", 0],
+  ["Hoàng liên", "", "ct", "Thanh nhiệt · thân rễ", 0, "hàn", "đắng", "giáng", "Tâm, Can, Vị, Đại tràng", "Thanh nhiệt táo thấp, tả hoả", "Berberin hạ đường huyết và mỡ máu trong nhiều thử nghiệm, chất lượng không đều; tương tác nhiều thuốc.", "m", 0],
+  ["Hoàng cầm", "", "ct", "Thanh nhiệt · rễ", 0, "hàn", "đắng", "giáng", "Phế, Đởm, Vị, Đại tràng", "Thanh nhiệt táo thấp, an thai", "", "", 0],
+  ["Cúc hoa", "", "ct", "Thanh nhiệt · hoa", 1, "hơi hàn", "ngọt, đắng", "", "Phế, Can", "Tán phong nhiệt, thanh can minh mục", "", "", 0],
+  ["Diếp cá", "Ngư tinh thảo", "ct", "Thanh nhiệt · cả cây", 1, "hơi hàn", "cay", "", "Phế", "Thanh nhiệt giải độc, tiêu ung", "Dạng tiêm từng gây phản vệ ở Trung Quốc; ăn như rau thì an toàn.", "", 0],
+  ["Diệp hạ châu", "Chó đẻ răng cưa", "ct", "Thanh nhiệt · cả cây", 1, "lương", "đắng", "", "Can", "Thanh can, giải độc, lợi tiểu", "Tác dụng với viêm gan B: thử nghiệm nhỏ, chưa đủ để thay thuốc kháng virus.", "w", 0],
+  ["Atiso", "", "ct", "Thanh nhiệt · lá", 1, "lương", "đắng", "", "Can, Đởm", "Lợi mật, thanh nhiệt", "Giảm chứng khó tiêu trong vài thử nghiệm nhỏ.", "w", 0],
+  ["Đại hoàng", "", "ct", "Tả hạ · thân rễ", 0, "hàn", "đắng", "giáng", "Tỳ, Vị, Đại tràng, Can", "Tả hạ công tích, thanh nhiệt", "Nhuận tràng mạnh nhờ anthraquinon; không dùng kéo dài.", "m", 0],
+  ["Hạnh nhân đắng", "Khổ hạnh nhân", "ct", "Chỉ khái · hạt", 3, "hơi ôn", "đắng", "giáng", "Phế, Đại tràng", "Chỉ khái bình suyễn, nhuận tràng", "Chứa amygdalin sinh xyanua; quá liều gây ngộ độc.", "", 1],
+  ["Ích mẫu", "", "ct", "Hoạt huyết · cả cây", 1, "hơi hàn", "đắng, cay", "giáng", "Can, Tâm bào", "Hoạt huyết điều kinh, lợi thuỷ", "Không dùng khi mang thai.", "", 0],
+  ["Nghệ", "Khương hoàng", "ct", "Hoạt huyết · củ", 3, "ôn", "cay, đắng", "", "Can, Tỳ", "Hoạt huyết, hành khí, chỉ thống", "Curcumin giảm nhẹ đau khớp gối; có báo cáo tổn thương gan với chế phẩm liều cao.", "w", 0],
+  ["Ngải cứu", "Ngải diệp", "ct", "Ôn lý · lá", 3, "ôn", "đắng, cay", "", "Can, Tỳ, Thận", "Ôn kinh chỉ huyết, an thai, tán hàn", "", "", 0],
+  ["Đinh hương", "", "ct", "Ôn lý · nụ hoa", 3, "ôn", "cay", "giáng", "Tỳ, Vị, Thận", "Ôn trung giáng nghịch, chỉ nôn", "Dầu đinh hương gây tê nhẹ khi đau răng.", "w", 0],
+  ["Nhục quế", "", "ct", "Ôn lý · vỏ thân", 4, "đại nhiệt", "cay, ngọt", "", "Thận, Tỳ, Tâm, Can", "Bổ hoả trợ dương, tán hàn chỉ thống", "Tác dụng hạ đường huyết: kết quả trái chiều.", "w", 0],
+  ["Phụ tử (chế)", "", "ct", "Ôn lý · củ", 4, "đại nhiệt", "cay", "", "Tâm, Thận, Tỳ", "Hồi dương cứu nghịch, bổ hoả", "Chứa aconitin, độc với tim; ngộ độc có thể tử vong ngay cả khi đã chế.", "", 1],
+  ["Lá lốt", "Tất bát", "ct", "Ôn lý · lá", 3, "ôn", "cay", "", "Tỳ, Vị", "Ôn trung tán hàn, chỉ thống; dùng khi đau nhức xương khớp, tê bì, đầy bụng do lạnh", "", "", 0],
+  ["Kinh giới", "", "ct", "Giải biểu · cả cây", 3, "hơi ôn", "cay", "xuất", "Phế, Can", "Phát tán phong hàn, giải cảm; sao đen để cầm máu", "", "", 0],
+  ["Hương nhu tía", "", "ct", "Giải biểu · cả cây", 3, "hơi ôn", "cay", "xuất", "Phế, Vị", "Phát hãn giải thử, hoá thấp, lợi tiểu", "", "", 0],
+  ["Húng chanh", "Tần dày lá", "ct", "Chỉ khái · lá", 3, "hơi ôn", "cay, chua", "xuất", "Phế", "Giải cảm, tiêu đàm, chỉ khái", "", "", 0],
+  ["Lá trầu không", "", "ct", "Ôn lý · lá", 3, "ôn", "cay", "xuất", "Phế, Tỳ", "Trừ phong, sát trùng, tiêu viêm; chủ yếu dùng ngoài", "Dịch chiết có tính kháng khuẩn trong phòng thí nghiệm.", "w", 0],
+  ["Lá sen", "Hà diệp", "ct", "Thanh nhiệt · lá", 2, "bình", "đắng", "thăng", "Can, Tỳ, Vị", "Thanh thử lợi thấp, thăng dương, chỉ huyết", "Hay được quảng cáo giảm cân, chưa có thử nghiệm tốt ở người.", "n", 0],
+  ["Lá vông nem", "Hải đồng bì", "ct", "An thần · lá", 2, "bình", "đắng", "", "Tâm, Can", "An thần, trấn kinh", "Hỗ trợ giấc ngủ: chưa có thử nghiệm tốt ở người.", "n", 0],
+  ["Lá vối", "", "ct", "Tiêu thực · lá, nụ", 1, "lương", "đắng, chát", "", "Tỳ, Vị", "Thanh nhiệt, tiêu thực, sát khuẩn", "Tác dụng hạ đường huyết mới thấy trên động vật.", "w", 0],
+  ["Lá ổi", "", "ct", "Thu liễm · búp lá", 2, "bình", "chát", "liễm", "Tỳ, Vị, Đại tràng", "Sáp trường chỉ tả", "Giảm tiêu chảy trong vài thử nghiệm nhỏ.", "w", 0],
+  ["Lá khôi", "Khôi tía", "ct", "Chỉ thống · lá", 2, "bình", "đắng, chát", "", "Can, Vị", "Thanh nhiệt giải độc, chỉ thống, dùng khi đau dạ dày", "Chưa có thử nghiệm tốt trên người.", "n", 0],
+  ["Trắc bách diệp", "", "ct", "Chỉ huyết · lá", 1, "hơi hàn", "đắng, chát", "liễm", "Phế, Can, Đại tràng", "Lương huyết chỉ huyết", "", "", 0],
+  ["Bồ công anh", "", "ct", "Thanh nhiệt · lá, cả cây", 0, "hàn", "đắng, ngọt", "", "Can, Vị", "Thanh nhiệt giải độc, tiêu ung tán kết, dùng khi viêm tắc tia sữa", "", "", 0],
+  ["Chè dây", "", "ct", "Thanh nhiệt · lá", 1, "lương", "ngọt, đắng", "", "Can, Vị", "Thanh nhiệt giải độc, chỉ thống, dùng khi đau dạ dày", "Vài nghiên cứu nhỏ trong nước về viêm loét dạ dày, chất lượng thấp.", "w", 0],
+  ["Rau sam", "Mã xỉ hiện", "ct", "Thanh nhiệt · cả cây", 0, "hàn", "chua", "", "Đại tràng, Can", "Thanh nhiệt giải độc, chỉ lỵ", "", "", 0],
+  ["Cỏ mực", "Nhọ nồi, Mặc hạn liên", "ct", "Chỉ huyết · cả cây", 1, "lương", "ngọt, chua", "liễm", "Can, Thận", "Lương huyết chỉ huyết, bổ can thận âm", "", "", 0],
+  ["Mã đề", "Xa tiền, Xa tiền tử", "ct", "Lợi thuỷ · cả cây, hạt", 0, "hàn", "ngọt", "giáng", "Thận, Bàng quang, Can, Phế", "Lợi tiểu thông lâm, thanh can minh mục, chỉ khái", "", "", 0],
+  ["Kim tiền thảo", "", "ct", "Lợi thuỷ · cả cây", 1, "hơi hàn", "ngọt, nhạt", "giáng", "Can, Đởm, Thận, Bàng quang", "Lợi thấp thoái hoàng, lợi niệu, dùng khi sỏi tiết niệu, sỏi mật", "Hỗ trợ tống sỏi tiết niệu: nghiên cứu nhỏ, chất lượng thấp.", "w", 0],
+  ["Râu ngô", "Ngọc mễ tu", "ct", "Lợi thuỷ · râu", 2, "bình", "ngọt", "giáng", "Bàng quang, Can, Đởm", "Lợi tiểu, lợi mật", "Lợi tiểu nhẹ trên động vật; dữ liệu ở người ít.", "w", 0],
+  ["Sài đất", "", "ct", "Thanh nhiệt · cả cây", 1, "lương", "ngọt, hơi chua", "", "Can, Phế", "Thanh nhiệt giải độc, tiêu viêm, dùng khi mụn nhọt, rôm sảy", "", "", 0],
+  ["Cối xay", "", "ct", "Thanh nhiệt · cả cây", 1, "lương", "ngọt, nhạt", "", "Can, Phế", "Thanh nhiệt, lợi tiểu, giải độc", "", "", 0],
+  ["Cam thảo đất", "", "ct", "Thanh nhiệt · cả cây", 1, "lương", "ngọt", "", "Phế, Tỳ", "Thanh nhiệt giải độc, chỉ khái", "", "", 0],
+  ["Lạc tiên", "Nhãn lồng", "ct", "An thần · cả cây", 1, "lương", "ngọt, hơi đắng", "", "Tâm, Can", "Dưỡng tâm an thần, thanh nhiệt", "Chi Passiflora giảm lo âu nhẹ trong vài thử nghiệm nhỏ.", "w", 0],
+  ["Hy thiêm", "Cỏ đĩ", "ct", "Trừ phong thấp · cả cây", 0, "hàn", "đắng", "", "Can, Thận", "Trừ phong thấp, thông kinh lạc, dùng khi đau nhức khớp", "", "", 0],
+  ["Cà gai leo", "", "ct", "Trừ phong thấp · thân, rễ", 3, "ôn", "hơi cay", "", "Can", "Trừ phong thấp, giải độc, hay dùng cho gan", "Tác dụng với viêm gan: nghiên cứu nhỏ trong nước, chất lượng thấp.", "w", 0],
+  ["Xạ đen", "", "ct", "Thanh nhiệt · thân, lá", 1, "lương", "đắng, chát", "", "Can", "Thanh nhiệt giải độc, tiêu ung", "Quảng cáo chữa ung thư không có bằng chứng ở người.", "n", 0],
+  ["Dây thìa canh", "", "ct", "Thanh nhiệt · thân, lá", 1, "lương", "đắng", "", "Tỳ, Can", "Hay dùng hỗ trợ hạ đường huyết", "Chi Gymnema giảm nhẹ đường huyết trong vài thử nghiệm nhỏ; không thay thuốc tiểu đường.", "w", 0],
+  ["Hoài sơn", "Củ mài, Sơn dược", "ct", "Bổ khí · củ", 2, "bình", "ngọt", "", "Tỳ, Phế, Thận", "Bổ tỳ dưỡng vị, sinh tân ích phế, bổ thận sáp tinh", "", "", 0],
+  ["Bạch truật", "", "ct", "Bổ khí · thân rễ", 3, "ôn", "đắng, ngọt", "", "Tỳ, Vị", "Kiện tỳ táo thấp, chỉ hãn, an thai", "", "", 0],
+  ["Đinh lăng", "", "ct", "Bổ khí · rễ, lá", 2, "bình", "ngọt, hơi đắng", "", "Tỳ, Phế", "Bổ khí huyết, lợi sữa, giải độc", "Dữ liệu chủ yếu trên động vật.", "w", 0],
+  ["Sâm Ngọc Linh", "", "ct", "Bổ khí · thân rễ", 3, "hơi ôn", "đắng, hơi ngọt", "thăng", "Tỳ, Phế", "Bổ khí, tăng sức chịu đựng", "Nghiên cứu trên người còn rất ít.", "w", 0],
+  ["Bạch thược", "", "ct", "Bổ huyết · rễ", 1, "hơi hàn", "đắng, chua", "liễm", "Can, Tỳ", "Dưỡng huyết liễm âm, nhu can chỉ thống", "", "", 0],
+  ["Mạch môn", "", "ct", "Bổ âm · củ", 1, "hơi hàn", "ngọt, hơi đắng", "", "Tâm, Phế, Vị", "Dưỡng âm nhuận phế, ích vị sinh tân, thanh tâm", "", "", 0],
+  ["Thiên môn đông", "", "ct", "Bổ âm · củ", 0, "hàn", "ngọt, đắng", "", "Phế, Thận", "Tư âm nhuận táo, thanh phế giáng hoả", "", "", 0],
+  ["Ba kích", "", "ct", "Bổ dương · rễ", 3, "hơi ôn", "cay, ngọt", "", "Thận, Can", "Bổ thận dương, mạnh gân xương, trừ phong thấp", "", "", 0],
+  ["Đỗ trọng", "", "ct", "Bổ dương · vỏ thân", 3, "ôn", "ngọt", "", "Can, Thận", "Bổ can thận, mạnh gân xương, an thai", "", "", 0],
+  ["Cẩu tích", "Lông cu li", "ct", "Bổ dương · thân rễ", 3, "ôn", "đắng, ngọt", "", "Can, Thận", "Bổ can thận, mạnh gân xương, trừ phong thấp", "", "", 0],
+  ["Sinh địa", "", "ct", "Thanh nhiệt · củ", 0, "hàn", "ngọt, đắng", "", "Tâm, Can, Thận", "Thanh nhiệt lương huyết, dưỡng âm sinh tân", "", "", 0],
+  ["Huyền sâm", "", "ct", "Thanh nhiệt · rễ", 0, "hàn", "đắng, ngọt, mặn", "", "Phế, Vị, Thận", "Thanh nhiệt lương huyết, tư âm giải độc", "", "", 0],
+  ["Rễ cỏ tranh", "Bạch mao căn", "ct", "Thanh nhiệt · thân rễ", 0, "hàn", "ngọt", "giáng", "Phế, Vị, Bàng quang", "Lương huyết chỉ huyết, thanh nhiệt lợi tiểu", "", "", 0],
+  ["Thổ phục linh", "Củ khúc khắc", "ct", "Trừ thấp · thân rễ", 2, "bình", "ngọt, nhạt", "", "Can, Vị", "Giải độc, trừ thấp, lợi gân xương", "", "", 0],
+  ["Trạch tả", "", "ct", "Lợi thuỷ · củ", 0, "hàn", "ngọt", "giáng", "Thận, Bàng quang", "Lợi thuỷ thẩm thấp, tiết nhiệt", "", "", 0],
+  ["Phục linh", "Bạch linh (nấm)", "ct", "Lợi thuỷ · nấm", 2, "bình", "ngọt, nhạt", "giáng", "Tâm, Tỳ, Thận", "Lợi thuỷ thẩm thấp, kiện tỳ, an thần", "", "", 0],
+  ["Hương phụ", "Củ gấu", "ct", "Hành khí · thân rễ", 2, "bình", "cay, hơi đắng, hơi ngọt", "", "Can, Tam tiêu", "Sơ can lý khí, điều kinh chỉ thống", "", "", 0],
+  ["Trần bì", "Vỏ quýt lâu năm", "ct", "Hành khí · vỏ quả", 3, "ôn", "cay, đắng", "giáng", "Tỳ, Phế", "Lý khí kiện tỳ, táo thấp hoá đàm", "", "", 0],
+  ["Xuyên khung", "", "ct", "Hoạt huyết · thân rễ", 3, "ôn", "cay", "thăng", "Can, Đởm, Tâm bào", "Hoạt huyết hành khí, khu phong chỉ thống, hay dùng khi đau đầu", "", "", 0],
+  ["Ngưu tất", "", "ct", "Hoạt huyết · rễ", 2, "bình", "đắng, chua", "giáng", "Can, Thận", "Hoạt huyết thông kinh, bổ can thận, dẫn huyết đi xuống", "Không dùng khi mang thai.", "", 0],
+  ["Nghệ đen", "Nga truật", "ct", "Hoạt huyết · củ", 3, "ôn", "cay, đắng", "", "Can, Tỳ", "Phá huyết hành khí, tiêu tích", "Không dùng khi mang thai, rong kinh.", "", 0],
+  ["Thiên niên kiện", "", "ct", "Trừ phong thấp · thân rễ", 3, "ôn", "đắng, cay", "", "Can, Thận", "Trừ phong thấp, mạnh gân xương", "", "", 0],
+  ["Cát cánh", "", "ct", "Chỉ khái · rễ", 2, "bình", "đắng, cay", "thăng", "Phế", "Tuyên phế, trừ đàm, bài nùng", "", "", 0],
+  ["Bách bộ", "", "ct", "Chỉ khái · củ", 3, "hơi ôn", "ngọt, đắng", "giáng", "Phế", "Nhuận phế chỉ khái, sát trùng", "Có độc nhẹ; quá liều gây buồn nôn, khó thở.", "", 1],
+  ["Bình vôi", "Ngải tượng", "ct", "An thần · củ", 1, "lương", "đắng", "giáng", "Tâm, Can, Tỳ", "An thần, chỉ thống", "Chứa rotundin; có báo cáo tổn thương gan, ức chế hô hấp khi dùng liều cao, kéo dài.", "", 1],
+  ["Hoè hoa", "Nụ hoè", "ct", "Chỉ huyết · nụ hoa", 1, "hơi hàn", "đắng", "giáng", "Can, Đại tràng", "Lương huyết chỉ huyết, thanh can", "Chứa rutin; dữ liệu cho trĩ, giãn tĩnh mạch còn hạn chế.", "w", 0],
+  ["Thảo quyết minh", "Hạt muồng", "ct", "Thanh nhiệt · hạt", 1, "hơi hàn", "ngọt, đắng, mặn", "giáng", "Can, Đại tràng", "Thanh can minh mục, nhuận tràng", "Chứa anthraquinon, dùng lâu gây tiêu chảy.", "", 0],
+  ["Ké đầu ngựa", "Thương nhĩ tử", "ct", "Giải biểu · quả", 3, "ôn", "ngọt, đắng", "xuất", "Phế", "Tán phong, trừ thấp, thông mũi", "Quả có độc; quá liều gây tổn thương gan, hạ đường huyết.", "", 1],
+  ["Chi tử", "Dành dành", "ct", "Thanh nhiệt · quả", 0, "hàn", "đắng", "giáng", "Tâm, Phế, Can, Vị, Tam tiêu", "Thanh nhiệt tả hoả, lương huyết, lợi thấp thoái hoàng", "", "", 0],
+  ["Liên kiều", "", "ct", "Thanh nhiệt · quả", 1, "hơi hàn", "đắng", "xuất", "Phế, Tâm, Đởm", "Thanh nhiệt giải độc, tiêu ung tán kết", "", "", 0],
+  ["Hoàng bá", "Hoàng nghiệt", "ct", "Thanh nhiệt · vỏ thân", 0, "hàn", "đắng", "giáng", "Thận, Bàng quang, Đại tràng", "Thanh nhiệt táo thấp, tả hoả, thanh hư nhiệt", "Chứa berberin như hoàng liên.", "", 0],
+  ["Tri mẫu", "", "ct", "Thanh nhiệt · thân rễ", 0, "hàn", "đắng, ngọt", "giáng", "Phế, Vị, Thận", "Thanh nhiệt tả hoả, tư âm nhuận táo", "", "", 0],
+  ["Mẫu đơn bì", "Đan bì", "ct", "Thanh nhiệt · vỏ rễ", 1, "hơi hàn", "đắng, cay", "", "Tâm, Can, Thận", "Thanh nhiệt lương huyết, hoạt huyết tán ứ", "Không dùng khi mang thai.", "", 0],
+  ["Phòng phong", "", "ct", "Giải biểu · rễ", 3, "hơi ôn", "cay, ngọt", "xuất", "Bàng quang, Can, Tỳ", "Tán phong giải biểu, trừ thấp chỉ thống", "", "", 0],
+  ["Thăng ma", "", "ct", "Giải biểu · thân rễ", 1, "hơi hàn", "cay, ngọt", "thăng", "Phế, Tỳ, Vị, Đại tràng", "Thăng dương cử hãm, giải độc, thấu chẩn", "", "", 0],
+  ["Tế tân", "", "ct", "Giải biểu · rễ", 3, "ôn", "cay", "xuất", "Phế, Thận, Tâm", "Tán hàn giải biểu, chỉ thống, ôn phế hoá ẩm", "Có độc; một số loài chứa acid aristolochic hại thận. Chỉ dùng liều nhỏ theo thầy thuốc.", "", 1],
+  ["Sơn thù", "Sơn thù du", "ct", "Thu liễm · quả", 3, "hơi ôn", "chua, chát", "liễm", "Can, Thận", "Bổ ích can thận, sáp tinh cố thoát", "", "", 0],
+  ["Mộc hương", "", "ct", "Hành khí · rễ", 3, "ôn", "cay, đắng", "giáng", "Tỳ, Vị, Đại tràng, Đởm", "Hành khí chỉ thống, kiện tỳ tiêu thực", "", "", 0],
+  ["Sa nhân", "", "ct", "Hành khí · quả", 3, "ôn", "cay", "", "Tỳ, Vị, Thận", "Hành khí hoá thấp, ôn trung chỉ tả, an thai", "", "", 0],
+  ["Hậu phác", "", "ct", "Hành khí · vỏ thân", 3, "ôn", "đắng, cay", "giáng", "Tỳ, Vị, Phế, Đại tràng", "Hành khí táo thấp, tiêu tích, bình suyễn", "", "", 0],
+  ["Thương truật", "", "ct", "Trừ thấp · thân rễ", 3, "ôn", "cay, đắng", "", "Tỳ, Vị, Can", "Táo thấp kiện tỳ, trừ phong thấp, minh mục", "", "", 0],
+  ["Viễn chí", "", "ct", "An thần · rễ", 3, "ôn", "đắng, cay", "", "Tâm, Thận, Phế", "An thần ích trí, khử đàm khai khiếu", "Dễ kích ứng dạ dày, gây buồn nôn.", "", 0],
+  ["Phục thần", "", "ct", "An thần · nấm", 2, "bình", "ngọt, nhạt", "", "Tâm, Tỳ", "Ninh tâm an thần", "Phần nấm phục linh ôm quanh rễ thông.", "", 0],
+  ["Độc hoạt", "", "ct", "Trừ phong thấp · rễ", 3, "hơi ôn", "cay, đắng", "", "Thận, Bàng quang", "Trừ phong thấp, chỉ thống, nhất là đau lưng gối", "", "", 0],
+  ["Tang ký sinh", "Tầm gửi cây dâu", "ct", "Trừ phong thấp · thân, lá", 2, "bình", "đắng, ngọt", "", "Can, Thận", "Trừ phong thấp, bổ can thận, mạnh gân xương, an thai", "", "", 0],
+  ["Thiên ma", "", "ct", "Bình can · thân rễ", 2, "bình", "ngọt", "giáng", "Can", "Bình can tức phong, chỉ kinh, chỉ thống", "", "", 0],
+  ["Câu đằng", "", "ct", "Bình can · cành có móc", 1, "lương", "ngọt", "giáng", "Can, Tâm bào", "Thanh nhiệt bình can, tức phong chỉ kinh", "Cho vào sau, không sắc lâu.", "", 0],
+  ["Nhân trần", "", "ct", "Lợi thuỷ · cả cây", 1, "hơi hàn", "đắng", "giáng", "Tỳ, Vị, Can, Đởm", "Thanh lợi thấp nhiệt, thoái hoàng", "", "", 0],
+  ["Mộc thông", "", "ct", "Lợi thuỷ · thân", 0, "hàn", "đắng", "giáng", "Tâm, Tiểu tràng, Bàng quang", "Lợi thuỷ thông lâm, thông kinh, lợi sữa", "Quan mộc thông chứa acid aristolochic gây suy thận, ung thư; nhiều nước đã cấm.", "", 1],
+  ["Bán hạ chế", "Bán hạ", "ct", "Chỉ khái · thân rễ đã chế", 3, "ôn", "cay", "giáng", "Tỳ, Vị, Phế", "Táo thấp hoá đàm, giáng nghịch chỉ ẩu", "Bán hạ sống có độc, chỉ dùng loại đã chế; thận trọng khi mang thai.", "", 1]
 ];
 
 const state = { g: "all", t: "all", v: "all", q: "" };
@@ -306,11 +409,120 @@ function render() {
 document.querySelector(".controls").addEventListener("click", e => {
   const b = e.target.closest(".chip"); if (!b) return;
   state[b.dataset.k] = b.dataset.v;
-  document.querySelectorAll(`.chip[data-k="${b.dataset.k}"]`).forEach(c => c.setAttribute("aria-pressed", String(c === b)));
+  document.querySelectorAll(`.controls:not(#b-controls) .chip[data-k="${b.dataset.k}"]`).forEach(c => c.setAttribute("aria-pressed", String(c === b)));
   render();
 });
 document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; render(); });
 render();
+
+// [tên, xuất xứ, nhóm bệnh, loại, thành phần, công năng, chủ trị, cách dùng, lưu ý, mức bằng chứng, cảnh báo độc]
+const B = [
+["Quế chi thang","Thương hàn luận","cam","Cổ phương",["Quế chi","Bạch thược","Gừng tươi","Táo tàu","Cam thảo"],"Giải cơ phát biểu, điều hoà dinh vệ","Cảm phong hàn: sợ gió, sốt nhẹ, có ra mồ hôi, đau đầu","Sắc uống ấm, sau đó ăn cháo nóng cho ra chút mồ hôi","","",0],
+["Ma hoàng thang","Thương hàn luận","cam","Cổ phương",["Ma hoàng","Quế chi","Hạnh nhân đắng","Cam thảo"],"Phát hãn giải biểu, tuyên phế bình suyễn","Cảm phong hàn nặng: sợ lạnh, không ra mồ hôi, đau mình, ho suyễn","Sắc uống","Ma hoàng chứa ephedrin: tăng huyết áp, nhịp tim nhanh; không dùng cho người bệnh tim mạch, tăng huyết áp.","",1],
+["Ngân kiều tán","Ôn bệnh điều biện","cam","Cổ phương",["Kim ngân hoa","Liên kiều","Cát cánh","Bạc hà","Kinh giới","Đạm đậu xị","Ngưu bàng tử","Trúc diệp","Lô căn","Cam thảo"],"Tân lương giải biểu, thanh nhiệt giải độc","Cảm phong nhiệt: sốt, hơi sợ gió, đau họng, khát","Tán bột hoặc sắc, không sắc lâu","Một số thử nghiệm ở Trung Quốc cho cảm cúm, chất lượng thấp.","w",0],
+["Nồi xông giải cảm","Kinh nghiệm dân gian","cam","Nam dược, dân gian",["Tía tô","Kinh giới","Hương nhu tía","Húng chanh","Lá bưởi","Sả","Bạc hà"],"Phát tán phong hàn, làm ra mồ hôi","Cảm lạnh mới mắc: ngạt mũi, nhức đầu, sợ lạnh","Nấu sôi, trùm chăn xông 5 đến 10 phút rồi lau khô, tránh gió","Không xông khi sốt cao, mất nhiều nước, cho trẻ nhỏ, người già yếu, người bệnh tim; dễ bỏng hơi nước. Hơi nước làm dễ thở tạm thời nhưng không rút ngắn cảm.","w",0],
+["Cháo giải cảm","Kinh nghiệm dân gian","cam","Nam dược, dân gian",["Gạo tẻ","Hành lá","Tía tô","Gừng tươi"],"Phát tán phong hàn, bổ tỳ","Cảm lạnh nhẹ, người mệt, ăn kém","Nấu cháo, cho hành, tía tô, gừng vào lúc gần chín, ăn nóng","","",0],
+
+["Nhị trần thang","Hoà tễ cục phương","ho","Cổ phương",["Bán hạ chế","Trần bì","Phục linh","Cam thảo","Gừng tươi","Ô mai"],"Táo thấp hoá đàm, lý khí hoà trung","Ho nhiều đờm trắng, dễ khạc, đầy tức ngực, buồn nôn","Sắc uống","Bán hạ sống có độc, chỉ dùng loại đã chế.","",0],
+["Húng chanh hấp mật ong","Kinh nghiệm dân gian","ho","Nam dược, dân gian",["Húng chanh","Mật ong"],"Tiêu đàm chỉ khái","Ho do cảm lạnh, ho có đờm nhẹ","Lá rửa sạch, thái nhỏ, trộn mật ong, hấp cách thuỷ, ngậm hoặc uống dần","Mật ong giảm ho ở trẻ em mức nhẹ (tổng quan Cochrane). Không cho trẻ dưới 1 tuổi dùng mật ong vì nguy cơ ngộ độc botulinum.","w",0],
+["Lê hấp đường phèn","Kinh nghiệm dân gian","ho","Nam dược, dân gian",["Lê","Xuyên bối mẫu","Đường phèn"],"Nhuận phế, chỉ khái","Ho khan, họng khô do phế táo","Khoét lõi lê, cho bối mẫu, đường phèn vào, hấp cách thuỷ","","",0],
+
+["Tứ quân tử thang","Hoà tễ cục phương","tieu","Cổ phương",["Nhân sâm","Bạch truật","Phục linh","Cam thảo"],"Ích khí kiện tỳ","Tỳ vị khí hư: ăn kém, phân nát, mệt mỏi, tiếng nói nhỏ","Sắc uống; nhân sâm thường thay bằng đảng sâm","Là bài nền của nhiều bài bổ khí.","",0],
+["Sâm linh bạch truật tán","Hoà tễ cục phương","tieu","Cổ phương",["Nhân sâm","Bạch truật","Phục linh","Cam thảo","Hoài sơn","Liên nhục","Ý dĩ","Bạch biển đậu","Sa nhân","Cát cánh"],"Ích khí kiện tỳ, thẩm thấp chỉ tả","Tỳ hư có thấp: tiêu chảy kéo dài, ăn kém, gầy yếu","Tán bột uống với nước táo tàu, hoặc sắc","Một số thử nghiệm nhỏ cho hội chứng ruột kích thích, chất lượng thấp.","w",0],
+["Lý trung thang","Thương hàn luận","tieu","Cổ phương",["Nhân sâm","Bạch truật","Gừng khô","Cam thảo"],"Ôn trung khu hàn, bổ khí kiện tỳ","Tỳ vị hư hàn: đau bụng thích chườm ấm, tiêu chảy, nôn, tay chân lạnh","Sắc uống ấm","","",0],
+["Bình vị tán","Hoà tễ cục phương","tieu","Cổ phương",["Thương truật","Hậu phác","Trần bì","Cam thảo"],"Táo thấp vận tỳ, hành khí hoà vị","Thấp trệ tỳ vị: đầy bụng, ăn không tiêu, rêu lưỡi dày nhớt","Tán bột hoặc sắc","","",0],
+["Búp ổi sắc","Kinh nghiệm dân gian","tieu","Nam dược, dân gian",["Lá ổi"],"Sáp trường chỉ tả","Tiêu chảy nhẹ","Sắc búp ổi uống","Bù nước bằng oresol vẫn là chính. Đi khám ngay nếu phân có máu, sốt cao, hoặc có dấu hiệu mất nước, nhất là ở trẻ nhỏ.","w",0],
+["Nước gừng chống nôn","Kinh nghiệm dân gian","tieu","Nam dược, dân gian",["Gừng tươi"],"Ôn trung chỉ ẩu","Buồn nôn, say xe, nôn do lạnh bụng","Hãm vài lát gừng với nước sôi, uống ấm","Gừng giảm buồn nôn khi mang thai ở mức khá trong các tổng quan; liều cao có thể tương tác thuốc chống đông.","m",0],
+
+["Quy tỳ thang","Tế sinh phương","than","Cổ phương",["Nhân sâm","Hoàng kỳ","Bạch truật","Phục thần","Toan táo nhân","Nhãn","Mộc hương","Đương quy","Viễn chí","Cam thảo","Gừng tươi","Táo tàu"],"Ích khí bổ huyết, kiện tỳ dưỡng tâm","Tâm tỳ hư: mất ngủ, hay quên, hồi hộp, mệt, ăn kém, kinh nguyệt nhiều","Sắc uống","Một số thử nghiệm nhỏ cho mất ngủ, chất lượng thấp.","w",0],
+["Toan táo nhân thang","Kim quỹ yếu lược","than","Cổ phương",["Toan táo nhân","Phục linh","Tri mẫu","Xuyên khung","Cam thảo"],"Dưỡng huyết an thần, thanh nhiệt trừ phiền","Mất ngủ, bồn chồn, hồi hộp, chóng mặt do can huyết hư","Sắc uống buổi chiều tối","Cải thiện giấc ngủ trong vài thử nghiệm nhỏ.","w",0],
+["Chè an thần","Kinh nghiệm Nam dược","than","Nam dược, dân gian",["Lạc tiên","Lá vông nem","Liên tâm"],"Dưỡng tâm an thần","Khó ngủ, ngủ không sâu, hồi hộp","Sắc hoặc hãm uống buổi tối","Không tự dùng thêm bình vôi (rotundin) vì nguy cơ hại gan, ức chế hô hấp.","w",0],
+
+["Tứ vật thang","Hoà tễ cục phương","bo","Cổ phương",["Thục địa","Đương quy","Bạch thược","Xuyên khung"],"Bổ huyết, hoạt huyết, điều kinh","Huyết hư: da xanh, chóng mặt, kinh nguyệt ít hoặc chậm","Sắc uống","Đương quy làm tăng tác dụng thuốc chống đông.","",0],
+["Bát trân thang","Chính thể loại yếu","bo","Cổ phương",["Nhân sâm","Bạch truật","Phục linh","Cam thảo","Thục địa","Đương quy","Bạch thược","Xuyên khung"],"Bổ cả khí lẫn huyết","Khí huyết đều hư: mệt, da xanh, hồi hộp, sau ốm lâu","Sắc uống, thêm gừng, táo tàu","Ghép Tứ quân tử thang với Tứ vật thang.","",0],
+["Bổ trung ích khí thang","Tỳ vị luận (Lý Đông Viên)","bo","Cổ phương",["Hoàng kỳ","Nhân sâm","Bạch truật","Cam thảo","Đương quy","Trần bì","Thăng ma","Sài hồ"],"Bổ trung ích khí, thăng dương cử hãm","Khí hư hạ hãm: mệt, ngại nói, tiêu chảy lâu, sa trực tràng, sa tử cung","Sắc uống","","",0],
+["Đương quy bổ huyết thang","Nội ngoại thương biện hoặc luận","bo","Cổ phương",["Hoàng kỳ","Đương quy"],"Bổ khí sinh huyết","Huyết hư sau mất máu, sau sinh, mệt, sốt nhẹ","Hoàng kỳ gấp năm lần đương quy, sắc uống","","",0],
+["Sinh mạch tán","Nội ngoại thương biện hoặc luận","bo","Cổ phương",["Nhân sâm","Mạch môn","Ngũ vị tử"],"Ích khí sinh tân, liễm âm chỉ hãn","Mệt, ra nhiều mồ hôi, khát, ho khan, sau sốt hoặc nắng nóng","Sắc uống hoặc hãm","Dạng tiêm ở Trung Quốc được nghiên cứu cho suy tim, nhưng chất lượng thấp.","w",0],
+["Ngọc bình phong tán","Đan khê tâm pháp","bo","Cổ phương",["Hoàng kỳ","Bạch truật","Phòng phong"],"Ích khí cố biểu chỉ hãn","Hay ra mồ hôi, sợ gió, dễ bị cảm","Tán bột uống","Vài thử nghiệm nhỏ cho viêm đường hô hấp tái diễn, chất lượng thấp.","w",0],
+["Lục vị địa hoàng hoàn","Tiểu nhi dược chứng trực quyết","bo","Cổ phương",["Thục địa","Hoài sơn","Sơn thù","Mẫu đơn bì","Phục linh","Trạch tả"],"Tư bổ can thận âm","Thận âm hư: đau lưng mỏi gối, ù tai, ra mồ hôi trộm, nóng lòng bàn tay chân","Làm hoàn uống","Là bài nền của nhiều bài bổ âm.","",0],
+["Bát vị quế phụ","Kim quỹ yếu lược","bo","Cổ phương",["Thục địa","Hoài sơn","Sơn thù","Mẫu đơn bì","Phục linh","Trạch tả","Nhục quế","Phụ tử (chế)"],"Ôn bổ thận dương","Thận dương hư: lưng gối lạnh đau, tiểu đêm nhiều, sợ lạnh","Làm hoàn uống","Phụ tử chứa aconitin độc với tim, chỉ dùng loại đã chế và có thầy thuốc theo dõi.","",1],
+
+["Độc hoạt tang ký sinh thang","Thiên kim phương","xuong","Cổ phương",["Độc hoạt","Tang ký sinh","Tần giao","Phòng phong","Tế tân","Đương quy","Bạch thược","Xuyên khung","Thục địa","Đỗ trọng","Ngưu tất","Nhân sâm","Phục linh","Cam thảo","Nhục quế"],"Trừ phong thấp, bổ can thận, ích khí huyết","Đau lưng, đau gối lâu ngày, tê bì, sợ lạnh, hay gặp ở người cao tuổi","Sắc uống","Tế tân có độc, dùng đúng liều. Vài thử nghiệm nhỏ cho thoái hoá khớp gối, chất lượng thấp.","w",1],
+["Lá lốt sắc uống, chườm","Kinh nghiệm dân gian","xuong","Nam dược, dân gian",["Lá lốt"],"Ôn kinh tán hàn, chỉ thống","Đau nhức xương khớp, tê bì chân tay khi trời lạnh","Sắc uống ấm buổi tối, hoặc sao nóng chườm","","",0],
+["Ngải cứu rang muối chườm","Kinh nghiệm dân gian","xuong","Nam dược, dân gian",["Ngải cứu","Muối"],"Ôn kinh, tán hàn, chỉ thống","Đau lưng, đau mỏi cơ do lạnh","Rang nóng, bọc vải, chườm chỗ đau","Thử nhiệt trước để tránh bỏng, nhất là ở người tiểu đường, người già.","",0],
+["Rượu xoa bóp, rượu thuốc","Kinh nghiệm Nam dược","xuong","Nam dược, dân gian",["Hy thiêm","Thiên niên kiện","Cẩu tích","Ngưu tất","Đỗ trọng"],"Trừ phong thấp, mạnh gân xương","Đau nhức xương khớp kéo dài","Ngâm rượu để xoa bóp ngoài, hoặc uống lượng nhỏ","Không uống khi có bệnh gan, tăng huyết áp, đang dùng thuốc. Tránh rượu không rõ nguồn (nguy cơ methanol) và rượu ngâm động vật, cây lạ (mã tiền, phụ tử sống, củ ấu tàu gây chết người).","",1],
+
+["Bát chính tán","Hoà tễ cục phương","tieuti","Cổ phương",["Xa tiền tử","Cù mạch","Biển súc","Hoạt thạch","Chi tử","Mộc thông","Đại hoàng","Cam thảo"],"Thanh nhiệt tả hoả, lợi thuỷ thông lâm","Tiểu buốt, tiểu rắt, nước tiểu đỏ đục do thấp nhiệt","Sắc uống","Quan mộc thông chứa acid aristolochic gây suy thận và ung thư; nhiều nước đã cấm, phải dùng loại thay thế. Nhiễm khuẩn tiết niệu thường cần kháng sinh.","",1],
+["Ngũ linh tán","Thương hàn luận","tieuti","Cổ phương",["Trạch tả","Phục linh","Trư linh","Bạch truật","Quế chi"],"Lợi thuỷ thẩm thấp, ôn dương hoá khí","Phù, tiểu ít, khát mà uống vào lại nôn","Tán bột uống với nước ấm","","",0],
+["Nước kim tiền thảo, râu ngô, mã đề","Kinh nghiệm Nam dược","tieuti","Nam dược, dân gian",["Kim tiền thảo","Râu ngô","Mã đề"],"Lợi niệu, thông lâm","Hỗ trợ khi có sỏi tiết niệu nhỏ, tiểu buốt","Sắc uống thay nước trong ngày","Hỗ trợ tống sỏi: nghiên cứu nhỏ. Đi khám ngay nếu đau quặn dữ dội, sốt, tiểu ra máu hoặc bí tiểu.","w",0],
+
+["Tiêu dao tán","Hoà tễ cục phương","gan","Cổ phương",["Sài hồ","Đương quy","Bạch thược","Bạch truật","Phục linh","Cam thảo","Gừng tươi","Bạc hà"],"Sơ can giải uất, kiện tỳ dưỡng huyết","Can uất tỳ hư: tức sườn, cáu gắt, buồn bực, ăn kém, kinh nguyệt không đều","Sắc hoặc làm hoàn","Một số thử nghiệm cho trầm cảm nhẹ, chất lượng thấp.","w",0],
+["Nhân trần cao thang","Thương hàn luận","gan","Cổ phương",["Nhân trần","Chi tử","Đại hoàng"],"Thanh nhiệt lợi thấp, thoái hoàng","Vàng da tươi sáng do thấp nhiệt, tiểu vàng, táo bón","Sắc uống","Vàng da cần đi khám để tìm nguyên nhân (viêm gan, tắc mật, tan máu) trước khi dùng bất cứ thứ gì.","",0],
+["Trà diệp hạ châu, cà gai leo, atiso","Kinh nghiệm Nam dược","gan","Nam dược, dân gian",["Diệp hạ châu","Cà gai leo","Atiso"],"Thanh can, giải độc, lợi mật","Dân gian dùng khi men gan cao, ăn khó tiêu, nóng trong","Sắc hoặc hãm uống","Thảo dược cũng có thể gây tổn thương gan. Viêm gan B, C cần thuốc kháng virus theo bác sĩ; trà không thay được.","w",0],
+
+["Cao ích mẫu","Kinh nghiệm Nam dược","phu","Nam dược, dân gian",["Ích mẫu","Hương phụ","Ngải cứu","Đương quy"],"Hoạt huyết, điều kinh, chỉ thống","Kinh nguyệt không đều, đau bụng kinh","Nấu cao uống trước kỳ kinh","Không dùng khi mang thai hoặc rong kinh.","",0],
+["Trứng gà ngải cứu","Kinh nghiệm dân gian","phu","Nam dược, dân gian",["Ngải cứu","Trứng gà"],"Ôn kinh, tán hàn, chỉ thống","Đau bụng kinh do lạnh, chân tay lạnh","Rán hoặc luộc ăn vài ngày trước kỳ kinh","","",0],
+
+["Ngũ vị tiêu độc ẩm","Y tông kim giám","da","Cổ phương",["Kim ngân hoa","Bồ công anh","Dã cúc hoa","Tử hoa địa đinh","Tử bối thiên quỳ"],"Thanh nhiệt giải độc, tiêu nhọt","Mụn nhọt sưng nóng đỏ đau","Sắc uống, bã đắp ngoài","Nhọt có sốt, lan rộng, ở mặt cần đi khám, có thể phải dùng kháng sinh.","",0],
+["Hoàng liên giải độc thang","Ngoại đài bí yếu","da","Cổ phương",["Hoàng liên","Hoàng cầm","Hoàng bá","Chi tử"],"Tả hoả giải độc","Nhiệt độc thịnh: sốt cao, bứt rứt, mụn nhọt, chảy máu cam","Sắc uống","Rất đắng lạnh, dễ hại tỳ vị khi dùng lâu. Berberin trong hoàng liên tương tác nhiều thuốc.","",0],
+["Nước tắm lá","Kinh nghiệm dân gian","da","Nam dược, dân gian",["Lá trầu không","Trà xanh","Kinh giới","Sài đất"],"Thanh nhiệt, sát trùng, chỉ dương","Rôm sảy, ngứa ngoài da nhẹ","Nấu nước để ấm, tắm hoặc lau","Thử ở vùng da nhỏ trước; dừng nếu đỏ rát.","",0],
+
+["Chè đậu xanh, nước sắn dây","Kinh nghiệm dân gian","nong","Nam dược, dân gian",["Đậu xanh","Cát căn","Rau má","Bí đao"],"Thanh nhiệt giải thử, sinh tân","Nóng trong, khát nước, mùa hè oi bức","Nấu chè, pha bột sắn dây, xay rau má, nấu canh bí","Người tỳ vị hư hàn (hay đầy bụng, phân lỏng) không nên dùng nhiều.","",0],
+
+["Thiên ma câu đằng ẩm","Tạp bệnh chứng trị tân nghĩa","ha","Cổ phương",["Thiên ma","Câu đằng","Thạch quyết minh","Chi tử","Hoàng cầm","Ngưu tất","Đỗ trọng","Ích mẫu","Tang ký sinh","Dạ giao đằng","Phục thần"],"Bình can tức phong, thanh nhiệt, bổ can thận","Can dương thượng kháng: đau đầu, chóng mặt, mất ngủ, hay gặp ở người tăng huyết áp","Sắc uống","Tổng quan cho thấy có thể hạ thêm huyết áp khi dùng kèm thuốc tây, nhưng chất lượng thấp. Không bỏ thuốc huyết áp bác sĩ kê.","w",0],
+["Trà dây thìa canh, mướp đắng","Kinh nghiệm Nam dược","ha","Nam dược, dân gian",["Dây thìa canh","Mướp đắng"],"Thanh nhiệt, hay dùng hỗ trợ hạ đường huyết","Dân gian dùng cho người đường huyết cao","Hãm hoặc sắc uống","Hạ đường huyết nhẹ trong vài thử nghiệm nhỏ. Dùng chung thuốc tiểu đường có thể gây hạ đường huyết quá mức; báo bác sĩ.","w",0],
+];
+const BGROUPS = { cam: "Cảm mạo", ho: "Ho, đờm", tieu: "Tiêu hoá", than: "Mất ngủ, lo âu", bo: "Bổ khí huyết, âm dương", xuong: "Đau nhức xương khớp", tieuti: "Tiểu tiện, sỏi", gan: "Gan mật", phu: "Kinh nguyệt", da: "Da, mụn nhọt", nong: "Nắng nóng", ha: "Huyết áp, đường huyết" };
+
+// ---- Bài thuốc ----
+const findVi = (() => {
+  const idx = {};
+  D.forEach(r => [r[0], ...(r[1] ? r[1].split(/,\s*|[()]/) : [])].forEach(n => { n = n.trim(); if (n) idx[norm(n)] = r[0]; }));
+  return (n) => idx[norm(n)];
+})();
+const bstate = { g: "all", k: "all", q: "" };
+function bchips(el, key, opts) {
+  el.innerHTML = opts.map(([val, label]) => `<button class="chip" data-k="${key}" data-v="${val}" aria-pressed="${bstate[key] === val}">${label}</button>`).join(" ");
+}
+bchips(document.getElementById("b-group"), "g", [["all", "Tất cả"], ...Object.entries(BGROUPS)]);
+bchips(document.getElementById("b-kind"), "k", [["all", "Tất cả"], ["Cổ phương", "Cổ phương"], ["Nam dược, dân gian", "Nam dược, dân gian"]]);
+function brender() {
+  const q = norm(bstate.q.trim());
+  const list = B.filter(b => (bstate.g === "all" || b[2] === bstate.g) && (bstate.k === "all" || b[3] === bstate.k) &&
+    (!q || norm([b[0], b[1], BGROUPS[b[2]], b[4].join(" "), b[5], b[6], b[8]].join(" ")).includes(q)));
+  document.getElementById("bcount").textContent = `${list.length} / ${B.length} bài`;
+  document.getElementById("bai-list").innerHTML = list.length ? list.map(b => {
+    const ev = b[9] ? `<span class="ev ${EV[b[9]][0]}">${EV[b[9]][1]}</span>` : "";
+    const warn = b[10] ? `<span class="warn">Có vị độc. </span>` : "";
+    const vi = b[4].map(n => { const hit = findVi(n); return hit ? `<button data-vi="${hit}" title="Xem trong bảng tra">${n}</button>` : `<span>${n}</span>`; }).join("");
+    return `<article class="bai">
+      <div><h3>${b[0]}</h3><div class="src">${BGROUPS[b[2]]} · ${b[3]} · ${b[1]}</div></div>
+      <dl>
+        <div><dt>Thành phần</dt><dd class="vithuoc">${vi}</dd></div>
+        <div><dt>Công năng</dt><dd>${b[5]}</dd></div>
+        <div><dt>Chủ trị</dt><dd>${b[6]}</dd></div>
+        <div><dt>Cách dùng</dt><dd>${b[7]}</dd></div>
+        ${(warn || ev || b[8]) ? `<div><dt>Y học hiện đại và lưu ý</dt><dd class="lu">${warn}${ev}${b[8]}</dd></div>` : ""}
+      </dl>
+    </article>`;
+  }).join("") : `<p class="empty">Không có bài nào khớp.</p>`;
+}
+document.getElementById("b-controls").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  bstate[b.dataset.k] = b.dataset.v;
+  document.querySelectorAll(`#b-controls .chip[data-k="${b.dataset.k}"]`).forEach(c => c.setAttribute("aria-pressed", String(c === b)));
+  brender();
+});
+document.getElementById("bq").addEventListener("input", e => { bstate.q = e.target.value; brender(); });
+document.getElementById("bai-list").addEventListener("click", e => {
+  const b = e.target.closest("button[data-vi]"); if (!b) return;
+  Object.assign(state, { g: "all", t: "all", v: "all", q: b.dataset.vi });
+  document.querySelectorAll(".controls:not(#b-controls) .chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.v === "all")));
+  document.getElementById("q").value = b.dataset.vi;
+  render();
+  document.getElementById("table-h").scrollIntoView({ behavior: "smooth" });
+});
+brender();
 </script>
 <script>
 if (window.self !== window.top) {
