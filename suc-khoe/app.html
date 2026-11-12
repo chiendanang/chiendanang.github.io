@@ -87,7 +87,7 @@ footer { padding: 16px 20px 28px; font-size: .78rem; color: var(--muted); text-a
     <button role="tab" id="tab-a" aria-selected="true" data-view="v-a">Phân tích bữa ăn</button>
     <button role="tab" id="tab-b" aria-selected="false" data-view="v-b">Tra cứu</button>
   </nav>
-  <span class="hint">Chạy offline · Dữ liệu 144 mục theo Đông y</span>
+  <span class="hint">Chạy offline · Dữ liệu 166 mục theo Đông y</span>
 </header>
 
 <main>
@@ -235,7 +235,7 @@ const D = [
   ["Chè dây", "", "ct", "Thanh nhiệt · lá", 1, "lương", "ngọt, đắng", "", "Can, Vị", "Thanh nhiệt giải độc, chỉ thống, dùng khi đau dạ dày", "Vài nghiên cứu nhỏ trong nước về viêm loét dạ dày, chất lượng thấp.", "w", 0],
   ["Rau sam", "Mã xỉ hiện", "ct", "Thanh nhiệt · cả cây", 0, "hàn", "chua", "", "Đại tràng, Can", "Thanh nhiệt giải độc, chỉ lỵ", "", "", 0],
   ["Cỏ mực", "Nhọ nồi, Mặc hạn liên", "ct", "Chỉ huyết · cả cây", 1, "lương", "ngọt, chua", "liễm", "Can, Thận", "Lương huyết chỉ huyết, bổ can thận âm", "", "", 0],
-  ["Mã đề", "Xa tiền", "ct", "Lợi thuỷ · cả cây, hạt", 0, "hàn", "ngọt", "giáng", "Thận, Bàng quang, Can, Phế", "Lợi tiểu thông lâm, thanh can minh mục, chỉ khái", "", "", 0],
+  ["Mã đề", "Xa tiền, Xa tiền tử", "ct", "Lợi thuỷ · cả cây, hạt", 0, "hàn", "ngọt", "giáng", "Thận, Bàng quang, Can, Phế", "Lợi tiểu thông lâm, thanh can minh mục, chỉ khái", "", "", 0],
   ["Kim tiền thảo", "", "ct", "Lợi thuỷ · cả cây", 1, "hơi hàn", "ngọt, nhạt", "giáng", "Can, Đởm, Thận, Bàng quang", "Lợi thấp thoái hoàng, lợi niệu, dùng khi sỏi tiết niệu, sỏi mật", "Hỗ trợ tống sỏi tiết niệu: nghiên cứu nhỏ, chất lượng thấp.", "w", 0],
   ["Râu ngô", "Ngọc mễ tu", "ct", "Lợi thuỷ · râu", 2, "bình", "ngọt", "giáng", "Bàng quang, Can, Đởm", "Lợi tiểu, lợi mật", "Lợi tiểu nhẹ trên động vật; dữ liệu ở người ít.", "w", 0],
   ["Sài đất", "", "ct", "Thanh nhiệt · cả cây", 1, "lương", "ngọt, hơi chua", "", "Can, Phế", "Thanh nhiệt giải độc, tiêu viêm, dùng khi mụn nhọt, rôm sảy", "", "", 0],
@@ -273,7 +273,29 @@ const D = [
   ["Bình vôi", "Ngải tượng", "ct", "An thần · củ", 1, "lương", "đắng", "giáng", "Tâm, Can, Tỳ", "An thần, chỉ thống", "Chứa rotundin; có báo cáo tổn thương gan, ức chế hô hấp khi dùng liều cao, kéo dài.", "", 1],
   ["Hoè hoa", "Nụ hoè", "ct", "Chỉ huyết · nụ hoa", 1, "hơi hàn", "đắng", "giáng", "Can, Đại tràng", "Lương huyết chỉ huyết, thanh can", "Chứa rutin; dữ liệu cho trĩ, giãn tĩnh mạch còn hạn chế.", "w", 0],
   ["Thảo quyết minh", "Hạt muồng", "ct", "Thanh nhiệt · hạt", 1, "hơi hàn", "ngọt, đắng, mặn", "giáng", "Can, Đại tràng", "Thanh can minh mục, nhuận tràng", "Chứa anthraquinon, dùng lâu gây tiêu chảy.", "", 0],
-  ["Ké đầu ngựa", "Thương nhĩ tử", "ct", "Giải biểu · quả", 3, "ôn", "ngọt, đắng", "xuất", "Phế", "Tán phong, trừ thấp, thông mũi", "Quả có độc; quá liều gây tổn thương gan, hạ đường huyết.", "", 1]
+  ["Ké đầu ngựa", "Thương nhĩ tử", "ct", "Giải biểu · quả", 3, "ôn", "ngọt, đắng", "xuất", "Phế", "Tán phong, trừ thấp, thông mũi", "Quả có độc; quá liều gây tổn thương gan, hạ đường huyết.", "", 1],
+  ["Chi tử", "Dành dành", "ct", "Thanh nhiệt · quả", 0, "hàn", "đắng", "giáng", "Tâm, Phế, Can, Vị, Tam tiêu", "Thanh nhiệt tả hoả, lương huyết, lợi thấp thoái hoàng", "", "", 0],
+  ["Liên kiều", "", "ct", "Thanh nhiệt · quả", 1, "hơi hàn", "đắng", "xuất", "Phế, Tâm, Đởm", "Thanh nhiệt giải độc, tiêu ung tán kết", "", "", 0],
+  ["Hoàng bá", "Hoàng nghiệt", "ct", "Thanh nhiệt · vỏ thân", 0, "hàn", "đắng", "giáng", "Thận, Bàng quang, Đại tràng", "Thanh nhiệt táo thấp, tả hoả, thanh hư nhiệt", "Chứa berberin như hoàng liên.", "", 0],
+  ["Tri mẫu", "", "ct", "Thanh nhiệt · thân rễ", 0, "hàn", "đắng, ngọt", "giáng", "Phế, Vị, Thận", "Thanh nhiệt tả hoả, tư âm nhuận táo", "", "", 0],
+  ["Mẫu đơn bì", "Đan bì", "ct", "Thanh nhiệt · vỏ rễ", 1, "hơi hàn", "đắng, cay", "", "Tâm, Can, Thận", "Thanh nhiệt lương huyết, hoạt huyết tán ứ", "Không dùng khi mang thai.", "", 0],
+  ["Phòng phong", "", "ct", "Giải biểu · rễ", 3, "hơi ôn", "cay, ngọt", "xuất", "Bàng quang, Can, Tỳ", "Tán phong giải biểu, trừ thấp chỉ thống", "", "", 0],
+  ["Thăng ma", "", "ct", "Giải biểu · thân rễ", 1, "hơi hàn", "cay, ngọt", "thăng", "Phế, Tỳ, Vị, Đại tràng", "Thăng dương cử hãm, giải độc, thấu chẩn", "", "", 0],
+  ["Tế tân", "", "ct", "Giải biểu · rễ", 3, "ôn", "cay", "xuất", "Phế, Thận, Tâm", "Tán hàn giải biểu, chỉ thống, ôn phế hoá ẩm", "Có độc; một số loài chứa acid aristolochic hại thận. Chỉ dùng liều nhỏ theo thầy thuốc.", "", 1],
+  ["Sơn thù", "Sơn thù du", "ct", "Thu liễm · quả", 3, "hơi ôn", "chua, chát", "liễm", "Can, Thận", "Bổ ích can thận, sáp tinh cố thoát", "", "", 0],
+  ["Mộc hương", "", "ct", "Hành khí · rễ", 3, "ôn", "cay, đắng", "giáng", "Tỳ, Vị, Đại tràng, Đởm", "Hành khí chỉ thống, kiện tỳ tiêu thực", "", "", 0],
+  ["Sa nhân", "", "ct", "Hành khí · quả", 3, "ôn", "cay", "", "Tỳ, Vị, Thận", "Hành khí hoá thấp, ôn trung chỉ tả, an thai", "", "", 0],
+  ["Hậu phác", "", "ct", "Hành khí · vỏ thân", 3, "ôn", "đắng, cay", "giáng", "Tỳ, Vị, Phế, Đại tràng", "Hành khí táo thấp, tiêu tích, bình suyễn", "", "", 0],
+  ["Thương truật", "", "ct", "Trừ thấp · thân rễ", 3, "ôn", "cay, đắng", "", "Tỳ, Vị, Can", "Táo thấp kiện tỳ, trừ phong thấp, minh mục", "", "", 0],
+  ["Viễn chí", "", "ct", "An thần · rễ", 3, "ôn", "đắng, cay", "", "Tâm, Thận, Phế", "An thần ích trí, khử đàm khai khiếu", "Dễ kích ứng dạ dày, gây buồn nôn.", "", 0],
+  ["Phục thần", "", "ct", "An thần · nấm", 2, "bình", "ngọt, nhạt", "", "Tâm, Tỳ", "Ninh tâm an thần", "Phần nấm phục linh ôm quanh rễ thông.", "", 0],
+  ["Độc hoạt", "", "ct", "Trừ phong thấp · rễ", 3, "hơi ôn", "cay, đắng", "", "Thận, Bàng quang", "Trừ phong thấp, chỉ thống, nhất là đau lưng gối", "", "", 0],
+  ["Tang ký sinh", "Tầm gửi cây dâu", "ct", "Trừ phong thấp · thân, lá", 2, "bình", "đắng, ngọt", "", "Can, Thận", "Trừ phong thấp, bổ can thận, mạnh gân xương, an thai", "", "", 0],
+  ["Thiên ma", "", "ct", "Bình can · thân rễ", 2, "bình", "ngọt", "giáng", "Can", "Bình can tức phong, chỉ kinh, chỉ thống", "", "", 0],
+  ["Câu đằng", "", "ct", "Bình can · cành có móc", 1, "lương", "ngọt", "giáng", "Can, Tâm bào", "Thanh nhiệt bình can, tức phong chỉ kinh", "Cho vào sau, không sắc lâu.", "", 0],
+  ["Nhân trần", "", "ct", "Lợi thuỷ · cả cây", 1, "hơi hàn", "đắng", "giáng", "Tỳ, Vị, Can, Đởm", "Thanh lợi thấp nhiệt, thoái hoàng", "", "", 0],
+  ["Mộc thông", "", "ct", "Lợi thuỷ · thân", 0, "hàn", "đắng", "giáng", "Tâm, Tiểu tràng, Bàng quang", "Lợi thuỷ thông lâm, thông kinh, lợi sữa", "Quan mộc thông chứa acid aristolochic gây suy thận, ung thư; nhiều nước đã cấm.", "", 1],
+  ["Bán hạ chế", "Bán hạ", "ct", "Chỉ khái · thân rễ đã chế", 3, "ôn", "cay", "giáng", "Tỳ, Vị, Phế", "Táo thấp hoá đàm, giáng nghịch chỉ ẩu", "Bán hạ sống có độc, chỉ dùng loại đã chế; thận trọng khi mang thai.", "", 1]
 ];
 const TINH = [["Hàn", "--t0"], ["Lương", "--t1"], ["Bình", "--t2"], ["Ôn", "--t3"], ["Nhiệt", "--t4"]];
 const GROUPS = { tv: "Thực vật", dv: "Động vật", ct: "Cây thuốc" };
