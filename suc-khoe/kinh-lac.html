@@ -153,6 +153,7 @@ svg.dim .pg:not(.hl) { opacity: .15; }
     <a href="#kinh-chinh">12 kinh chính</a>
     <a href="#ky-kinh">8 mạch kỳ kinh</a>
     <a href="#huyet">Tra huyệt</a>
+    <a href="#tac-kinh">Tắc kinh lạc</a>
     <a href="#thao-duoc">Thảo dược ngoài da</a>
     <a href="#bang-chung">Bằng chứng</a>
   </nav>
@@ -266,6 +267,50 @@ svg.dim .pg:not(.hl) { opacity: .15; }
     <div class="frow"><label>Khác</label><button class="chip" id="fEv" aria-pressed="false">Có bằng chứng Khá trở lên</button><button class="chip" id="fSafe" aria-pressed="false">Ẩn huyệt kiêng khi có thai</button><span class="count" id="count"></span></div>
   </div>
   <div class="pts" id="pts"></div>
+</section>
+
+<!-- TẮC KINH LẠC -->
+<section class="view" id="v-tac-kinh" hidden>
+  <h2>Tắc kinh lạc và các bệnh liên quan</h2>
+  <p class="lead">Đông y có câu: <b>"Thông tắc bất thống, thống tắc bất thông"</b> (通則不痛，痛則不通): khí huyết thông thì không đau, đau là vì không thông. Khi một đường kinh bị tắc, triệu chứng thường hiện ra ở hai nơi: <b>dọc theo đường đi của kinh</b> (đau, tê, mỏi, lạnh ở vùng kinh chạy qua) và ở <b>tạng phủ mà kinh đó thuộc về</b>. Ngoài ra còn kiểu đau do thiếu, gọi là "bất vinh tắc thống": khí huyết không đủ nuôi nên cũng đau, dù không có gì chặn.</p>
+
+  <h2>Sáu nguyên nhân gây tắc</h2>
+  <p class="note">Theo cách chia của Đông y. Cột cuối là các tình trạng Tây y có biểu hiện gần giống, chỉ để tham khảo, không phải chẩn đoán.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Nguyên nhân</th><th>Kiểu đau, dấu hiệu</th><th>Hướng khai thông (Đông y)</th><th>Gần với (Tây y)</th></tr></thead>
+    <tbody id="tacBody"></tbody>
+  </table></div>
+
+  <h2>Tắc ở từng kinh thì thường biểu hiện ra sao</h2>
+  <p class="note">Bấm tên huyệt để xem vị trí trên hình người. Cột "Gần với" là các tình trạng Tây y có vùng đau trùng với đường kinh. Sự trùng khớp này giúp nhớ vị trí, chứ không chứng minh kinh lạc là nguyên nhân.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Kinh</th><th>Dọc đường kinh</th><th>Tạng phủ liên quan</th><th>Gần với (Tây y)</th><th>Huyệt hay dùng</th></tr></thead>
+    <tbody id="tacKinhBody"></tbody>
+  </table></div>
+
+  <h2>Khoa học hiện đại giải thích thế nào</h2>
+  <div class="grid2">
+    <div class="panel"><h3>Không có "ống" nào bị nghẽn</h3><p>Chưa tìm thấy cấu trúc giải phẫu riêng của kinh lạc, nên "tắc" nên hiểu là cách mô tả một <b>vùng đau, tê theo một dải</b>, không phải một đường ống bị bít. Có bốn cách giải thích được bàn nhiều:</p><ul class="tight">
+      <li><b>Đau quy chiếu:</b> tạng bên trong đau nhưng cảm nhận ở da xa, vì cùng đi vào một đoạn tuỷ sống. Ví dụ đau thắt ngực lan dọc mặt trong tay trái, gần giống đường kinh Tâm.</li>
+      <li><b>Điểm kích hoạt cơ</b> (trigger point): nút co cứng trong cơ gây đau lan theo dải. Một số tác giả thấy nhiều điểm trùng với huyệt, nhưng kết luận này bị phản bác vì cách so sánh.</li>
+      <li><b>Dây thần kinh và vùng da do rễ thần kinh chi phối:</b> đau thần kinh toạ rễ S1 chạy mặt sau chân, giống kinh Bàng quang; rễ L5 chạy mặt ngoài, giống kinh Đởm.</li>
+      <li><b>Mô liên kết:</b> nhóm của Langevin (2002) thấy nhiều huyệt và đường kinh nằm trên các mặt phẳng mô liên kết giữa các cơ.</li>
+    </ul></div>
+    <div class="panel"><h3>Dùng sao cho đúng</h3><ul class="tight">
+      <li>Coi đường kinh là <b>bản đồ để mô tả và ghi nhớ</b> vùng đau, không phải công cụ để tự chẩn đoán bệnh nội tạng.</li>
+      <li>Các cách "khai thông" như vận động, kéo giãn, xoa bóp, chườm ấm, châm cứu có bằng chứng ở mức khá cho <b>đau cơ xương mạn tính</b> (xem tab Bằng chứng).</li>
+      <li>Cùng một vùng đau có thể do nhiều nguyên nhân rất khác nhau. Đau kéo dài, nặng dần, hoặc kèm dấu hiệu dưới đây cần được khám.</li>
+    </ul></div>
+  </div>
+
+  <div class="panel" style="margin-top:14px;border-color:var(--warn)"><h3 style="color:var(--warn)">Những dấu hiệu không được coi là "tắc kinh" mà phải đi khám ngay</h3><ul class="tight">
+    <li>Đau, tức ngực lan ra tay trái, hàm, lưng, kèm khó thở, vã mồ hôi: có thể là nhồi máu cơ tim. Gọi cấp cứu 115.</li>
+    <li>Đột ngột yếu hoặc tê nửa người, méo miệng, nói khó, nhìn mờ: có thể là đột quỵ. Gọi cấp cứu.</li>
+    <li>Một bên bắp chân sưng, nóng, đau, nhất là sau khi nằm lâu hay đi xa: có thể là huyết khối tĩnh mạch. Không xoa bóp, đi khám ngay.</li>
+    <li>Đau lưng kèm tê vùng quanh hậu môn, bí tiểu hoặc són tiểu, yếu hai chân: có thể là chèn ép chùm đuôi ngựa, cần cấp cứu.</li>
+    <li>Đau đầu dữ dội đột ngột như "sét đánh", hoặc đau kèm sốt cao, cứng gáy.</li>
+    <li>Đau xương khớp kèm sụt cân không rõ lý do, sốt, đau về đêm không đỡ khi nằm nghỉ.</li>
+  </ul></div>
 </section>
 
 <!-- THẢO DƯỢC NGOÀI DA -->
@@ -439,6 +484,8 @@ const EV = [
   ["Capsaicin (hoạt chất của ớt) bôi, dán giảm đau?","k","Cochrane 2017: miếng dán capsaicin 8% giảm đau thần kinh sau zona và đau thần kinh do HIV ở một phần người dùng. Kem nồng độ thấp có tác dụng yếu."],
   ["Cứu ngải giảm đau (khớp gối, lưng)?","h","Một số tổng quan thấy tín hiệu tích cực nhưng thử nghiệm nhỏ, thiếu nhóm chứng tốt, khó làm mù."],
   ["Ngâm chân, chườm gừng, lá lốt, sả có tác dụng riêng ngoài hơi nóng?","n","Chưa có thử nghiệm đủ tốt tách được tác dụng của cây khỏi tác dụng của nhiệt."],
+  ["Huyệt trùng với điểm kích hoạt cơ (trigger point)?","h","Dorsher 2008 báo cáo trùng khớp cao về vị trí; Birch 2008 phản bác vì so sánh chưa đúng chức năng. Chưa thống nhất."],
+  ["Đường kinh trùng vùng đau quy chiếu của nội tạng?","h","Có ví dụ khớp (đau thắt ngực lan dọc tay trái, gần kinh Tâm), nhưng chưa có nghiên cứu hệ thống cho thấy trùng khớp chung cho cả 12 kinh."],
   ["Giờ vượng của kinh (đồng hồ khí)?","n","Chưa có nghiên cứu kiểm chứng. Khoa học nhịp sinh học là một lĩnh vực riêng, không dựa trên mô hình này."]
 ];
 
@@ -660,8 +707,38 @@ const HERB_PTS = [
 $("herbPts").innerHTML = HERB_PTS.map(g => `<div class="panel"><h3>${esc(g[0])}</h3><div class="plist" style="display:flex;gap:6px;flex-wrap:wrap">${g[1].filter(c => HP[c]).map(c => `<button class="chip" data-show="${c}">${esc(HP[c].n)} <span class="code">${c}</span>${HP[c].preg ? ' <span class="preg">Kiêng khi có thai</span>' : ""}</button>`).join("")}</div><p class="note">${esc(g[2])}</p></div>`).join("");
 $("herbPts").addEventListener("click", e => { const b = e.target.closest("[data-show]"); if (b) { location.hash = "hinh-nguoi"; window.atlas.selectPoint(b.dataset.show); } });
 
+// Tắc kinh lạc
+const TAC = [
+  ["Hàn ngưng (lạnh)", "Đau buốt, cố định một chỗ, gặp lạnh đau tăng, chườm ấm thì đỡ; tay chân lạnh.", "Ôn kinh tán hàn: chườm ấm, cứu ngải, ngâm chân (xem tab Thảo dược ngoài da).", "Co cơ, co mạch do lạnh; hiện tượng Raynaud; đau cơ khi trở trời."],
+  ["Thấp trở (ẩm)", "Nặng nề, tê bì, mỏi rã rời, có thể sưng nhẹ; trời ẩm, mưa thì nặng hơn.", "Trừ thấp: vận động cho ra mồ hôi, giác hơi, ngâm chân; giữ nơi ở khô ráo.", "Phù nề, thoái hoá khớp. Liên hệ giữa thời tiết và đau khớp trong nghiên cứu còn chưa nhất quán."],
+  ["Khí trệ (khí không lưu thông)", "Đau căng tức, chạy chỗ này chỗ khác, lúc có lúc không, nặng lên khi căng thẳng, đỡ khi ợ hơi hay trung tiện.", "Hành khí: vận động, thở chậm, xoa bóp, khí công; điều hoà cảm xúc.", "Căng cơ do stress, đau đầu căng cơ, hội chứng ruột kích thích, đau ngực chức năng."],
+  ["Huyết ứ (máu ứ đọng)", "Đau như dao đâm, cố định, ấn vào đau hơn, về đêm nặng hơn; da hoặc lưỡi có vết tím.", "Hoạt huyết: xoa bóp nhẹ, giác hơi, vận động. Không xoa bóp mạnh chỗ chấn thương mới.", "Sau chấn thương, tụ máu, suy tuần hoàn. Cần loại trừ huyết khối tĩnh mạch."],
+  ["Đàm trọc (đờm, chất đục)", "Tê, nặng đầu, chóng mặt, người nặng nề; có thể có cục mềm dưới da.", "Hoá đàm: ăn nhạt, bớt đồ ngọt béo, vận động; huyệt Phong long.", "Thừa cân, rối loạn mỡ máu, u mỡ dưới da. Chóng mặt, tê kéo dài cần khám."],
+  ["Hư (bất vinh tắc thống)", "Đau âm ỉ, mỏi, thích được xoa ấn và chườm ấm; mệt, ăn kém, hay hoa mắt.", "Bồi bổ: ăn ngủ đủ, vận động vừa sức, cứu Túc tam lý, Quan nguyên, Khí hải.", "Thiếu máu, suy nhược, giảm khối cơ ở người lớn tuổi, thiếu vitamin D hoặc B12."]
+];
+$("tacBody").innerHTML = TAC.map(t => `<tr><td style="min-width:130px"><b>${esc(t[0])}</b></td><td style="min-width:220px">${esc(t[1])}</td><td style="min-width:220px">${esc(t[2])}</td><td style="min-width:200px">${esc(t[3])}</td></tr>`).join("");
+const TACK = [
+  ["LU","Đau ngực trên, mặt trước vai, mặt trong trước cánh tay, cổ tay phía ngón cái; tê ngón cái.","Ho, hen, khó thở, đau họng, dễ cảm.","Chèn rễ thần kinh C6 (tê ngón cái), viêm gân De Quervain ở cổ tay.",["LU1","LU5","LU7","LU9"]],
+  ["LI","Đau ngón trỏ, mặt ngoài khuỷu, vai trước, cổ, hàm dưới.","Táo bón, đau răng, đau họng, nghẹt mũi.","Viêm lồi cầu ngoài khuỷu (khuỷu tay tennis), đau vai trước, đau răng.",["LI4","LI11","LI20"]],
+  ["ST","Đau mặt, hàm, mặt trước đùi, đầu gối trước, cạnh ngoài xương chày, mu chân.","Đau dạ dày, đầy bụng, nôn, tiêu chảy.","Đau khớp gối phía trước (xương bánh chè), đau dây thần kinh mặt, đau ống chân.",["ST25","ST36","ST40"]],
+  ["SP","Tê đau ngón chân cái, mặt trong cổ chân, cẳng chân, gối trong; chân nặng, phù.","Ăn kém, đầy bụng, phân lỏng, mệt, kinh nguyệt không đều.","Suy giãn tĩnh mạch chân, phù chi dưới, đau gối mặt trong.",["SP4","SP6","SP9","SP10"]],
+  ["HT","Đau mặt trong cánh tay phía ngón út, khuỷu trong, tê ngón út và ngón nhẫn.","Hồi hộp, đau ngực, mất ngủ, lo âu.","Chèn thần kinh trụ ở khuỷu, rễ C8. Đau thắt ngực lan tay trái đi theo đúng dải này: phải cấp cứu.",["HT7"]],
+  ["SI","Đau mặt sau cánh tay phía ngón út, bả vai, gáy, má.","Ù tai, đau họng; theo Đông y liên quan tiêu hoá ở ruột non.","Điểm kích hoạt ở cơ trên gai và dưới gai, cứng cổ, vẹo cổ.",["SI3"]],
+  ["BL","Đau gáy, hai dải dọc cột sống, mông, mặt sau đùi, khoeo, bắp chân, gót, ngón út chân.","Bệnh tiết niệu, tiểu nhiều, đau mắt; các bối du trên lưng nối với mọi tạng phủ.","Đau thắt lưng, đau thần kinh toạ rễ S1 (lan mặt sau chân), chuột rút bắp chân.",["BL13","BL23","BL40","BL60","BL62"]],
+  ["KI","Đau gan bàn chân, gót, mắt cá trong, mặt trong cẳng chân; mỏi lưng gối.","Ù tai, tiểu đêm, sinh lý yếu, mệt mỏi kéo dài.","Viêm cân gan chân, đau gót, hội chứng ống cổ chân.",["KI1","KI3","KI6"]],
+  ["PC","Đau giữa mặt trong cẳng tay, cổ tay, tê ngón giữa, nóng lòng bàn tay; tức ngực.","Hồi hộp, buồn nôn, bồn chồn.","Hội chứng ống cổ tay (chèn thần kinh giữa), tê các ngón 1 đến 3.",["PC6","PC8"]],
+  ["TE","Đau mặt sau cẳng tay, vai ngoài, sau tai, thái dương.","Ù tai, đau đầu hai bên, sốt.","Đau vai do chóp xoay, đau đầu căng cơ, đau khớp thái dương hàm.",["TE5"]],
+  ["GB","Đau hai bên đầu, gáy, vai, sườn, hông, mông ngoài, mặt ngoài đùi và cẳng chân, ngón chân thứ tư.","Đắng miệng, đau sườn, khó tiêu mỡ.","Đau nửa đầu (migraine), hội chứng dải chậu chày, đau thần kinh toạ rễ L5 (lan mặt ngoài chân).",["GB20","GB21","GB30","GB34","GB41"]],
+  ["LR","Đau đỉnh đầu, mạn sườn, bẹn, mặt trong đùi, mu chân, ngón chân cái.","Cáu giận, chóng mặt, kinh nguyệt không đều, đau bụng dưới.","Căng cơ khép đùi, đau vùng bẹn, đau hạ sườn phải do gan mật.",["LR3","LR14"]],
+  ["GV","Cứng đau dọc giữa cột sống, gáy, đỉnh đầu.","Theo Đông y liên quan dương khí, não tuỷ.","Thoái hoá cột sống. Đau lưng về đêm, cứng buổi sáng ở người trẻ cần khám để loại trừ viêm cột sống dính khớp.",["GV4","GV14","GV20"]],
+  ["DV","Đau ngang thắt lưng như bị thắt dây, bụng dưới nặng.","Khí hư, đau lưng ngang eo.","Đau thắt lưng. Đau rát thành dải một bên eo, sau đó nổi mụn nước, có thể là zona.",["GB41"]]
+];
+const KNAME = Object.assign({}, KN, {DV:"Đới mạch"});
+$("tacKinhBody").innerHTML = TACK.map(t => `<tr><td style="min-width:120px"><b>${esc(KNAME[t[0]])}</b> <span class="code">${t[0]}</span></td><td style="min-width:220px">${esc(t[1])}</td><td style="min-width:170px">${esc(t[2])}</td><td style="min-width:220px">${esc(t[3])}</td><td style="min-width:150px"><div style="display:flex;gap:4px;flex-wrap:wrap">${t[4].filter(c => HP[c]).map(c => `<button class="chip" data-show="${c}">${esc(HP[c].n)}</button>`).join("")}</div></td></tr>`).join("");
+$("tacKinhBody").addEventListener("click", e => { const b = e.target.closest("[data-show]"); if (b) { location.hash = "hinh-nguoi"; window.atlas.selectPoint(b.dataset.show); } });
+
 // Định tuyến theo hash
-const VIEWS = ["tong-quan","hinh-nguoi","dong-ho","kinh-chinh","ky-kinh","huyet","thao-duoc","bang-chung"];
+const VIEWS = ["tong-quan","hinh-nguoi","dong-ho","kinh-chinh","ky-kinh","huyet","tac-kinh","thao-duoc","bang-chung"];
 function route(){
   const h = location.hash.slice(1); const cur = VIEWS.includes(h) ? h : "tong-quan";
   VIEWS.forEach(v => { $("v-" + v).hidden = v !== cur; });
